@@ -1,0 +1,20 @@
+{
+  "routes": [
+    {
+      "name": "health",
+      "path": "/health",
+      "method": "GET",
+      "controller": "CubaDevOps\\Flexi\\Infrastructure\\Controllers\\HealthController",
+      "parameters": []
+    },
+    {
+      "name": "404",
+      "path": "/not-found",
+      "method": "GET",
+      "controller": "CubaDevOps\\Flexi\\Infrastructure\\Controllers\\NotFoundController"
+    },
+    {
+      "glob": "/modules/*/Config/routes.json"
+    }
+  ]
+}

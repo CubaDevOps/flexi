@@ -1,0 +1,148 @@
+{
+  "services": [
+    {
+      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\ConfigurationFactory",
+        "method": "getInstance",
+        "arguments": []
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Classes\\NativeSessionStorage",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Domain\\Classes\\NativeSessionStorage",
+        "arguments": [
+          {
+            "name": "PHPSESSID",
+            "cookie_lifetime": 0,
+            "cookie_path": "/",
+            "cookie_domain": "flexi.local",
+            "cookie_secure": false,
+            "cookie_httponly": true,
+            "use_cookies": true,
+            "use_only_cookies": true,
+            "use_strict_mode": true,
+            "sid_length": 32,
+            "sid_bits_per_character": 5
+          }
+        ]
+      }
+    },
+    {
+      "name": "session",
+      "alias": "CubaDevOps\\Flexi\\Domain\\Classes\\NativeSessionStorage"
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Utils\\ClassFactory",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Domain\\Utils\\ClassFactory",
+        "arguments": []
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Classes\\Router",
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Domain\\Factories\\RouterFactory",
+        "method": "getInstance",
+        "arguments": [
+          "@session",
+          "@CubaDevOps\\Flexi\\Domain\\Classes\\EventBus",
+          "@CubaDevOps\\Flexi\\Domain\\Utils\\ClassFactory",
+          "@Psr\\Http\\Message\\ResponseFactoryInterface",
+          "/src/Config/routes.json"
+        ]
+      }
+    },
+    {
+      "name": "router",
+      "alias": "CubaDevOps\\Flexi\\Domain\\Classes\\Router"
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Classes\\VersionRepository",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Domain\\Classes\\VersionRepository",
+        "arguments": []
+      }
+    },
+    {
+      "name": "html_render",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Domain\\Classes\\HtmlRender",
+        "arguments": []
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Classes\\CommandBus",
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Domain\\Factories\\BusFactory",
+        "method": "getInstance",
+        "arguments": [
+          "@container",
+          "CubaDevOps\\Flexi\\Domain\\Classes\\CommandBus",
+          "/src/Config/commands.json"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Classes\\QueryBus",
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Domain\\Factories\\BusFactory",
+        "method": "getInstance",
+        "arguments": [
+          "@container",
+          "CubaDevOps\\Flexi\\Domain\\Classes\\QueryBus",
+          "/src/Config/queries.json"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Classes\\EventBus",
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Domain\\Factories\\BusFactory",
+        "method": "getInstance",
+        "arguments": [
+          "@container",
+          "CubaDevOps\\Flexi\\Domain\\Classes\\EventBus",
+          "/src/Config/listeners.json"
+        ]
+      }
+    },
+    {
+      "name": "logger",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\PsrLogger",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Classes\\InFileLogRepository"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Classes\\InFileLogRepository",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Domain\\Classes\\InFileLogRepository",
+        "arguments": [
+          "ENV.log_file_path",
+          "ENV.log_format"
+        ]
+      }
+    },
+    {
+      "name": "Psr\\Http\\Message\\ResponseFactoryInterface",
+      "class": {
+        "name": "GuzzleHttp\\Psr7\\HttpFactory",
+        "arguments": []
+      }
+    },
+    {
+      "name": "Psr\\Http\\Message\\ServerRequestFactoryInterface",
+      "class": {
+        "name": "GuzzleHttp\\Psr7\\HttpFactory",
+        "arguments": []
+      }
+    },
+    {
+      "glob": "/modules/*/Config/services.json"
+    }
+  ]
+}

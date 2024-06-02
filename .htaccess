@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Redirect other requests to public
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /public%{REQUEST_URI} [L]

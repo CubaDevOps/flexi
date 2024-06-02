@@ -1,0 +1,19 @@
+<?php
+
+namespace CubaDevOps\Flexi\Domain\Interfaces;
+
+interface BusInterface
+{
+    public function register(
+        string $identifier,
+        string $handler
+    ): void;
+
+    public function execute(DTOInterface $dto);
+
+    public function hasHandler(string $identifier): bool;
+
+    public function getHandler(string $identifier): string;
+
+    public function loadHandlersFromJsonFile(string $file): void;
+}

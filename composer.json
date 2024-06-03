@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "time": "2024-06-02",
   "license": "MIT",
+  "type": "project",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "keywords": [
     "PHP",
     "DDD",
@@ -57,13 +60,23 @@
     "psalm": "psalm --show-info=true",
     "fix-dry": "psalter --issues=all --dry-run",
     "fix": "psalter --issues=all",
-    "format": "php-cs-fixer fix --rules=@PSR12,@Symfony --allow-risky=yes ."
+    "format": "php-cs-fixer fix --rules=@PSR12,@Symfony --allow-risky=yes .",
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "update-framework": [
+      "composer update cubadevops/flexi --with-dependencies"
+    ],
+    "check": [
+      "@composer test",
+      "@composer psalm",
+      "@composer format --dry-run"
+    ]
   },
   "config": {
     "sort-packages": true,
-    "preferred-install": {
-      "flexi": "source"
-    }
+    "preferred-install": "auto",
+    "optimize-autoloader": true
   },
   "repositories": [
     {

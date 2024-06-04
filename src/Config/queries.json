@@ -16,7 +16,7 @@
       "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ListCommands"
     },
     {
-      "glob": "/modules/*/Config/queries.json"
+      "glob": "./modules/*/Config/queries.json"
     }
   ]
 }

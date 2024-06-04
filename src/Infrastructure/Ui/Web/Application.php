@@ -45,7 +45,7 @@ class Application
      */
     private static function handle(): StreamInterface
     {
-        $container = ContainerFactory::getInstance('/src/Config/services.json');
+        $container = ContainerFactory::getInstance('./src/Config/services.json');
 
         /** @var Router $router */
         $router = $container->get(Router::class);

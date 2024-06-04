@@ -4,17 +4,22 @@ namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Interfaces\LogInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\LogRepositoryInterface;
+use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
 
 class InFileLogRepository implements LogRepositoryInterface
 {
+    use FileHandlerTrait;
+
     private string $path;
     private string $format;
 
+    /**
+     * @param string $path
+     * @param string $format
+     */
     public function __construct(string $path, string $format)
     {
-        if (!file_exists($path)) {
-            touch($path);
-        }
+        $this->ensureFileExists($path);
         $this->path = $path;
         $this->format = $format;
     }
@@ -23,7 +28,7 @@ class InFileLogRepository implements LogRepositoryInterface
     {
         file_put_contents(
             $this->path,
-            $this->formatMessage($log).PHP_EOL,
+            $this->formatMessage($log) . PHP_EOL,
             FILE_APPEND
         );
     }

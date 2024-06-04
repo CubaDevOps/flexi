@@ -1,7 +1,7 @@
 {
   "handlers": [
     {
-      "glob": "/modules/*/Config/commands.json"
+      "glob": "./modules/*/Config/commands.json"
     }
   ]
 }

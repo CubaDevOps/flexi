@@ -5,6 +5,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 use CubaDevOps\Flexi\Domain\Classes\Template;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
+use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use CubaDevOps\Flexi\Infrastructure\Factories\ConfigurationFactory;
@@ -16,6 +17,8 @@ use Psr\Log\LoggerInterface;
 
 class NotFoundController extends HttpHandler
 {
+    use FileHandlerTrait;
+
     private TemplateEngineInterface $html_render;
     private SessionStorageInterface $session;
     private LoggerInterface $logger;
@@ -31,16 +34,9 @@ class NotFoundController extends HttpHandler
         parent::__construct();
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $app_dir = ConfigurationFactory::getInstance()->get('APP_DIR');
-        $template = new Template(
-            $app_dir . '/Infrastructure/Ui/Templates/404.html'
-        );
+        $template = new Template($this->normalize('./src/Infrastructure/Ui/Templates/404.html'));
 
         $previous_url = $this->session->has('previous_route')
             ? $this->session->get('previous_route')

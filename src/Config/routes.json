@@ -14,7 +14,7 @@
       "controller": "CubaDevOps\\Flexi\\Infrastructure\\Controllers\\NotFoundController"
     },
     {
-      "glob": "/modules/*/Config/routes.json"
+      "glob": "./modules/*/Config/routes.json"
     }
   ]
 }

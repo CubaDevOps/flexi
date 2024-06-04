@@ -50,7 +50,7 @@
           "@CubaDevOps\\Flexi\\Domain\\Classes\\EventBus",
           "@CubaDevOps\\Flexi\\Domain\\Utils\\ClassFactory",
           "@Psr\\Http\\Message\\ResponseFactoryInterface",
-          "/src/Config/routes.json"
+          "./src/Config/routes.json"
         ]
       }
     },
@@ -80,7 +80,7 @@
         "arguments": [
           "@container",
           "CubaDevOps\\Flexi\\Domain\\Classes\\CommandBus",
-          "/src/Config/commands.json"
+          "./src/Config/commands.json"
         ]
       }
     },
@@ -92,7 +92,7 @@
         "arguments": [
           "@container",
           "CubaDevOps\\Flexi\\Domain\\Classes\\QueryBus",
-          "/src/Config/queries.json"
+          "./src/Config/queries.json"
         ]
       }
     },
@@ -104,7 +104,7 @@
         "arguments": [
           "@container",
           "CubaDevOps\\Flexi\\Domain\\Classes\\EventBus",
-          "/src/Config/listeners.json"
+          "./src/Config/listeners.json"
         ]
       }
     },
@@ -142,7 +142,7 @@
       }
     },
     {
-      "glob": "/modules/*/Config/services.json"
+      "glob": "./modules/*/Config/services.json"
     }
   ]
 }

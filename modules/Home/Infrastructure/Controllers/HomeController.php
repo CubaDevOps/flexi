@@ -3,6 +3,7 @@
 namespace CubaDevOps\Flexi\Modules\Home\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Domain\Classes\QueryBus;
+use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 use GuzzleHttp\Psr7\HttpFactory;
@@ -14,13 +15,12 @@ use ReflectionException;
 
 class HomeController
 {
+    use FileHandlerTrait;
     private QueryBus $query_bus;
-    private Configuration $config;
 
-    public function __construct(QueryBus $query_bus, Configuration $config)
+    public function __construct(QueryBus $query_bus)
     {
         $this->query_bus = $query_bus;
-        $this->config = $config;
     }
 
     /**
@@ -29,7 +29,7 @@ class HomeController
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $response = (new HttpFactory())->createResponse();
-        $template_path = $this->config->get('MODULES_DIR') . '/Home/Infrastructure/UI/Templates/home.html';
+        $template_path = $this->normalize('./modules/Home/Infrastructure/UI/Templates/home.html');
         $dto = new HomePageDTO($template_path);
 
         $response->getBody()->write((string)$this->query_bus->execute($dto));

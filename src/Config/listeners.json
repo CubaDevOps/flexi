@@ -6,6 +6,6 @@
     ]
   },
   {
-    "glob": "/modules/*/Config/listeners.json"
+    "glob": "./modules/*/Config/listeners.json"
   }
 ]

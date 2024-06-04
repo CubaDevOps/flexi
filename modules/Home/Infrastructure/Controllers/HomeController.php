@@ -29,7 +29,7 @@ class HomeController
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $response = (new HttpFactory())->createResponse();
-        $template_path = $this->config->get('MODULES_DIR') . '/Home/Infrastructure/Ui/Templates/home.html';
+        $template_path = $this->config->get('MODULES_DIR') . '/Home/Infrastructure/UI/Templates/home.html';
         $dto = new HomePageDTO($template_path);
 
         $response->getBody()->write((string)$this->query_bus->execute($dto));

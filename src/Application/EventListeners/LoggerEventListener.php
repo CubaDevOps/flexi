@@ -21,7 +21,7 @@ class LoggerEventListener extends EventListener
     public function handleEvent(EventInterface $event): void
     {
         $message = sprintf(
-            'Event %s was triggered at %s from %s.',
+            'Event %s was triggered at %s from %s',
             $event->getName(),
             $event->occurredOn()->format(DATE_ATOM),
             $event->firedBy()

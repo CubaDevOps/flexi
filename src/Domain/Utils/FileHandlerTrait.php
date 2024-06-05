@@ -6,6 +6,14 @@ namespace CubaDevOps\Flexi\Domain\Utils;
 
 trait FileHandlerTrait
 {
+    public function writeToFile(string $file_path, string $content, int $flags = 0): void
+    {
+        $this->ensureFileExists($file_path);
+        if (false === file_put_contents($file_path, $content, $flags)) {
+            throw new \RuntimeException("Could not write to file: $file_path");
+        }
+    }
+
     public function ensureFileExists(string &$file_path): void
     {
         $file_path = $this->normalize($file_path);
@@ -28,7 +36,7 @@ trait FileHandlerTrait
 
             fclose($fileHandle);
         } catch (\Exception $e) {
-            throw new \RuntimeException('An error occurred while creating the file: '.$e->getMessage());
+            throw new \RuntimeException('An error occurred while creating the file: ' . $e->getMessage());
         }
     }
 
@@ -39,7 +47,7 @@ trait FileHandlerTrait
         }
 
         $rootDir = dirname(__DIR__, 3);
-        $fullPath = $rootDir.DIRECTORY_SEPARATOR.$relative_path;
+        $fullPath = $rootDir . DIRECTORY_SEPARATOR . $relative_path;
         $segments = explode(DIRECTORY_SEPARATOR, $fullPath);
         $normalizedSegments = [];
 
@@ -55,11 +63,23 @@ trait FileHandlerTrait
             }
         }
 
-        return DIRECTORY_SEPARATOR.implode(DIRECTORY_SEPARATOR, $normalizedSegments);
+        return DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $normalizedSegments);
     }
 
     private function isAbsolutePath(string $path): bool
     {
         return 0 === strpos($path, DIRECTORY_SEPARATOR) || (strlen($path) > 1 && ':' === $path[1]);
+    }
+
+    public function readFromFile(string $file_path): string
+    {
+        $this->ensureFileExists($file_path);
+        $contents = file_get_contents($file_path);
+
+        if (false === $contents) {
+            throw new \RuntimeException("Could not read from file: $file_path");
+        }
+
+        return $contents;
     }
 }

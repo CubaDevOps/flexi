@@ -10,20 +10,26 @@ use CubaDevOps\Flexi\Domain\Interfaces\CriteriaInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EntityInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\RepositoryInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ValueObjectInterface;
+use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
+use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
 use CubaDevOps\Flexi\Domain\ValueObjects\ID;
 use CubaDevOps\Flexi\Domain\ValueObjects\Version;
+use JsonException;
 
 class VersionRepository implements RepositoryInterface
 {
+    use JsonFileReader;
+
     /**
      * @return mixed
+     * @throws JsonException
      */
     public function retrieveValue(
         CriteriaInterface $criteria
     ): ValueObjectInterface {
-        [$major, $minor, $fix] = explode('.', '1.0.0');
-
-        return new Version($major, $minor, $fix);
+        $version_string = $this->readJsonFile('composer.json')['version'];
+        [$major, $minor, $patch] = array_map('intval', explode('.', $version_string));
+        return new Version($major,$minor,$patch);
     }
 
     /**
@@ -38,8 +44,14 @@ class VersionRepository implements RepositoryInterface
     {
     }
 
+    /**
+     * @param EntityInterface $entity
+     * @return void
+     * @throws JsonException
+     */
     public function update(EntityInterface $entity): void
     {
+        $this->writeJsonFileFromArray('composer.json', $entity->toArray());
     }
 
     public function delete(ID $entity_id): void

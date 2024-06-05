@@ -28,4 +28,12 @@ class DummyEntity implements EntityInterface
     {
         // dummy implementation
     }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [];
+    }
 }

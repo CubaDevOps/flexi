@@ -15,4 +15,6 @@ interface EntityInterface
     public function getUpdatedAt(): \DateTimeImmutable;
 
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): void;
+
+    public function toArray(): array;
 }

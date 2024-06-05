@@ -31,6 +31,6 @@ class Health implements HandlerInterface
             new DummySearchCriteria()
         );
 
-        return new PlainTextMessage($version);
+        return new PlainTextMessage((string)$version);
     }
 }

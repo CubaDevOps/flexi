@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\DTO\CliDTO;
 use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
@@ -11,11 +12,9 @@ use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Domain\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use ReflectionException;
 
 class CommandBus implements BusInterface
 {
@@ -39,8 +38,8 @@ class CommandBus implements BusInterface
     }
 
     /**
-     * @throws JsonException
-     * @throws ReflectionException
+     * @throws \JsonException
+     * @throws \ReflectionException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -64,9 +63,9 @@ class CommandBus implements BusInterface
 
     /**
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      * @throws ContainerExceptionInterface
-     * @throws JsonException
+     * @throws \JsonException
      */
     private function loadGlobHandlers(string $glob_path): void
     {
@@ -99,7 +98,7 @@ class CommandBus implements BusInterface
     /**
      * @throws NotFoundExceptionInterface
      * @throws ContainerExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function execute(DTOInterface $dto): MessageInterface
     {
@@ -110,12 +109,12 @@ class CommandBus implements BusInterface
         /** @var HandlerInterface $handler_obj */
         $handler_obj = $this->class_factory->build($this->container, $handler);
 
-        $event_before = new Event('core.command.before_execute',__CLASS__, [
+        $event_before = new Event('core.command.before_execute', __CLASS__, [
             'command' => $identifier,
         ]);
         $this->event_bus->notify($event_before);
         $response = $handler_obj->handle($dto);
-        $event_after = new Event('core.command.after_execute',__CLASS__, [
+        $event_after = new Event('core.command.after_execute', __CLASS__, [
             'command' => $identifier,
         ]);
         $this->event_bus->notify($event_after);
@@ -148,6 +147,7 @@ class CommandBus implements BusInterface
         if ($with_aliases) {
             $list = array_merge($list, $this->aliases);
         }
+
         return $list;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Domain\Classes\Template;
@@ -8,9 +10,6 @@ use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
 use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
-use CubaDevOps\Flexi\Infrastructure\Factories\ConfigurationFactory;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;

@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Factories;
 
 use CubaDevOps\Flexi\Domain\Classes\Container;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use ReflectionException;
 
 class ContainerFactory
 {
@@ -14,9 +14,9 @@ class ContainerFactory
 
     /**
      * @throws ContainerExceptionInterface
-     * @throws JsonException
+     * @throws \JsonException
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public static function getInstance(string $file = ''): Container
     {

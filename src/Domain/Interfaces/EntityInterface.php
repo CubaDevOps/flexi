@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Interfaces;
 
 use CubaDevOps\Flexi\Domain\ValueObjects\ID;

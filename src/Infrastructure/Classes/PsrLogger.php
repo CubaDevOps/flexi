@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
 use CubaDevOps\Flexi\Domain\Classes\InFileLogRepository;

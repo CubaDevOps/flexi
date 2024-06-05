@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Factories\ContainerFactory;
@@ -163,7 +165,7 @@ class Router
 
     public static function getUrlBase(): string
     {
-        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+        return $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
     }
 
     /**

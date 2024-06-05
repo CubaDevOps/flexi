@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;

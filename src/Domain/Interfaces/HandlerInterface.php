@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Interfaces;
 
 interface HandlerInterface
 {
     /**
-     * @param DTOInterface $dto
      * @return void|MessageInterface
      */
     public function handle(DTOInterface $dto);

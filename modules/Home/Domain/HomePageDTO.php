@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Modules\Home\Domain;
 
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use InvalidArgumentException;
 
 class HomePageDTO implements DTOInterface
 {
@@ -14,21 +15,15 @@ class HomePageDTO implements DTOInterface
         $this->template = $template;
     }
 
-    /**
-     * @inheritDoc
-     */
     public static function fromArray(array $data): DTOInterface
     {
         if (!self::validate($data)) {
-            throw new InvalidArgumentException('Invalid data provided for ' . self::class);
+            throw new \InvalidArgumentException('Invalid data provided for '.self::class);
         }
+
         return new self($data['template']);
     }
 
-    /**
-     * @param array $data
-     * @return bool
-     */
     public static function validate(array $data): bool
     {
         return isset($data['template']);
@@ -39,10 +34,6 @@ class HomePageDTO implements DTOInterface
         return $this->template;
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     public function get(string $name): string
     {
         return $this->toArray()[$name];

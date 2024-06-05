@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Interfaces\LogInterface;
@@ -13,10 +15,6 @@ class InFileLogRepository implements LogRepositoryInterface
     private string $path;
     private string $format;
 
-    /**
-     * @param string $path
-     * @param string $format
-     */
     public function __construct(string $path, string $format)
     {
         $this->ensureFileExists($path);
@@ -28,7 +26,7 @@ class InFileLogRepository implements LogRepositoryInterface
     {
         file_put_contents(
             $this->path,
-            $this->formatMessage($log) . PHP_EOL,
+            $this->formatMessage($log).PHP_EOL,
             FILE_APPEND
         );
     }

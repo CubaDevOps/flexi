@@ -1,18 +1,15 @@
 <?php
 
-namespace CubaDevOps\Flexi\Domain\Utils;
+declare(strict_types=1);
 
-use JsonException;
-use RuntimeException;
+namespace CubaDevOps\Flexi\Domain\Utils;
 
 trait JsonFileReader
 {
     use FileHandlerTrait;
 
     /**
-     * @param string $file_path
-     * @return array
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function readJsonFile(string $file_path): array
     {
@@ -22,13 +19,10 @@ trait JsonFileReader
         return json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
     }
 
-    /**
-     * @param string $file_path
-     */
     private function assertThatFilePathExist(string $file_path): void
     {
         if (!file_exists($file_path)) {
-            throw new RuntimeException("File $file_path doesn't exist");
+            throw new \RuntimeException("File $file_path doesn't exist");
         }
     }
 }

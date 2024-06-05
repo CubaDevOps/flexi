@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
@@ -60,7 +62,7 @@ class NativeSessionStorage implements SessionStorageInterface
 
     /**
      * @param string $offset
-     * @return mixed
+     * @return TValue
      */
     public function offsetGet($offset)
     {
@@ -69,6 +71,7 @@ class NativeSessionStorage implements SessionStorageInterface
 
     /**
      * @param string $offset
+     * @param TValue $value
      */
     public function offsetSet($offset, $value): void
     {

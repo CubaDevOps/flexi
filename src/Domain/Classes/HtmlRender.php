@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
@@ -8,7 +10,7 @@ class HtmlRender implements TemplateEngineInterface
 {
     public function render(Template $template, $vars = []): string
     {
-        $template_content = $this->header(). $template->getContent() . $this->footer();
+        $template_content = $this->header().$template->getContent().$this->footer();
 
         return $this->replacePlaceholders($template_content, $vars);
     }
@@ -26,17 +28,11 @@ class HtmlRender implements TemplateEngineInterface
         return str_replace($placeholders, $values, $template_content);
     }
 
-    /**
-     * @return string
-     */
     public function header(): string
     {
         return '';
     }
 
-    /**
-     * @return string
-     */
     public function footer(): string
     {
         return '';

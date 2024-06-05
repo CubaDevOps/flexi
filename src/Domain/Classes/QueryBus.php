@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\DTO\CliDTO;
 use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
@@ -11,11 +12,9 @@ use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Domain\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use ReflectionException;
 
 class QueryBus implements BusInterface
 {
@@ -41,8 +40,8 @@ class QueryBus implements BusInterface
     }
 
     /**
-     * @throws JsonException
-     * @throws ReflectionException
+     * @throws \JsonException
+     * @throws \ReflectionException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -65,9 +64,9 @@ class QueryBus implements BusInterface
 
     /**
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      * @throws ContainerExceptionInterface
-     * @throws JsonException
+     * @throws \JsonException
      */
     private function loadGlobFiles(array $handler): void
     {
@@ -99,7 +98,7 @@ class QueryBus implements BusInterface
 
     /**
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      * @throws ContainerExceptionInterface
      */
     public function execute(DTOInterface $dto): MessageInterface
@@ -114,14 +113,14 @@ class QueryBus implements BusInterface
             $handler
         );
 
-        $event_before = new Event("core.query.before_execute.$identifier",__CLASS__, [
+        $event_before = new Event("core.query.before_execute.$identifier", __CLASS__, [
             'command' => $identifier,
         ]);
         $this->event_bus->notify($event_before);
 
         $response = $handler_obj->handle($dto);
 
-        $event_after = new Event("core.query.after_execute.$identifier",__CLASS__, [
+        $event_after = new Event("core.query.after_execute.$identifier", __CLASS__, [
             'command' => $identifier,
         ]);
         $this->event_bus->notify($event_after);
@@ -154,6 +153,7 @@ class QueryBus implements BusInterface
         if ($with_aliases) {
             $list = array_merge($list, $this->aliases);
         }
+
         return $list;
     }
 }

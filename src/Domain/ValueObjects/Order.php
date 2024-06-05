@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\ValueObjects;
 
 use CubaDevOps\Flexi\Domain\Interfaces\ValueObjectInterface;
@@ -24,7 +26,7 @@ class Order implements ValueObjectInterface
 
     private function assertThatIsValidOrder(string $order): void
     {
-        if (!in_array($order, [self::ASC, self::DESC])) {
+        if (!in_array($order, [self::ASC, self::DESC], true)) {
             throw new \InvalidArgumentException("Invalid order value: $order");
         }
     }

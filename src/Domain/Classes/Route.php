@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
@@ -7,7 +9,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use ReflectionException;
 
 class Route
 {
@@ -91,7 +92,7 @@ class Route
 
     private function validateMethod(string $method): void
     {
-        if (!in_array($method, self::METHODS)) {
+        if (!in_array($method, self::METHODS, true)) {
             throw new \InvalidArgumentException("Invalid method: $method");
         }
     }
@@ -103,7 +104,7 @@ class Route
 
     /**
      * @throws ContainerExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      * @throws NotFoundExceptionInterface
      */
     public function throughMiddlewares(ContainerInterface $container, ClassFactory $factory, RequestHandlerInterface $handler): RequestHandlerInterface

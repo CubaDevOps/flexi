@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Modules\Home\Application;
 
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;

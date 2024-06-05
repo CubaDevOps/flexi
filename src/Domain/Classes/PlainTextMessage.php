@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
 use DateTimeImmutable;
-use InvalidArgumentException;
 
 class PlainTextMessage implements MessageInterface
 {
     private string $body;
-    private DateTimeImmutable $created_at;
+    private \DateTimeImmutable $created_at;
 
     /**
      * PlainTextMessage constructor.
@@ -18,10 +19,10 @@ class PlainTextMessage implements MessageInterface
     public function __construct(string $body)
     {
         $this->body = $body;
-        $this->created_at = new DateTimeImmutable();
+        $this->created_at = new \DateTimeImmutable();
     }
 
-    public function createdAt(): DateTimeImmutable
+    public function createdAt(): \DateTimeImmutable
     {
         return $this->created_at;
     }
@@ -32,7 +33,7 @@ class PlainTextMessage implements MessageInterface
     }
 
     /**
-     * @return (DateTimeImmutable|string)[]
+     * @return (\DateTimeImmutable|string)[]
      *
      * @psalm-return array{body: string, created_at: DateTimeImmutable}
      */
@@ -45,29 +46,24 @@ class PlainTextMessage implements MessageInterface
     }
 
     /**
-     * @param array $data
      * @return self
      */
     public static function fromArray(array $data): DTOInterface
     {
         if (!self::validate($data)) {
-            throw new InvalidArgumentException('Invalid data provided for ' . self::class);
+            throw new \InvalidArgumentException('Invalid data provided for '.self::class);
         }
-           return new self($data['body']);
+
+        return new self($data['body']);
     }
 
-    /**
-     * @param array $data
-     * @return bool
-     */
     public static function validate(array $data): bool
     {
         return isset($data['body']);
     }
 
     /**
-     * @param string $name
-     * @return DateTimeImmutable|string
+     * @return \DateTimeImmutable|string
      */
     public function get(string $name)
     {

@@ -1,30 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Web;
 
 use CubaDevOps\Flexi\Domain\Classes\Router;
 use CubaDevOps\Flexi\Domain\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Infrastructure\Factories\ConfigurationFactory;
-use ErrorException;
 use GuzzleHttp\Psr7\ServerRequest;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use ReflectionException;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\ErrorHandler\ErrorHandler;
 
 class Application
 {
-
     /**
      * @throws ContainerExceptionInterface
-     * @throws ErrorException
-     * @throws JsonException
+     * @throws \ErrorException
+     * @throws \JsonException
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public static function run(): void
     {
@@ -39,9 +37,9 @@ class Application
 
     /**
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      * @throws ContainerExceptionInterface
-     * @throws JsonException
+     * @throws \JsonException
      */
     private static function handle(): StreamInterface
     {

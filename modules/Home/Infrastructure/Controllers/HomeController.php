@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Modules\Home\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Domain\Classes\QueryBus;
 use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 use GuzzleHttp\Psr7\HttpFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use ReflectionException;
 
 class HomeController
 {
@@ -24,7 +24,7 @@ class HomeController
     }
 
     /**
-     * @throws NotFoundExceptionInterface|ReflectionException|ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface|\ReflectionException|ContainerExceptionInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -32,7 +32,7 @@ class HomeController
         $template_path = $this->normalize('./modules/Home/Infrastructure/UI/Templates/home.html');
         $dto = new HomePageDTO($template_path);
 
-        $response->getBody()->write((string)$this->query_bus->execute($dto));
+        $response->getBody()->write((string) $this->query_bus->execute($dto));
 
         return $response;
     }

@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Factories;
 
 use CubaDevOps\Flexi\Domain\Classes\Router;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
-use JsonException;
 use Psr\Http\Message\ResponseFactoryInterface;
 
 class RouterFactory
@@ -14,7 +15,7 @@ class RouterFactory
     private static Router $instance;
 
     /**
-     * @throws JsonException
+     * @throws \JsonException
      */
     public static function getInstance(
         SessionStorageInterface $session,

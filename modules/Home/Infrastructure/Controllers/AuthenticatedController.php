@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Modules\Home\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\DTO;
 
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
@@ -22,7 +24,6 @@ class DummyDTO implements DTOInterface
     }
 
     /**
-     * @param array $data
      * @return self
      */
     public static function fromArray(array $data): DTOInterface
@@ -30,17 +31,12 @@ class DummyDTO implements DTOInterface
         return new self();
     }
 
-    /**
-     * @param array $data
-     * @return bool
-     */
     public static function validate(array $data): bool
     {
         return true;
     }
 
     /**
-     * @param string $name
      * @return null
      */
     public function get(string $name)

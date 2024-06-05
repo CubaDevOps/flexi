@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Domain\Classes\QueryBus;
@@ -9,7 +11,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use ReflectionException;
 
 class HealthController extends HttpHandler
 {
@@ -24,7 +25,7 @@ class HealthController extends HttpHandler
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

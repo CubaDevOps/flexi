@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Factories;
 
 use CubaDevOps\Flexi\Domain\Classes\CommandBus;
@@ -7,12 +9,9 @@ use CubaDevOps\Flexi\Domain\Classes\EventBus;
 use CubaDevOps\Flexi\Domain\Classes\QueryBus;
 use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
-use InvalidArgumentException;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use ReflectionException;
 
 class BusFactory
 {
@@ -20,9 +19,9 @@ class BusFactory
 
     /**
      * @throws ContainerExceptionInterface
-     * @throws JsonException
+     * @throws \JsonException
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public static function getInstance(
         ContainerInterface $container,
@@ -43,7 +42,7 @@ class BusFactory
                     self::$instance[$type] = new EventBus($container, $class_factory);
                     break;
                 default:
-                    throw new InvalidArgumentException('Invalid bus type');
+                    throw new \InvalidArgumentException('Invalid bus type');
             }
             self::$instance[$type]->loadHandlersFromJsonFile($file);
         }

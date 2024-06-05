@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\ValueObjects;
 
 use CubaDevOps\Flexi\Domain\Interfaces\ValueObjectInterface;
@@ -38,7 +40,7 @@ class Operator implements ValueObjectInterface
 
     private function assertThatIsValidOperator(string $operator): void
     {
-        if (!in_array($operator, self::OPERATORS)) {
+        if (!in_array($operator, self::OPERATORS, true)) {
             throw new \InvalidArgumentException("Invalid operator: $operator");
         }
     }

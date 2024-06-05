@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\DTO;
 
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
@@ -13,26 +15,19 @@ class QueryListDTO implements DTOInterface
         $this->with_aliases = $with_aliases;
     }
 
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return [
-            'with_aliases' => $this->with_aliases
+            'with_aliases' => $this->with_aliases,
         ];
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return __CLASS__;
     }
 
     /**
-     * @param array $data
      * @return self
      */
     public static function fromArray(array $data): DTOInterface
@@ -40,19 +35,11 @@ class QueryListDTO implements DTOInterface
         return new self($data['with_aliases'] ?? false);
     }
 
-    /**
-     * @param array $data
-     * @return bool
-     */
     public static function validate(array $data): bool
     {
         return true;
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function get(string $name): bool
     {
         return $this->with_aliases;

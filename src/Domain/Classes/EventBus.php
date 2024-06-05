@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
@@ -9,11 +11,9 @@ use CubaDevOps\Flexi\Domain\Interfaces\EventListenerInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Domain\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use ReflectionException;
 
 class EventBus implements EventBusInterface
 {
@@ -31,8 +31,8 @@ class EventBus implements EventBusInterface
     }
 
     /**
-     * @throws JsonException
-     * @throws ReflectionException
+     * @throws \JsonException
+     * @throws \ReflectionException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -56,9 +56,9 @@ class EventBus implements EventBusInterface
 
     /**
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      * @throws ContainerExceptionInterface
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function loadGlobListeners(array $listener): void
     {
@@ -85,7 +85,7 @@ class EventBus implements EventBusInterface
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function execute(DTOInterface $dto): void
     {
@@ -97,7 +97,7 @@ class EventBus implements EventBusInterface
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function notify(EventInterface $dto): void
     {
@@ -111,7 +111,7 @@ class EventBus implements EventBusInterface
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     private function notifyListeners(array $listeners, EventInterface $dto): void
     {
@@ -127,7 +127,7 @@ class EventBus implements EventBusInterface
 
     /**
      * @throws ContainerExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      * @throws NotFoundExceptionInterface
      */
     private function notifyListenersOffAllEvents(EventInterface $dto): void
@@ -145,7 +145,7 @@ class EventBus implements EventBusInterface
     }
 
     /**
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function getHandler(string $identifier): string
     {

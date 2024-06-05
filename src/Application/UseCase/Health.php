@@ -11,6 +11,7 @@ use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\Version;
+use JsonException;
 
 class Health implements HandlerInterface
 {
@@ -23,6 +24,7 @@ class Health implements HandlerInterface
 
     /**
      * @return PlainTextMessage
+     * @throws JsonException
      */
     public function handle(DTOInterface $dto): MessageInterface
     {

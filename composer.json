@@ -60,7 +60,7 @@
     "psalm": "psalm --show-info=true",
     "fix-dry": "psalter --issues=all --dry-run",
     "fix": "psalter --issues=all",
-    "format": "php-cs-fixer fix --rules=@PSR12,@Symfony --allow-risky=yes .",
+    "format": "php-cs-fixer fix --rules=@PSR12,@Symfony,declare_strict_types --allow-risky=yes .",
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],

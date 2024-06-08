@@ -56,7 +56,7 @@
     }
   },
   "scripts": {
-    "test": "phpunit --bootstrap vendor/autoload.php tests",
+    "test": "phpunit --bootstrap vendor/autoload.php --color tests",
     "psalm": "psalm --show-info=true",
     "fix-dry": "psalter --issues=all --dry-run",
     "fix": "psalter --issues=all",

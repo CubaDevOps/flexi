@@ -11,24 +11,29 @@ class VersionTest extends TestCase
 {
     private Version $version;
 
-    protected function setUp(): void
-    {
-        $this->version = new Version(1, 0, 0);
-    }
-
     public function testToStringVersion(): void
     {
-        $this->assertEquals('1.0.0', (string) $this->version);
+        $this->assertEquals('1.0.0', (string)$this->version);
     }
 
     public function testInvalidVersion(): void
     {
         $this->expectException(\TypeError::class);
-        $version = new Version('1', '0', '0');
+
+        /**
+         * @noinspection PhpStrictTypeCheckingInspection
+         * @psalm-suppress InvalidArgument
+         */
+        $this->version = new Version('1', '0', '0');
     }
 
     public function testGetAbsoluteVersion(): void
     {
         $this->assertEquals(100, $this->version->getAbsoluteVersion());
+    }
+
+    protected function setUp(): void
+    {
+        $this->version = new Version(1, 0, 0);
     }
 }

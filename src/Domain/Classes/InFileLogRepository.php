@@ -24,7 +24,7 @@ class InFileLogRepository implements LogRepositoryInterface
 
     public function save(LogInterface $log): void
     {
-        file_put_contents(
+        $this->writeToFile(
             $this->path,
             $this->formatMessage($log).PHP_EOL,
             FILE_APPEND

@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+
+namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
+
+class CliInputParser
+{
+    public const FORMAT = '/(--command|--query|-c|-q) [a-zA-Z0-9]+(\s[a-zA-Z0-9]+=[a-zA-Z0-9]+)*(\s(--help|-h))?/';
+
+    public static function parse(array $input): CliInput
+    {
+        array_shift($input); // clear entry point script
+        self::assertIsValidInput($input);
+        $command_type = array_shift($input);
+        $commandName = array_shift($input);
+        $arguments = [];
+        $show_help = false;
+        $is_command = false;
+
+        if ('--command' === $command_type || '-c' === $command_type) {
+            $is_command = true;
+        }
+
+        foreach ($input as $arg) {
+            if (0 === strpos($arg, '--help') || 0 === strpos($arg, '-h')) {
+                $show_help = true;
+                continue;
+            }
+
+            [$optionName, $optionValue] = explode('=', $arg, 2);
+            $arguments[$optionName] = $optionValue ?? false;
+        }
+
+        return new CliInput($commandName, $arguments, $is_command, $show_help);
+    }
+
+    private static function assertIsValidInput(array $input): void
+    {
+        // regex to match --command|--query or -c|-q followed by a command name and arguments in the form key=value with optional --help or -h
+        if (!preg_match(self::FORMAT, implode(' ', $input))) {
+            throw new \InvalidArgumentException('Invalid input format');
+        }
+    }
+}

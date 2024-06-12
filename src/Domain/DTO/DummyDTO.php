@@ -24,11 +24,11 @@ class DummyDTO implements DTOInterface
     }
 
     /**
-     * @return self
+     * @return static
      */
     public static function fromArray(array $data): DTOInterface
     {
-        return new self();
+        return new static();
     }
 
     public static function validate(array $data): bool

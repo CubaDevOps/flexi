@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\DTO;
 
+use CubaDevOps\Flexi\Domain\Interfaces\CliDTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 
-class CommandListDTO implements DTOInterface
+class CommandListDTO implements CliDTOInterface
 {
     private bool $with_aliases;
 
@@ -32,7 +33,9 @@ class CommandListDTO implements DTOInterface
      */
     public static function fromArray(array $data): DTOInterface
     {
-        return new self($data['with_aliases'] ?? false);
+        $with_aliases = isset($data['with_aliases']) && ('true' === $data['with_aliases'] || true === $data['with_aliases']);
+
+        return new self($with_aliases);
     }
 
     public static function validate(array $data): bool
@@ -48,5 +51,10 @@ class CommandListDTO implements DTOInterface
     public function withAliases(): bool
     {
         return $this->with_aliases;
+    }
+
+    public function usage(): string
+    {
+        return 'Usage: command:list with_aliases=true|false';
     }
 }

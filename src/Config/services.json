@@ -13,6 +13,7 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Domain\\Classes\\NativeSessionStorage",
         "arguments": [
+          "@logger",
           {
             "name": "PHPSESSID",
             "cookie_lifetime": 0,

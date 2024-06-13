@@ -42,7 +42,8 @@
     "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^9.6",
     "vimeo/psalm": "^5.22.2",
-    "friendsofphp/php-cs-fixer": "^3.57"
+    "friendsofphp/php-cs-fixer": "^3.57",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {
@@ -56,7 +57,7 @@
     }
   },
   "scripts": {
-    "test": "phpunit --bootstrap vendor/autoload.php --color tests",
+    "test": "phpunit --configuration phpunit.xml",
     "psalm": "psalm --show-info=true",
     "fix-dry": "psalter --issues=all --dry-run",
     "fix": "psalter --issues=all",

@@ -2,6 +2,8 @@
 <?php
 declare(strict_types=1);
 
+ob_start();
+
 use CubaDevOps\Flexi\Infrastructure\Ui\Cli\ConsoleApplication;
 use CubaDevOps\Flexi\Infrastructure\Ui\Cli\ConsoleOutputFormatter;
 

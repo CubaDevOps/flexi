@@ -13,6 +13,8 @@ use CubaDevOps\Flexi\Domain\DTO\EmptyVersionDTO;
 use CubaDevOps\Flexi\Domain\DTO\QueryListDTO;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Modules\Home\Application\RenderHome;
+use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
@@ -64,6 +66,7 @@ class QueryBusTest extends TestCase
         $this->assertEquals(Health::class, $this->queryBus->getHandler(EmptyVersionDTO::class));
         $this->assertEquals(ListQueries::class, $this->queryBus->getHandler(QueryListDTO::class));
         $this->assertEquals(ListCommands::class, $this->queryBus->getHandler(CommandListDTO::class));
+        $this->assertEquals(RenderHome::class, $this->queryBus->getHandler(HomePageDTO::class));
     }
 
     public function testGetHandlerDoesNotExist(): void
@@ -92,6 +95,7 @@ class QueryBusTest extends TestCase
             'version'               => Health::class,
             'query:list'            => ListQueries::class,
             'command:list'          => ListCommands::class,
+            HomePageDTO::class      => RenderHome::class
         ];
 
         $definitions = $this->queryBus->getHandlersDefinition(true);

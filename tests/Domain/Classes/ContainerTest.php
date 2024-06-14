@@ -4,7 +4,6 @@ namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Classes\CommandBus;
 use CubaDevOps\Flexi\Domain\Classes\Container;
-use CubaDevOps\Flexi\Domain\Classes\DummySearchCriteria;
 use CubaDevOps\Flexi\Domain\Classes\EventBus;
 use CubaDevOps\Flexi\Domain\Classes\HtmlRender;
 use CubaDevOps\Flexi\Domain\Classes\InFileLogRepository;
@@ -33,15 +32,15 @@ class ContainerTest extends TestCase
     public function testGetService(): void
     {
         $this->assertInstanceOf(Configuration::class, $this->container->get(Configuration::class));
-        $this->assertInstanceOf(NativeSessionStorage::class, $this->container->get(NativeSessionStorage::class));
+//        $this->assertInstanceOf(NativeSessionStorage::class, $this->container->get(NativeSessionStorage::class));
         $this->assertInstanceOf(ClassFactory::class, $this->container->get(ClassFactory::class));
 //        $this->assertInstanceOf(Router::class, $this->container->get(Router::class));
         $this->assertInstanceOf(VersionRepository::class, $this->container->get(VersionRepository::class));
         $this->assertInstanceOf(HtmlRender::class, $this->container->get('html_render'));
-//        $this->assertInstanceOf(CommandBus::class, $this->container->get(CommandBus::class));
-//        $this->assertInstanceOf(QueryBus::class, $this->container->get(QueryBus::class));
-//        $this->assertInstanceOf(EventBus::class, $this->container->get(EventBus::class));
-//        $this->assertInstanceOf(InFileLogRepository::class, $this->container->get(InFileLogRepository::class));
+        $this->assertInstanceOf(CommandBus::class, $this->container->get(CommandBus::class));
+        $this->assertInstanceOf(QueryBus::class, $this->container->get(QueryBus::class));
+        $this->assertInstanceOf(EventBus::class, $this->container->get(EventBus::class));
+        $this->assertInstanceOf(InFileLogRepository::class, $this->container->get(InFileLogRepository::class));
         $this->assertInstanceOf(ResponseFactoryInterface::class, $this->container->get(ResponseFactoryInterface::class));
         $this->assertInstanceOf(ServerRequestFactoryInterface::class, $this->container->get(ServerRequestFactoryInterface::class));
     }

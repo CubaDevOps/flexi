@@ -6,6 +6,7 @@ use CubaDevOps\Flexi\Domain\Classes\NativeSessionStorage;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use ReflectionClass;
 
 class NativeSessionStorageTest extends TestCase
 {
@@ -21,11 +22,6 @@ class NativeSessionStorageTest extends TestCase
         'use_strict_mode'        => true,
         'sid_length'             => 32,
         'sid_bits_per_character' => 5
-    ];
-
-    private const STORAGE_VAR_INIT = [
-        'key'   => 'initial',
-        'value' => 'session'
     ];
 
     private const STORAGE_VAR_USER = [
@@ -44,8 +40,6 @@ class NativeSessionStorageTest extends TestCase
     public function setUp(): void
     {
         $this->logger = $this->createMock(LoggerInterface::class);
-
-//        $_SESSION[self::STORAGE_VAR_INIT['key']] = self::STORAGE_VAR_INIT['value'];
 
         $this->nativeSessionStorage = new NativeSessionStorage($this->logger, self::SESSION_OPTIONS);
         $this->nativeSessionStorage->set(self::STORAGE_VAR_USER['key'], self::STORAGE_VAR_USER['value']);
@@ -93,7 +87,6 @@ class NativeSessionStorageTest extends TestCase
         $expected = [
             self::STORAGE_VAR_USER['key'] => self::STORAGE_VAR_USER['value'],
             self::STORAGE_VAR_ROLE['key'] => self::STORAGE_VAR_ROLE['value'],
-            self::STORAGE_VAR_INIT['key'] => self::STORAGE_VAR_INIT['value'],
         ];
 
         $this->assertEquals($expected, $this->nativeSessionStorage->all());

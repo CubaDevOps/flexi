@@ -36,14 +36,14 @@
     "psr/http-factory": "^1.0",
     "guzzlehttp/guzzle": "^7.7",
     "symfony/error-handler": "^5.4",
-    "vlucas/phpdotenv": "^5.5"
+    "vlucas/phpdotenv": "^5.5",
+    "ext-json": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^9.6",
     "vimeo/psalm": "^5.22.2",
-    "friendsofphp/php-cs-fixer": "^3.57",
-    "ext-json": "*"
+    "friendsofphp/php-cs-fixer": "^3.57"
   },
   "autoload": {
     "psr-4": {

@@ -18,7 +18,8 @@ class InFileLogRepositoryTest extends TestCase
         $this->log = $this->createMock(LogInterface::class);
 
         $this->repository = new InFileLogRepository(
-            dirname(__DIR__, 1) .'/inFileLogRepositoryTest', 'txt'
+            dirname(__DIR__, 3) .'/var/logs/inFileLogRepositoryTest.log',
+            '[{level} - {time}]: {message} - {context}'
         );
     }
 
@@ -41,7 +42,7 @@ class InFileLogRepositoryTest extends TestCase
         $message->expects($this->once())
             ->method('createdAt')->willReturn($createdAt);
         $createdAt->expects($this->once())
-            ->method('format')->willReturn('Y-m-d\TH:i:sP');
+            ->method('format')->willReturn('2005-08-15T15:52:01+00:00'); // Y-m-d\TH:i:sP
 
         $message->expects($this->once())
             ->method('__toString')->willReturn('message info');

@@ -6,6 +6,8 @@ namespace CubaDevOps\Flexi\Domain\Utils;
 
 trait FileHandlerTrait
 {
+    use OSDetector;
+
     public function writeToFile(string $file_path, string $content, int $flags = 0): void
     {
         $this->ensureFileExists($file_path);
@@ -48,7 +50,7 @@ trait FileHandlerTrait
 
         $rootDir = dirname(__DIR__, 3);
         $fullPath = $rootDir . DIRECTORY_SEPARATOR . $relative_path;
-        $segments = explode(DIRECTORY_SEPARATOR, $fullPath);
+        $segments = preg_split('/[\/\\\\]+/', $fullPath);
         $normalizedSegments = [];
 
         foreach ($segments as $segment) {
@@ -56,19 +58,31 @@ trait FileHandlerTrait
                 continue;
             }
 
-            if ('..' === $segment) {
+            if ($segment === '..') {
                 array_pop($normalizedSegments);
             } else {
                 $normalizedSegments[] = $segment;
             }
         }
 
-        return DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $normalizedSegments);
+        $normalizedPath = implode(DIRECTORY_SEPARATOR, $normalizedSegments);
+
+        return $this->isWindows() ? $normalizedPath : DIRECTORY_SEPARATOR . $normalizedPath;
     }
 
     private function isAbsolutePath(string $path): bool
     {
-        return 0 === strpos($path, DIRECTORY_SEPARATOR) || (strlen($path) > 1 && ':' === $path[1]);
+        if ($this->isUnix()) {
+            // Check for Unix absolute paths
+            return str_starts_with($path, '/') || str_starts_with($path, '~');
+        }
+
+        if ($this->isWindows()) {
+            // Check for Windows absolute paths
+            return preg_match('/^[a-zA-Z]:\\\\/', $path) || str_starts_with($path, '\\\\');
+        }
+
+        return false;
     }
 
     public function readFromFile(string $file_path): string

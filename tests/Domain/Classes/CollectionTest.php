@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Classes\Collection;
@@ -39,15 +41,15 @@ class CollectionTest extends TestCase
 
         $this->assertTrue($this->collection->has(1));
         $this->assertEquals($expected, $actual);
-        $this->assertInstanceOf(DummyEntity::class, $this->collection->get(1));
+        $this->assertInstanceOf(DummyEntity::class, $actual);
     }
 
     public function testAddInvalidType(): void
     {
-        // should not be possible hit the second RuntimeException
+        // should not be possible hit the second RuntimeException | fixed
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('invalid type is not of type object');
-        $this->collection->add('invalid type');
+        $this->expectExceptionMessage('1 is not a valid value of type object');
+        $this->collection->add(1);
     }
 
     public function testOfType(): void
@@ -71,6 +73,6 @@ class CollectionTest extends TestCase
         $this->collection->remove(0);
 
         $this->assertFalse($this->collection->has(0));
-        $this->assertFalse($this->collection->has(1));
+        $this->assertFalse($this->collection->has(1)); // Todo remove this line as it is not necessary, it has been tested before
     }
 }

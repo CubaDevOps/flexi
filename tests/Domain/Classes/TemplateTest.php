@@ -9,22 +9,22 @@ use PHPUnit\Framework\TestCase;
 class TemplateTest extends TestCase
 {
     use FileHandlerTrait;
+
     private Template $template;
     private string $path;
+
     public function setUp(): void
     {
-        $this->path = $this->normalize('./src/Infrastructure/Ui/Templates/404.html');
+        $this->path = './src/Infrastructure/Ui/Templates/404.html';
 
         $this->template = new Template($this->path);
     }
 
     public function testInvalidPath(): void
     {
-        //TODO: this test should work after a fix
-        $path = $this->normalize('./invalid/path/test/file.html');
-
+        $path = './var/invalid/path/test/file.html';
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Template file not found: $path");
+        $this->expectExceptionMessage('Template file not found: ' . $this->normalize($path));
 
         new Template($path);
     }
@@ -37,7 +37,7 @@ class TemplateTest extends TestCase
 
     public function testGetTemplatePath(): void
     {
-        $this->assertEquals($this->path, $this->template->getTemplatePath());
+        $this->assertEquals($this->normalize($this->path), $this->template->getTemplatePath());
     }
 
     public function testGetTemplateName(): void

@@ -9,6 +9,8 @@ use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Infrastructure\Controllers\HealthController;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,6 +29,9 @@ class RouterTest extends TestCase
 
     private Router $router;
 
+    /**
+     * @throws \JsonException
+     */
     public function setUp(): void
     {
         $this->session = $this->createMock(SessionStorageInterface::class);
@@ -36,7 +41,7 @@ class RouterTest extends TestCase
 
         $this->router = new Router($this->session, $this->event_bus, $this->class_factory, $this->response_factory);
 
-        $this->router->loadRoutesFile(dirname(__DIR__, 3) .'/src/Config/routes.json');
+        $this->router->loadRoutesFile('./src/Config/routes.json');
     }
 
     public function testAddRoute(): void
@@ -50,6 +55,8 @@ class RouterTest extends TestCase
         );
         $this->router->addRoute($route);
 
+        //Todo This assertion can probably be skipped (argument implicitly declares return type).
+        // maybe it's better to use assertExpectException instead with RuntimeException('Define at least one route')
         $this->assertInstanceOf(Route::class, $this->router->getByName(self::ROUTE_NAME));
     }
 
@@ -93,9 +100,16 @@ class RouterTest extends TestCase
         $response = $this->router->dispatch($serverRequestMock);
 
         $this->assertNotEmpty($response);
+        //Todo This assertion can probably be skipped (argument implicitly declares return type).
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws \ReflectionException
+     * @throws \JsonException
+     */
     public function testDispatchNoRoutes(): void
     {
         $_SERVER['HTTP_HOST']       = 'flexi';
@@ -120,6 +134,12 @@ class RouterTest extends TestCase
         $emptyRouter->dispatch($serverRequestMock);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws \ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws \JsonException
+     */
     public function testDispatchParameterRequired(): void
     {
         $_SERVER['HTTP_HOST']       = 'flexi';
@@ -158,6 +178,12 @@ class RouterTest extends TestCase
         $this->router->dispatch($serverRequestMock);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws \ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws \JsonException
+     */
     public function testDispatchInvalidMethod(): void
     {
         $_SERVER['HTTP_HOST']       = 'flexi';
@@ -182,6 +208,12 @@ class RouterTest extends TestCase
         $this->router->dispatch($serverRequestMock);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws \ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws \JsonException
+     */
     public function testDispatchDirectToNotFound(): void
     {
         $_SERVER['HTTP_HOST']       = 'flexi';
@@ -212,6 +244,7 @@ class RouterTest extends TestCase
         $response = $this->router->dispatch($serverRequestMock);
 
         $this->assertNotEmpty($response);
+        //Todo This assertion can probably be skipped (argument implicitly declares return type).
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 

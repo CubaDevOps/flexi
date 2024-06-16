@@ -16,7 +16,9 @@ use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Modules\Home\Application\RenderHome;
 use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class QueryBusTest extends TestCase
 {
@@ -25,6 +27,12 @@ class QueryBusTest extends TestCase
     private EventBusInterface $event_bus;
     private ClassFactory $class_factory;
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws \ReflectionException
+     * @throws \JsonException
+     */
     public function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
@@ -33,9 +41,14 @@ class QueryBusTest extends TestCase
 
         $this->queryBus = new QueryBus($this->container, $this->event_bus, $this->class_factory);
 
-        $this->queryBus->loadHandlersFromJsonFile(dirname(__DIR__, 3) .'/src/Config/queries.json');
+        $this->queryBus->loadHandlersFromJsonFile('./src/Config/queries.json');
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testExecute(): void
     {
         $handlerMock = $this->createMock(ListCommands::class);
@@ -98,7 +111,7 @@ class QueryBusTest extends TestCase
             HomePageDTO::class      => RenderHome::class
         ];
 
-        $definitions = $this->queryBus->getHandlersDefinition(true);
+        $definitions = $this->queryBus->getHandlersDefinition();
 
         $this->assertNotEmpty($definitions);
         $this->assertEquals($expectedDefinitions, $definitions);

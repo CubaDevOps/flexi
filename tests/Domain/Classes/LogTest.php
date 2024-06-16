@@ -28,6 +28,8 @@ class LogTest extends TestCase
 
     public function testGetLogLevel(): void
     {
+        //Todo This assertion can probably be skipped (argument implicitly declares return type).
+        // maybe it's better to use $this->logLevel->method('getValue')->willReturn('INFO'); and then assert the value
         $this->assertInstanceOf(LogLevel::class, $this->log->getLogLevel());
     }
 
@@ -41,6 +43,7 @@ class LogTest extends TestCase
         $actual = $this->log->__toString();
 
         $this->assertEquals($expected, $actual);
+        //Todo This assertion can probably be skipped (argument implicitly declares return type).
         $this->assertInstanceOf(MessageInterface::class, $this->log->getMessage());
     }
 

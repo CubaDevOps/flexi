@@ -18,7 +18,7 @@ class InFileLogRepositoryTest extends TestCase
         $this->log = $this->createMock(LogInterface::class);
 
         $this->repository = new InFileLogRepository(
-            dirname(__DIR__, 3) .'/var/logs/inFileLogRepositoryTest.log',
+            './var/logs/inFileLogRepositoryTest.log',
             '[{level} - {time}]: {message} - {context}'
         );
     }

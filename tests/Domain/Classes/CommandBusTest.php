@@ -16,7 +16,9 @@ use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Modules\Home\Application\RenderHome;
 use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class CommandBusTest extends TestCase
 {
@@ -25,6 +27,12 @@ class CommandBusTest extends TestCase
     private EventBusInterface $event_bus;
     private ClassFactory $class_factory;
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws \ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws \JsonException
+     */
     public function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
@@ -33,10 +41,15 @@ class CommandBusTest extends TestCase
 
         $this->commandBus = new CommandBus($this->container, $this->event_bus, $this->class_factory);
 
-        $this->commandBus->loadHandlersFromJsonFile(dirname(__DIR__, 3) .'/src/Config/commands.json');
-        $this->commandBus->loadHandlersFromJsonFile(dirname(__DIR__, 3) .'/src/Config/queries.json');
+        $this->commandBus->loadHandlersFromJsonFile('./src/Config/commands.json');
+        $this->commandBus->loadHandlersFromJsonFile(dirname(__DIR__, 3) .'/src/Config/queries.json'); // Todo: Remove this line as queries.json is not used by CommandBus but by QueryBus
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws \ReflectionException
+     * @throws NotFoundExceptionInterface
+     */
     public function testExecute(): void
     {
         $handlerMock = $this->createMock(ListCommands::class);

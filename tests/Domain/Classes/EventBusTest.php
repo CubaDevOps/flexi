@@ -7,7 +7,9 @@ use CubaDevOps\Flexi\Domain\Classes\EventBus;
 use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class EventBusTest extends TestCase
 {
@@ -15,6 +17,12 @@ class EventBusTest extends TestCase
     private ContainerInterface $container;
     private ClassFactory $class_factory;
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws \ReflectionException
+     * @throws \JsonException
+     */
     public function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
@@ -22,9 +30,14 @@ class EventBusTest extends TestCase
 
         $this->eventBus = new EventBus($this->container, $this->class_factory);
 
-        $this->eventBus->loadHandlersFromJsonFile(dirname(__DIR__, 3) .'/src/Config/listeners.json');
+        $this->eventBus->loadHandlersFromJsonFile('./src/Config/listeners.json');
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws \ReflectionException
+     * @throws NotFoundExceptionInterface
+     */
     public function testExecute(): void
     {
         $dtoMock = $this->createMock(EventInterface::class);
@@ -41,6 +54,9 @@ class EventBusTest extends TestCase
         $this->eventBus->execute($dtoMock);
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function testGetHandler(): void
     {
         $expected = json_encode([LoggerEventListener::class], JSON_THROW_ON_ERROR);

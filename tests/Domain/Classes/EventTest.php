@@ -90,11 +90,14 @@ class EventTest extends TestCase
         Event::fromArray($data);
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function testSerialize(): void
     {
         $expected =
             '{"event":"'. self::EVENT_NAME .
-            '","data":'. json_encode(self::EVENT_DATA) .
+            '","data":'. json_encode(self::EVENT_DATA, JSON_THROW_ON_ERROR) .
             ',"fired_by":"'. self::EVENT_TRIGGER .
             '","occurred_on":"'. $this->now->format(DATE_ATOM) .'"}';
 

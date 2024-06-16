@@ -6,7 +6,9 @@ use CubaDevOps\Flexi\Domain\Classes\Route;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Server\MiddlewareInterface;
 
 class RouteTest extends TestCase
@@ -106,6 +108,11 @@ class RouteTest extends TestCase
         $this->assertEquals(self::ROUTE_MIDDLEWARES, $this->route->getMiddlewares());
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testThroughMiddlewares(): void
     {
         $container = $this->createMock(ContainerInterface::class);

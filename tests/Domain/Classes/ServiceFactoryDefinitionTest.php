@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 class ServiceFactoryDefinitionTest extends TestCase
 {
     private const FACTORY_CLASS = 'testServiceClass';
-    private const FACTORY_METHOD = 'testServiceClass';
+    private const FACTORY_METHOD = 'getInstance';
     private const FACTORY_ARGS  = ['arg' => 'test-arg'];
 
     private ServiceFactoryDefinition $factory;
@@ -29,7 +29,7 @@ class ServiceFactoryDefinitionTest extends TestCase
 
     public function testGetMethod(): void
     {
-        $this->assertEquals(self::FACTORY_CLASS, $this->factory->getMethod());
+        $this->assertEquals(self::FACTORY_METHOD, $this->factory->getMethod());
     }
 
     public function testGetArgs(): void

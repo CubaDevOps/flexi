@@ -54,9 +54,6 @@ class RouterTest extends TestCase
             ['test' => 'param']
         );
         $this->router->addRoute($route);
-
-        //Todo This assertion can probably be skipped (argument implicitly declares return type).
-        // maybe it's better to use assertExpectException instead with RuntimeException('Define at least one route')
         $this->assertInstanceOf(Route::class, $this->router->getByName(self::ROUTE_NAME));
     }
 
@@ -100,7 +97,6 @@ class RouterTest extends TestCase
         $response = $this->router->dispatch($serverRequestMock);
 
         $this->assertNotEmpty($response);
-        //Todo This assertion can probably be skipped (argument implicitly declares return type).
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
@@ -244,7 +240,6 @@ class RouterTest extends TestCase
         $response = $this->router->dispatch($serverRequestMock);
 
         $this->assertNotEmpty($response);
-        //Todo This assertion can probably be skipped (argument implicitly declares return type).
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 

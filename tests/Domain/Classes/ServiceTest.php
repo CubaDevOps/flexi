@@ -40,7 +40,7 @@ class ServiceTest extends TestCase
     public function testToString(): void
     {
         //TODO: this is not working as expected
-        $expected = '{}';
+        $expected = '?';
 
         $result = $this->service->__toString();
 

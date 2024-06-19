@@ -1,0 +1,9 @@
+{
+  "handlers": [
+    {
+      "id": "CubaDevOps\\Flexi\\Domain\\DTO\\DummyDTO",
+      "cli_alias": "test",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\Health"
+    }
+  ]
+}

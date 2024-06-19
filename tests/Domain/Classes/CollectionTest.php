@@ -46,7 +46,6 @@ class CollectionTest extends TestCase
 
     public function testAddInvalidType(): void
     {
-        // should not be possible hit the second RuntimeException | fixed
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('1 is not a valid value of type object');
         $this->collection->add(1);
@@ -73,6 +72,5 @@ class CollectionTest extends TestCase
         $this->collection->remove(0);
 
         $this->assertFalse($this->collection->has(0));
-        $this->assertFalse($this->collection->has(1)); // Todo remove this line as it is not necessary, it has been tested before
     }
 }

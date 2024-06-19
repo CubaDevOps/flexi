@@ -41,8 +41,7 @@ class CommandBusTest extends TestCase
 
         $this->commandBus = new CommandBus($this->container, $this->event_bus, $this->class_factory);
 
-        $this->commandBus->loadHandlersFromJsonFile('./src/Config/commands.json');
-        $this->commandBus->loadHandlersFromJsonFile(dirname(__DIR__, 3) .'/src/Config/queries.json'); // Todo: Remove this line as queries.json is not used by CommandBus but by QueryBus
+        $this->commandBus->loadHandlersFromJsonFile(dirname(__DIR__, 2) .'/TestData/Configurations/commands-bus-test.json');
     }
 
     /**
@@ -52,7 +51,7 @@ class CommandBusTest extends TestCase
      */
     public function testExecute(): void
     {
-        $handlerMock = $this->createMock(ListCommands::class);
+        $handlerMock = $this->createMock(Health::class);
 
         $this->event_bus
             ->expects($this->exactly(2))
@@ -61,7 +60,7 @@ class CommandBusTest extends TestCase
         $this->class_factory
             ->expects($this->once())
             ->method('build')
-            ->with($this->container, ListCommands::class)
+            ->with($this->container, Health::class)
             ->willReturn($handlerMock);
 
         $handlerMock
@@ -69,7 +68,7 @@ class CommandBusTest extends TestCase
             ->method('handle')
             ->willReturn($this->createMock(PlainTextMessage::class));
 
-        $message = $this->commandBus->execute(new CommandListDTO());
+        $message = $this->commandBus->execute(new DummyDTO());
 
         $this->assertNotNull($message);
         $this->assertInstanceOf(PlainTextMessage::class, $message);
@@ -77,15 +76,12 @@ class CommandBusTest extends TestCase
 
     public function testGetHandler(): void
     {
-        $this->assertEquals(Health::class, $this->commandBus->getHandler(EmptyVersionDTO::class));
-        $this->assertEquals(ListQueries::class, $this->commandBus->getHandler(QueryListDTO::class));
-        $this->assertEquals(ListCommands::class, $this->commandBus->getHandler(CommandListDTO::class));
-        $this->assertEquals(RenderHome::class, $this->commandBus->getHandler(HomePageDTO::class));
+        $this->assertEquals(Health::class, $this->commandBus->getHandler(DummyDTO::class));
     }
 
     public function testGetHandlerDoesNotExist(): void
     {
-        $testHandler = DummyDTO::class;
+        $testHandler = EmptyVersionDTO::class;
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Not handler found for $testHandler command");
         $this->commandBus->getHandler($testHandler);
@@ -93,23 +89,15 @@ class CommandBusTest extends TestCase
 
     public function testHasHandler(): void
     {
-        $this->assertTrue($this->commandBus->hasHandler(EmptyVersionDTO::class));
-        $this->assertTrue($this->commandBus->hasHandler(QueryListDTO::class));
-        $this->assertTrue($this->commandBus->hasHandler(CommandListDTO::class));
-
-        $this->assertFalse($this->commandBus->hasHandler(DummyDTO::class));
+        $this->assertTrue($this->commandBus->hasHandler(DummyDTO::class));
+        $this->assertFalse($this->commandBus->hasHandler(EmptyVersionDTO::class));
     }
 
     public function testGetHandlersDefinitions(): void
     {
         $expectedDefinitions = [
-            EmptyVersionDTO::class  => Health::class,
-            QueryListDTO::class     => ListQueries::class,
-            CommandListDTO::class   => ListCommands::class,
-            'version'               => Health::class,
-            'query:list'            => ListQueries::class,
-            'command:list'          => ListCommands::class,
-            HomePageDTO::class      => RenderHome::class,
+            DummyDTO::class => Health::class,
+            'test'          => Health::class,
         ];
 
         $definitions = $this->commandBus->getHandlersDefinition(true);

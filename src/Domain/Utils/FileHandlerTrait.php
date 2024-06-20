@@ -13,35 +13,19 @@ trait FileHandlerTrait
     /**
      * @param string $file_path
      * @param string $content
-     * @param int $flags
+     * @param int $flags see https://www.php.net/manual/en/function.file-put-contents.php
      * @param bool $try_create_it
      * @return void
      * @throws RuntimeException
      */
     public function writeToFile(string $file_path, string $content, int $flags = 0, bool $try_create_it = false): void
     {
-        $this->ensureFileExists($file_path, $try_create_it);
-        if (false === file_put_contents($file_path, $content, $flags)) {
-            throw new RuntimeException("Could not write to file: $file_path");
-        }
-    }
-
-    /**
-     * @param string $file_path
-     * @param bool $try_create_it
-     * @return void
-     * @throws RuntimeException
-     */
-    public function ensureFileExists(string &$file_path, bool $try_create_it = false): void
-    {
         $file_path = $this->normalize($file_path);
-
-        if ($try_create_it) {
-            $this->createFileIfNotExists($file_path);
+        if ($try_create_it && !$this->fileExists($file_path)) {
+            $this->createFile($file_path);
         }
-
-        if (!file_exists($file_path)) {
-            throw new RuntimeException('File ' . $file_path . ' does not exist');
+        if (!$this->canWriteToFile($file_path) || false === file_put_contents($file_path, $content, $flags)) {
+            throw new RuntimeException("Could not write to file: $file_path");
         }
     }
 
@@ -90,46 +74,60 @@ trait FileHandlerTrait
 
     /**
      * @param string $file_path
+     * @return bool
+     */
+    public function fileExists(string $file_path): bool
+    {
+        return file_exists($file_path);
+    }
+
+    /**
+     * @param string $file_path
      * @return void
      * @throws RuntimeException
      */
-    private function createFileIfNotExists(string $file_path): void
+    private function createFile(string $file_path): void
     {
         $directory = dirname($file_path);
-        $this->createDirectoryIfNotExist($directory);
-
-        if (!file_exists($file_path)) {
-            $fileHandle = fopen($file_path, 'wb');
-
-            if ($fileHandle === false) {
-                throw new RuntimeException("Could not open file for writing: $file_path");
-            }
-
-            fclose($fileHandle);
+        if (!$this->directoryExists($directory)) {
+            $this->createDirectory($directory);
+        }
+        try {
+            touch($file_path);
+        } catch (\Exception $e) {
+            throw new RuntimeException("Could not create file: $file_path");
         }
     }
 
     /**
      * @param string $dir_path
-     * @return void
-     * @throws RuntimeException
+     * @return bool
      */
-    private function createDirectoryIfNotExist(string $dir_path): void
+    private function directoryExists(string $dir_path): bool
+    {
+        return is_dir($dir_path);
+    }
+
+    private function createDirectory(string $dir_path): void
     {
         if (!is_dir($dir_path) && !mkdir($dir_path, 0750, true) && !is_dir($dir_path)) {
-            throw new RuntimeException("Could not create directory: $dir_path");
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_path));
         }
     }
 
+
     /**
      * @param string $file_path
-     * @param bool $try_create_it
-     * @return string
-     * @throws RuntimeException
+     * @return void
      */
-    public function readFromFile(string $file_path, bool $try_create_it = false): string
+    private function canWriteToFile(string $file_path): bool
     {
-        $this->ensureFileExists($file_path, $try_create_it);
+        return is_writable($file_path);
+    }
+
+    public function readFromFile(string $file_path): string
+    {
+        $this->ensureFileExists($file_path);
         $contents = file_get_contents($file_path);
 
         if (false === $contents) {
@@ -137,5 +135,18 @@ trait FileHandlerTrait
         }
 
         return $contents;
+    }
+
+    /**
+     * @param string $file_path
+     * @return void
+     */
+    public function ensureFileExists(string &$file_path): void
+    {
+        $file_path = $this->normalize($file_path);
+
+        if (!$this->fileExists($file_path)) {
+            throw new RuntimeException('File ' . $file_path . ' does not exist');
+        }
     }
 }

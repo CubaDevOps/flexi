@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Classes;
 
+use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
 use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
@@ -155,5 +156,12 @@ class QueryBus implements BusInterface
         }
 
         return $list;
+    }
+
+    public function getDtoClassFromAlias(string $id): string
+    {
+        $handler = $this->aliases[$id];
+        $dto = array_search($handler, $this->queries, true);
+        return $dto ?: NotFoundCliCommand::class;
     }
 }

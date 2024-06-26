@@ -31,6 +31,10 @@ class HealthTest extends TestCase
             ->willReturn(new Version(1, 1, 1));
 
         $message = $this->health->handle($dto);
+
         $this->assertInstanceOf(PlainTextMessage::class, $message);
+
+        $this->assertEquals('1.1.1', $message->get('body'));
+        $this->assertInstanceOf(\DateTimeImmutable::class, $message->get('created_at'));
     }
 }

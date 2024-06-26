@@ -33,7 +33,7 @@ class LoggerEventListenerTest extends TestCase
         $datetime->expects($this->once())
             ->method('format')
             ->with(DATE_ATOM)
-            ->willReturn(DATE_ATOM);
+            ->willReturn('2024-01-01T00:00:00+00:00');
 
         $event->expects($this->once())
             ->method('firedBy')

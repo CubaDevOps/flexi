@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Test\TestData\TestTools\RouteVisitor\MiddlewareVisitorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -100,6 +101,11 @@ class Route
     public function getMiddlewares(): array
     {
         return $this->middlewares;
+    }
+
+    public function acceptMiddlewareVisitor(MiddlewareVisitorInterface $visitor): void
+    {
+        $visitor->visit($this->middlewares);
     }
 
     /**

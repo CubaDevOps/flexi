@@ -243,6 +243,41 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
+    public function testDispatchDirectToNotFoundSpy(): void
+    {
+        $_SERVER['HTTP_HOST']       = 'flexi';
+        $_SERVER['REQUEST_SCHEME']  = 'https';
+
+        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
+        $responseInterfaceMock = $this->createMock(ResponseInterface::class);
+
+        $redirectMethodMock = $this->getMockBuilder(Router::class)
+            ->setConstructorArgs([$this->session, $this->event_bus, $this->class_factory, $this->response_factory])
+            ->onlyMethods(['redirectToNotFound'])
+            ->getMock();
+
+        $route = new Route(
+            self::ROUTE_NAME,
+            self::ROUTE_PATH,
+            self::ROUTE_CTRL,
+            'GET',
+            ['test' => 'param']
+        );
+        $redirectMethodMock->addRoute($route);
+
+        $redirectMethodMock->expects($this->once())
+            ->method('redirectToNotFound')
+            ->willReturn($responseInterfaceMock);
+
+        $this->event_bus->expects($this->once())
+            ->method('notify')->willReturnSelf();
+
+        $response = $redirectMethodMock->dispatch($serverRequestMock);
+
+        $this->assertNotEmpty($response);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+    }
+
     public function testGetByNameDoesNotExist(): void
     {
         $invalidRouteName = '/invalid-route-name';

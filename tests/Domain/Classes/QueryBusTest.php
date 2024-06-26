@@ -66,12 +66,13 @@ class QueryBusTest extends TestCase
         $handlerMock
             ->expects($this->once())
             ->method('handle')
-            ->willReturn($this->createMock(PlainTextMessage::class));
+            ->willReturn(new PlainTextMessage('message'));
 
         $message = $this->queryBus->execute(new CommandListDTO());
 
         $this->assertNotNull($message);
         $this->assertInstanceOf(PlainTextMessage::class, $message);
+        $this->assertEquals('message', $message->get('body'));
     }
 
     public function testGetHandler(): void

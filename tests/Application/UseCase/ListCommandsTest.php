@@ -23,15 +23,23 @@ class ListCommandsTest extends TestCase
     public function testHandleEvent(): void
     {
         $dto = $this->createMock(CommandListDTO::class);
+        $commands = ['command1', 'command2'];
 
         $dto->expects($this->once())
             ->method('withAliases')->willReturn(true);
 
         $this->commandBus->expects($this->once())
             ->method('getHandlersDefinition')
-            ->willReturn(['command1', 'command2']);
+            ->willReturn($commands);
 
         $message = $this->listCommands->handle($dto);
+
         $this->assertInstanceOf(PlainTextMessage::class, $message);
+
+        $this->assertEquals(
+            $commands, json_decode((string)$message, true, 512, JSON_THROW_ON_ERROR)
+        );
+
+        $this->assertInstanceOf(\DateTimeImmutable::class, $message->get('created_at'));
     }
 }

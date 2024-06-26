@@ -3,6 +3,7 @@
 namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Classes\Log;
+use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
 use PHPUnit\Framework\TestCase;
@@ -20,27 +21,22 @@ class LogTest extends TestCase
 
     public function setUp(): void
     {
-        $this->logLevel = $this->createMock(LogLevel::class);
-        $this->message  = $this->createMock(MessageInterface::class);
+        $this->logLevel = new LogLevel('info');
+        $this->message  = new PlainTextMessage('message');
 
         $this->log = new Log($this->logLevel, $this->message, self::LOG_CONTEXT);
     }
 
     public function testGetLogLevel(): void
     {
+        $this->assertEquals('info', $this->log->getLogLevel()->getValue());
         $this->assertInstanceOf(LogLevel::class, $this->log->getLogLevel());
     }
 
     public function testGetMessage(): void
     {
-        $expected = 'message';
-
-        $this->message->expects($this->once())
-            ->method('__toString')->willReturn($expected);
-
-        $actual = $this->log->__toString();
-
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($this->message->get('body'), $this->log->__toString());
+        $this->assertEquals($this->message->get('body'), $this->log->getMessage()->get('body'));
         $this->assertInstanceOf(MessageInterface::class, $this->log->getMessage());
     }
 

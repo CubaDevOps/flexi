@@ -5,11 +5,13 @@ namespace CubaDevOps\Flexi\Test\Domain\Classes;
 use CubaDevOps\Flexi\Domain\Classes\Route;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
+use CubaDevOps\Flexi\Test\TestData\TestTools\RouteVisitor\MiddlewareTestVisitor;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class RouteTest extends TestCase
 {
@@ -108,34 +110,32 @@ class RouteTest extends TestCase
         $this->assertEquals(self::ROUTE_MIDDLEWARES, $this->route->getMiddlewares());
     }
 
-    /**
-     * @throws \ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function testThroughMiddlewares(): void
-    {
-        $container = $this->createMock(ContainerInterface::class);
-        $classFactory = $this->createMock(ClassFactory::class);
-        $handler = $this->createMock(HttpHandler::class);
-
-        $classFactory->expects($this->once())
-            ->method('build')
-            ->with($container, self::ROUTE_MIDDLEWARES[0])
-            ->willReturn(self::ROUTE_MIDDLEWARES[0]);
-
-        $handler->expects($this->once())
-            ->method('setMiddlewares')
-            ->with(self::ROUTE_MIDDLEWARES)
-            ->willReturnSelf();
-
-        $handlerResult = $this->route->throughMiddlewares($container, $classFactory, $handler);
-
-        $this->assertInstanceOf(HttpHandler::class, $handlerResult);
-    }
-
     public function testHasMiddlewares(): void
     {
         $this->assertTrue($this->route->hasMiddlewares());
+    }
+
+    public function testThroughMiddlewaresSetsMiddlewares()
+    {
+        $container = $this->createMock(ContainerInterface::class);
+        $factory = $this->createMock(ClassFactory::class);
+        $handler = $this->createMock(HttpHandler::class);
+
+        $middlewares = ['middleware1', 'middleware2'];
+        $route = new Route('test_route', '/test', 'TestController', 'GET', [], $middlewares);
+
+        $visitor = new MiddlewareTestVisitor();
+        $route->acceptMiddlewareVisitor($visitor);
+
+        $factory->method('build')
+            ->will($this->onConsecutiveCalls('middleware1_instance', 'middleware2_instance'));
+
+        $handler->expects($this->once())
+            ->method('setMiddlewares')
+            ->with($this->equalTo(['middleware1_instance', 'middleware2_instance']));
+
+        $route->throughMiddlewares($container, $factory, $handler);
+
+        $this->assertSame($middlewares, $visitor->getMiddlewares());
     }
 }

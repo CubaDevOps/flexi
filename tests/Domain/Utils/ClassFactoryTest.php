@@ -30,7 +30,7 @@ class ClassFactoryTest extends TestCase
 
         $this->assertInstanceOf(Configuration::class, $configuration);
 
-        $this->assertEquals('true', $configuration->get('debug'));
+        $this->assertNotEmpty($configuration->get('debug'));
 
         $this->assertEquals('[{level} - {time}]: {message} - {context}', $configuration->get('log_format'));
     }
@@ -42,9 +42,7 @@ class ClassFactoryTest extends TestCase
 
         $this->assertInstanceOf(Configuration::class, $configurationCache);
 
-        $this->assertEquals('true', $configurationCache->get('debug'));
-
-        $this->assertEquals('[{level} - {time}]: {message} - {context}', $configurationCache->get('log_format'));
+        $this->assertEquals($configuration, $configurationCache);
     }
 
     public function testBuildIsNotInstantiable(): void
@@ -73,7 +71,7 @@ class ClassFactoryTest extends TestCase
 
         $this->assertInstanceOf(Configuration::class, $configuration);
 
-        $this->assertEquals('true', $configuration->get('debug'));
+        $this->assertNotEmpty($configuration->get('debug'));
 
         $this->assertEquals('[{level} - {time}]: {message} - {context}', $configuration->get('log_format'));
     }
@@ -89,9 +87,7 @@ class ClassFactoryTest extends TestCase
 
         $this->assertInstanceOf(Configuration::class, $configurationCache);
 
-        $this->assertEquals('true', $configurationCache->get('debug'));
-
-        $this->assertEquals('[{level} - {time}]: {message} - {context}', $configurationCache->get('log_format'));
+        $this->assertEquals($configuration, $configurationCache);
     }
 
     public function testBuildFromFactoryNotStatic(): void

@@ -49,13 +49,12 @@ class InFileLogRepositoryTest extends TestCase
 
         $this->repository->save($this->log);
 
-        //TODO: Running the test alone does not fail but when run with the collection it does
-        // it is probably dir related failure.
-//        $this->assertFileExists('../../../var/logs/inFileLogRepositoryTest.log');
-//        $this->assertStringContainsString(
-//            '[INFO - 2005-08-15T15:52:01+00:00]: message info - line 23',
-//            file_get_contents('../../../var/logs/inFileLogRepositoryTest.log')
-//        );
+        // Running the test alone fails but running the collection is does not
+        $this->assertFileExists('./var/logs/inFileLogRepositoryTest.log');
+        $this->assertStringContainsString(
+            '[INFO - 2005-08-15T15:52:01+00:00]: message info - line 23',
+            file_get_contents('./var/logs/inFileLogRepositoryTest.log')
+        );
         $this->assertEquals(LogLevel::INFO, $this->log->getLogLevel()->getValue());
     }
 }

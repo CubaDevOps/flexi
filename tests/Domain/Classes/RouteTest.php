@@ -5,6 +5,7 @@ namespace CubaDevOps\Flexi\Test\Domain\Classes;
 use CubaDevOps\Flexi\Domain\Classes\Route;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
+use CubaDevOps\Flexi\Test\TestData\TestTools\RouteMock;
 use CubaDevOps\Flexi\Test\TestData\TestTools\RouteVisitor\MiddlewareTestVisitor;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
@@ -122,10 +123,7 @@ class RouteTest extends TestCase
         $handler = $this->createMock(HttpHandler::class);
 
         $middlewares = ['middleware1', 'middleware2'];
-        $route = new Route('test_route', '/test', 'TestController', 'GET', [], $middlewares);
-
-        $visitor = new MiddlewareTestVisitor();
-        $route->acceptMiddlewareVisitor($visitor);
+        $route = new RouteMock('test_route', '/test', 'TestController', 'GET', [], $middlewares);
 
         $factory->method('build')
             ->will($this->onConsecutiveCalls('middleware1_instance', 'middleware2_instance'));
@@ -136,6 +134,21 @@ class RouteTest extends TestCase
 
         $route->throughMiddlewares($container, $factory, $handler);
 
-        $this->assertSame($middlewares, $visitor->getMiddlewares());
+        $this->assertTrue($route->has_middlewares_spy);
+        $this->assertSame($middlewares, $route->getMiddlewares());
+    }
+
+    public function testThroughMiddlewaresDoesNotSetMiddlewares()
+    {
+        $container = $this->createMock(ContainerInterface::class);
+        $factory = $this->createMock(ClassFactory::class);
+        $handler = $this->createMock(HttpHandler::class);
+
+        $route = new RouteMock('test_route', '/test', 'TestController', 'GET');
+
+        $route->throughMiddlewares($container, $factory, $handler);
+
+        $this->assertFalse($route->has_middlewares_spy);
+        $this->assertSame([], $route->getMiddlewares());
     }
 }

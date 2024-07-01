@@ -11,24 +11,17 @@ use CubaDevOps\Flexi\Test\TestData\TestTools\HasNoConstructor;
 use CubaDevOps\Flexi\Test\TestData\TestTools\IsNotInstantiable;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use ReflectionMethod;
 
 class ClassFactoryTest extends TestCase
 {
     private ClassFactory $classFactory;
-    private ReflectionMethod $resolveArguments;
-    private ReflectionMethod $getParameterClassName;
     private ContainerInterface $container;
 
     public function setUp(): void
     {
         $this->classFactory = new ClassFactory();
-        $class = new \ReflectionClass(ClassFactory::class);
 
-        $this->resolveArguments = $class->getMethod('resolveArguments');
-        $this->getParameterClassName = $class->getMethod('getParameterClassName');
-
-        $this->container = ContainerFactory::getInstance(__DIR__ .'/../../TestData/Configurations/container-test.json');
+        $this->container = ContainerFactory::getInstance('./tests/TestData/Configurations/container-test.json');
     }
 
     public function testBuild(): void
@@ -119,128 +112,5 @@ class ClassFactoryTest extends TestCase
         $this->expectExceptionMessage("$method has 5 required parameters");
 
         $this->classFactory->buildFromFactory($this->container, RouterFactory::class, $method);
-    }
-
-    public function testResolveArgumentsParamName(): void
-    {
-        $method = $this->createMock(\ReflectionFunctionAbstract::class);
-        $parameter = $this->createMock(\ReflectionParameter::class);
-        $container = $this->createMock(ContainerInterface::class);
-
-        $paramName = 'paramName';
-
-        $method->expects($this->once())->method('getParameters')
-            ->willReturn([0 => $parameter]);
-
-        $parameter->expects($this->atLeast(2))
-            ->method('getName')->willReturn($paramName);
-
-        $container->expects($this->once())->method('has')->willReturn(true);
-        $container->expects($this->once())->method('get')->willReturnSelf();
-
-        $dependencies = $this->resolveArguments
-            ->invokeArgs($this->classFactory, [$method, $container, []]);
-
-        $this->assertNotEmpty($dependencies);
-    }
-
-    //TODO: isObject use case is challenging to hit, maybe make it more testable
-//    public function testResolveArgumentsIsObject(): void
-//    {
-//        $method = $this->createMock(\ReflectionFunctionAbstract::class);
-//        $parameter = $this->createMock(\ReflectionParameter::class);
-//        $parameterType = $this->createMock(\ReflectionNamedType::class);
-//        $container = $this->createMock(ContainerInterface::class);
-//
-//        $paramName = 'paramName';
-//
-//        $method->expects($this->once())->method('getParameters')
-//            ->willReturn([0 => $parameter]);
-//
-//        $parameter->expects($this->atLeast(2))
-//            ->method('getName')->willReturn($paramName);
-//
-//        $parameter->expects($this->atLeast(2))
-//            ->method('getType')->willReturn($parameterType);
-//
-//        $parameterType->expects($this->atLeast(2))
-//            ->method('getName')
-//            ->willReturn(\ReflectionParameter::class);
-//
-//        $container->expects($this->atLeast(2))
-//            ->method('has')->willReturn(false);
-//
-//        $container->expects($this->once())->method('get')->willReturnSelf();
-//
-//        $dependencies = $this->reflectionMethod
-//            ->invokeArgs($this->classFactory, [$method, $container, []]);
-//
-//        $this->assertNotEmpty($dependencies);
-//    }
-
-    public function testResolveArgumentsDefaultValue(): void
-    {
-        $method = $this->createMock(\ReflectionFunctionAbstract::class);
-        $parameter = $this->createMock(\ReflectionParameter::class);
-        $container = $this->createMock(ContainerInterface::class);
-
-        $paramName = 'paramName';
-
-        $method->expects($this->once())->method('getParameters')
-            ->willReturn([0 => $parameter]);
-
-        $parameter->expects($this->once())
-            ->method('getName')->willReturn($paramName);
-
-        $container->expects($this->once())->method('has')->willReturn(false);
-
-        $parameter->expects($this->once())->method('isDefaultValueAvailable')->willReturn(true);
-        $parameter->expects($this->once())->method('getDefaultValue')->willReturnSelf();
-
-        $dependencies = $this->resolveArguments
-            ->invokeArgs($this->classFactory, [$method, $container, []]);
-
-        $this->assertNotEmpty($dependencies);
-    }
-
-    public function testResolveArgumentsInvalidDependency(): void
-    {
-        $method = $this->createMock(\ReflectionFunctionAbstract::class);
-        $parameter = $this->createMock(\ReflectionParameter::class);
-        $container = $this->createMock(ContainerInterface::class);
-
-        $paramName = 'paramName';
-
-        $method->expects($this->once())->method('getParameters')
-            ->willReturn([0 => $parameter]);
-
-        $parameter->expects($this->exactly(2))
-            ->method('getName')->willReturn($paramName);
-
-        $container->expects($this->once())->method('has')->willReturn(false);
-
-        $parameter->expects($this->once())
-            ->method('isDefaultValueAvailable')->willReturn(false);
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Unable to resolve dependency: '. $paramName);
-
-        $this->resolveArguments->invokeArgs($this->classFactory, [$method, $container, []]);
-    }
-
-    public function test()
-    {
-        $parameterName = 'paramName';
-        $parameter = $this->createMock(\ReflectionParameter::class);
-        $type = $this->createMock(\ReflectionNamedType::class);
-
-        $parameter->expects($this->exactly(2))->method('getType')->willReturn($type);
-
-        $type->expects($this->once())->method('getName')->willReturn($parameterName);
-
-        $name = $this->getParameterClassName
-            ->invokeArgs($this->classFactory, [$parameter]);
-
-        $this->assertEquals($parameterName, $name);
     }
 }

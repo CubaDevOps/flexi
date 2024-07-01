@@ -8,6 +8,7 @@ use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Infrastructure\Controllers\HealthController;
+use CubaDevOps\Flexi\Test\TestData\TestTools\RouterMock;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -39,7 +40,7 @@ class RouterTest extends TestCase
         $this->class_factory = $this->createMock(ClassFactory::class);
         $this->response_factory = $this->createMock(ResponseFactoryInterface::class);
 
-        $this->router = new Router($this->session, $this->event_bus, $this->class_factory, $this->response_factory);
+        $this->router = new RouterMock($this->session, $this->event_bus, $this->class_factory, $this->response_factory);
 
         $this->router->loadRoutesFile('./src/Config/routes.json');
     }
@@ -97,6 +98,7 @@ class RouterTest extends TestCase
         $response = $this->router->dispatch($serverRequestMock);
 
         $this->assertNotEmpty($response);
+        $this->assertFalse($this->router->redirect_to_not_found_spy);
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
@@ -128,6 +130,7 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage('Define at least one route');
 
         $emptyRouter->dispatch($serverRequestMock);
+        $this->assertFalse($this->router->redirect_to_not_found_spy);
     }
 
     /**
@@ -172,6 +175,7 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage("Parameter '{$requiredParam}' is required");
 
         $this->router->dispatch($serverRequestMock);
+        $this->assertFalse($this->router->redirect_to_not_found_spy);
     }
 
     /**
@@ -202,6 +206,7 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage("Method $invalidMethod is not allowed for this route");
 
         $this->router->dispatch($serverRequestMock);
+        $this->assertFalse($this->router->redirect_to_not_found_spy);
     }
 
     /**
@@ -240,41 +245,7 @@ class RouterTest extends TestCase
         $response = $this->router->dispatch($serverRequestMock);
 
         $this->assertNotEmpty($response);
-        $this->assertInstanceOf(ResponseInterface::class, $response);
-    }
-
-    public function testDispatchDirectToNotFoundSpy(): void
-    {
-        $_SERVER['HTTP_HOST']       = 'flexi';
-        $_SERVER['REQUEST_SCHEME']  = 'https';
-
-        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
-        $responseInterfaceMock = $this->createMock(ResponseInterface::class);
-
-        $redirectMethodMock = $this->getMockBuilder(Router::class)
-            ->setConstructorArgs([$this->session, $this->event_bus, $this->class_factory, $this->response_factory])
-            ->onlyMethods(['redirectToNotFound'])
-            ->getMock();
-
-        $route = new Route(
-            self::ROUTE_NAME,
-            self::ROUTE_PATH,
-            self::ROUTE_CTRL,
-            'GET',
-            ['test' => 'param']
-        );
-        $redirectMethodMock->addRoute($route);
-
-        $redirectMethodMock->expects($this->once())
-            ->method('redirectToNotFound')
-            ->willReturn($responseInterfaceMock);
-
-        $this->event_bus->expects($this->once())
-            ->method('notify')->willReturnSelf();
-
-        $response = $redirectMethodMock->dispatch($serverRequestMock);
-
-        $this->assertNotEmpty($response);
+        $this->assertTrue($this->router->redirect_to_not_found_spy);
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 

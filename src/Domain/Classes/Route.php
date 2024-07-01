@@ -103,11 +103,6 @@ class Route
         return $this->middlewares;
     }
 
-    public function acceptMiddlewareVisitor(MiddlewareVisitorInterface $visitor): void
-    {
-        $visitor->visit($this->middlewares);
-    }
-
     /**
      * @throws ContainerExceptionInterface
      * @throws \ReflectionException

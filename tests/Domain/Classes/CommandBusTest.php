@@ -41,7 +41,7 @@ class CommandBusTest extends TestCase
 
         $this->commandBus = new CommandBus($this->container, $this->event_bus, $this->class_factory);
 
-        $this->commandBus->loadHandlersFromJsonFile(dirname(__DIR__, 2) .'/TestData/Configurations/commands-bus-test.json');
+        $this->commandBus->loadHandlersFromJsonFile('./tests/TestData/Configurations/commands-bus-test.json');
     }
 
     /**

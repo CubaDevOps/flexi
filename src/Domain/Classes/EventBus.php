@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Classes;
 
+use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
@@ -155,5 +156,10 @@ class EventBus implements EventBusInterface
     public function getListeners(string $event): array
     {
         return $this->events[$event] ?? [];
+    }
+
+    public function getDtoClassFromAlias(string $id): string
+    {
+        return NotFoundCliCommand::class;
     }
 }

@@ -4,33 +4,28 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Classes;
 
+use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
+
 class Template
 {
+    use FileHandlerTrait;
+
     private string $template_path;
-    /**
-     * @var array|string
-     */
-    private $template_name;
-    /**
-     * @var array|string
-     */
-    private $template_extension;
+
+    private string $template_name;
+
+    private string $template_extension;
 
     public function __construct(string $template_path)
     {
-        $template_path = realpath($template_path);
-        $this->assertTemplateExists($template_path);
-        $this->template_path = $template_path;
-        $this->template_name = pathinfo($template_path, PATHINFO_BASENAME);
+        $normalized_path = $this->normalize($template_path);
+        $this->assertTemplateExists($normalized_path);
+        $this->template_path = $normalized_path;
+        $this->template_name = pathinfo($normalized_path, PATHINFO_BASENAME);
         $this->template_extension = pathinfo(
-            $template_path,
+            $normalized_path,
             PATHINFO_EXTENSION
         );
-    }
-
-    public function getContent(): string
-    {
-        return file_get_contents($this->template_path);
     }
 
     private function assertTemplateExists(string $template_path): void
@@ -40,23 +35,28 @@ class Template
         }
     }
 
+    public function getContent(): string
+    {
+        return $this->readFromFile($this->template_path);
+    }
+
+    /**
+     * Get the absolute path to the template file.
+     * @return string
+     */
     public function getTemplatePath(): string
     {
         return $this->template_path;
     }
 
-    /**
-     * @return array|string
-     */
-    public function getTemplateName()
+
+    public function getTemplateName(): string
     {
         return $this->template_name;
     }
 
-    /**
-     * @return array|string
-     */
-    public function getTemplateExtension()
+
+    public function getTemplateExtension(): string
     {
         return $this->template_extension;
     }

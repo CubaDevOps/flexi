@@ -1,0 +1,41 @@
+{
+  "services": [
+    {
+      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\ConfigurationFactory",
+        "method": "getInstance",
+        "arguments": []
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Test\\TestData\\TestTools\\IsNotInstantiable",
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Test\\TestData\\TestTools\\IsNotInstantiable",
+        "method": "getInstance",
+        "arguments": []
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Test\\TestData\\TestTools\\HasNoConstructor",
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Test\\TestData\\TestTools\\HasNoConstructor",
+        "method": "getInstance",
+        "arguments": []
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Classes\\Router",
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Domain\\Factories\\RouterFactory",
+        "method": "getInstance",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\SessionStorageInterface",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\EventBusInterface",
+          "@CubaDevOps\\Flexi\\Domain\\Utils\\ClassFactory",
+          "@Psr\\Http\\Message\\ResponseFactoryInterface"
+        ]
+      }
+    }
+  ]
+}

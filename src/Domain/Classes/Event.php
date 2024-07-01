@@ -57,6 +57,7 @@ class Event implements EventInterface
      */
     public function serialize(): string
     {
+        //Todo refactor to use JsonHandler Trait, implement serialize and deserialize methods for json
         return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
     }
 

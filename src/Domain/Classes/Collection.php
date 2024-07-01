@@ -44,13 +44,8 @@ class Collection extends \ArrayObject implements CollectionInterface
 
     protected function assertIsValidValue($element): void
     {
-        $element_type = gettype($element);
-        if (!$this->ofType($element_type)) {
-            throw new \RuntimeException("{$element} is not of type {$this->type->getValue()}");
-        }
-
         if (!$this->type->isValidType($element)) {
-            throw new \RuntimeException("{$element} is not a valid value of type {$this->type->getValue()}");
+            throw new \RuntimeException($element . ' is not a valid value of type ' . $this->type->getValue());
         }
     }
 
@@ -79,7 +74,11 @@ class Collection extends \ArrayObject implements CollectionInterface
         return $this->offsetGet($index);
     }
 
-    public function has(string $index): bool
+    /**
+     * @param int|string $index
+     * @return bool
+     */
+    public function has($index): bool
     {
         return $this->offsetExists($index);
     }

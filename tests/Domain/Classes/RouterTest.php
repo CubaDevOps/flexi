@@ -8,7 +8,7 @@ use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Infrastructure\Controllers\HealthController;
-use CubaDevOps\Flexi\Test\TestData\TestTools\RouterMock;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouterMock;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

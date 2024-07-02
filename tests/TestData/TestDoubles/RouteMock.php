@@ -1,6 +1,6 @@
 <?php
 
-namespace CubaDevOps\Flexi\Test\TestData\TestTools;
+namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
 use CubaDevOps\Flexi\Domain\Classes\Route;
 

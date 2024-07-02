@@ -7,8 +7,8 @@ use CubaDevOps\Flexi\Domain\Factories\RouterFactory;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Factories\ConfigurationFactory;
-use CubaDevOps\Flexi\Test\TestData\TestTools\HasNoConstructor;
-use CubaDevOps\Flexi\Test\TestData\TestTools\IsNotInstantiable;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\HasNoConstructor;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\IsNotInstantiable;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 

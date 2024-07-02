@@ -22,12 +22,12 @@ class Router
     use JsonFileReader;
     use GlobFileReader;
 
-    private ObjectCollection $routes_indexed_by_name;
-    private ObjectCollection $routes_indexed_by_path;
-    private SessionStorageInterface $session;
-    private EventBusInterface $event_bus;
-    private ClassFactory $class_factory;
-    private ResponseFactoryInterface $response_factory;
+    protected ObjectCollection $routes_indexed_by_name;
+    protected ObjectCollection $routes_indexed_by_path;
+    protected SessionStorageInterface $session;
+    protected EventBusInterface $event_bus;
+    protected ClassFactory $class_factory;
+    protected ResponseFactoryInterface $response_factory;
 
     public function __construct(
         SessionStorageInterface $session,

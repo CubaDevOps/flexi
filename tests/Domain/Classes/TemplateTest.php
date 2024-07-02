@@ -3,15 +3,21 @@
 namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Classes\Template;
-use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\FileHandler;
 use PHPUnit\Framework\TestCase;
 
 class TemplateTest extends TestCase
 {
-    use FileHandlerTrait;
 
     private Template $template;
     private string $path;
+    private FileHandler $file_handler;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->file_handler = new FileHandler();
+    }
 
     public function setUp(): void
     {
@@ -24,7 +30,7 @@ class TemplateTest extends TestCase
     {
         $path = './var/invalid/path/test/file.html';
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Template file not found: ' . $this->normalize($path));
+        $this->expectExceptionMessage('Template file not found: ' . $this->file_handler->normalize($path));
 
         new Template($path);
     }
@@ -37,7 +43,7 @@ class TemplateTest extends TestCase
 
     public function testGetTemplatePath(): void
     {
-        $this->assertEquals($this->normalize($this->path), $this->template->getTemplatePath());
+        $this->assertEquals($this->file_handler->normalize($this->path), $this->template->getTemplatePath());
     }
 
     public function testGetTemplateName(): void

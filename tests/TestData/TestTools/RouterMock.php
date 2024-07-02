@@ -14,7 +14,7 @@ class RouterMock extends Router
         ServerRequestInterface $request,
         string $previous_route
     ): ResponseInterface {
-        $response = parent::redirectToNotFound($request, $previous_route);
+        $response = $this->response_factory->createResponse(404);
         $this->redirect_to_not_found_spy = true;
         return $response;
     }

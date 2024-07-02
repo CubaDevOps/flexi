@@ -76,7 +76,7 @@ trait FileHandlerTrait
      * @param string $file_path
      * @return bool
      */
-    public function fileExists(string $file_path): bool
+    protected function fileExists(string $file_path): bool
     {
         return file_exists($file_path);
     }
@@ -86,7 +86,7 @@ trait FileHandlerTrait
      * @return void
      * @throws RuntimeException
      */
-    private function createFile(string $file_path): void
+    protected function createFile(string $file_path): void
     {
         $directory = dirname($file_path);
         if (!$this->directoryExists($directory)) {
@@ -103,12 +103,12 @@ trait FileHandlerTrait
      * @param string $dir_path
      * @return bool
      */
-    private function directoryExists(string $dir_path): bool
+    protected function directoryExists(string $dir_path): bool
     {
         return is_dir($dir_path);
     }
 
-    private function createDirectory(string $dir_path): void
+    protected function createDirectory(string $dir_path): void
     {
         if (!is_dir($dir_path) && !mkdir($dir_path, 0750, true) && !is_dir($dir_path)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_path));

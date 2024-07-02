@@ -62,7 +62,7 @@ class RouterTest extends TestCase
             ['test' => 'param']
         );
         $this->router->addRoute($route);
-        $this->assertInstanceOf(Route::class, $this->router->getByName(self::ROUTE_NAME));
+        $this->assertEquals(2, $this->router->route_counter);
     }
 
     public function testDispatch(): void

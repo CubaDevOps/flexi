@@ -6,13 +6,9 @@ use CubaDevOps\Flexi\Domain\Classes\Route;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use CubaDevOps\Flexi\Test\TestData\TestTools\RouteMock;
-use CubaDevOps\Flexi\Test\TestData\TestTools\RouteVisitor\MiddlewareTestVisitor;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 class RouteTest extends TestCase
 {

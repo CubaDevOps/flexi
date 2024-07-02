@@ -17,7 +17,7 @@ class DTOFactory
         }
 
         /** @var DTOInterface $dto */
-        $dto = class_exists($id) ? $id : $bus->getDtoFromAlias($id);
+        $dto = class_exists($id) ? $id : $bus->getDtoClassFromAlias($id);
 
         return $dto::fromArray($data);
     }

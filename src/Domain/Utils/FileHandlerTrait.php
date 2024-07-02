@@ -4,41 +4,28 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Utils;
 
+use RuntimeException;
+
 trait FileHandlerTrait
 {
     use OSDetector;
 
-    public function writeToFile(string $file_path, string $content, int $flags = 0): void
-    {
-        $this->ensureFileExists($file_path);
-        if (false === file_put_contents($file_path, $content, $flags)) {
-            throw new \RuntimeException("Could not write to file: $file_path");
-        }
-    }
-
-    public function ensureFileExists(string &$file_path): void
+    /**
+     * @param string $file_path
+     * @param string $content
+     * @param int $flags see https://www.php.net/manual/en/function.file-put-contents.php
+     * @param bool $try_create_it
+     * @return void
+     * @throws RuntimeException
+     */
+    public function writeToFile(string $file_path, string $content, int $flags = 0, bool $try_create_it = false): void
     {
         $file_path = $this->normalize($file_path);
-
-        $directory = dirname($file_path);
-        if (!is_dir($directory) && (!mkdir($directory, 0750, true) && !is_dir($directory))) {
-            throw new \RuntimeException("Could not create directory: $directory");
+        if ($try_create_it && !$this->fileExists($file_path)) {
+            $this->createFile($file_path);
         }
-
-        if (file_exists($file_path)) {
-            return;
-        }
-
-        try {
-            $fileHandle = fopen($file_path, 'wb');
-
-            if (false === $fileHandle) {
-                throw new \RuntimeException('Could not open file for writing.');
-            }
-
-            fclose($fileHandle);
-        } catch (\Exception $e) {
-            throw new \RuntimeException('An error occurred while creating the file: ' . $e->getMessage());
+        if (!$this->canWriteToFile($file_path) || false === file_put_contents($file_path, $content, $flags)) {
+            throw new RuntimeException("Could not write to file: $file_path");
         }
     }
 
@@ -85,15 +72,81 @@ trait FileHandlerTrait
         return false;
     }
 
+    /**
+     * @param string $file_path
+     * @return bool
+     */
+    public function fileExists(string $file_path): bool
+    {
+        return file_exists($file_path);
+    }
+
+    /**
+     * @param string $file_path
+     * @return void
+     * @throws RuntimeException
+     */
+    private function createFile(string $file_path): void
+    {
+        $directory = dirname($file_path);
+        if (!$this->directoryExists($directory)) {
+            $this->createDirectory($directory);
+        }
+        try {
+            touch($file_path);
+        } catch (\Exception $e) {
+            throw new RuntimeException("Could not create file: $file_path");
+        }
+    }
+
+    /**
+     * @param string $dir_path
+     * @return bool
+     */
+    private function directoryExists(string $dir_path): bool
+    {
+        return is_dir($dir_path);
+    }
+
+    private function createDirectory(string $dir_path): void
+    {
+        if (!is_dir($dir_path) && !mkdir($dir_path, 0750, true) && !is_dir($dir_path)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_path));
+        }
+    }
+
+
+    /**
+     * @param string $file_path
+     * @return void
+     */
+    private function canWriteToFile(string $file_path): bool
+    {
+        return is_writable($file_path);
+    }
+
     public function readFromFile(string $file_path): string
     {
         $this->ensureFileExists($file_path);
         $contents = file_get_contents($file_path);
 
         if (false === $contents) {
-            throw new \RuntimeException("Could not read from file: $file_path");
+            throw new RuntimeException("Could not read from file: $file_path");
         }
 
         return $contents;
+    }
+
+    /**
+     * @param string $file_path
+     * @return void
+     */
+    public function ensureFileExists(string &$file_path): void
+    {
+        $file_path = $this->normalize($file_path);
+
+        if (!$this->fileExists($file_path)) {
+            throw new RuntimeException('File ' . $file_path . ' does not exist');
+        }
     }
 }

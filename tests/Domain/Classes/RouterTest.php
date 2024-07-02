@@ -230,6 +230,8 @@ class RouterTest extends TestCase
         $uriInterfaceMock = $this->createMock(UriInterface::class);
         $serverRequestMock = $this->createMock(ServerRequestInterface::class);
         $responseInterfaceMock = $this->createMock(ResponseInterface::class);
+        $responseInterfaceMock->expects($this->once())
+            ->method('getStatusCode')->willReturn(404);
 
         $serverRequestMock->expects($this->once())
             ->method('getUri')->willReturn($uriInterfaceMock);
@@ -237,21 +239,12 @@ class RouterTest extends TestCase
         $uriInterfaceMock->expects($this->once())
             ->method('getPath')->willReturn('/invalid');
 
-        $this->event_bus->expects($this->exactly(2))
-            ->method('notify')->willReturnSelf();
-
         $this->response_factory->expects($this->once())
             ->method('createResponse')->willReturn($responseInterfaceMock);
 
-        $responseInterfaceMock->expects($this->once())
-            ->method('withHeader')->willReturnSelf();
-
-        $responseInterfaceMock->expects($this->once())
-            ->method('withStatus')->willReturnSelf();
-
         $response = $this->router->dispatch($serverRequestMock);
 
-        $this->assertNotEmpty($response);
+        $this->assertEquals(404, $response->getStatusCode());
         $this->assertTrue($this->router->redirect_to_not_found_spy);
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }

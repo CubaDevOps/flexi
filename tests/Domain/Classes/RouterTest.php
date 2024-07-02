@@ -42,7 +42,14 @@ class RouterTest extends TestCase
 
         $this->router = new RouterMock($this->session, $this->event_bus, $this->class_factory, $this->response_factory);
 
-        $this->router->loadRoutesFile('./src/Config/routes.json');
+        $route = new Route(
+            self::ROUTE_NAME,
+            self::ROUTE_PATH,
+            self::ROUTE_CTRL,
+            'GET',
+            ['test' => 'param']
+        );
+        $this->router->addRoute($route);
     }
 
     public function testAddRoute(): void

@@ -6,19 +6,29 @@ use CubaDevOps\Flexi\Domain\Classes\InFileLogRepository;
 use CubaDevOps\Flexi\Domain\Interfaces\LogInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\FileHandler;
 use PHPUnit\Framework\TestCase;
 
 class InFileLogRepositoryTest extends TestCase
 {
     private LogInterface $log;
     private InFileLogRepository $repository;
+    private string $log_path;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->log_path = './var/logs/inFileLogRepositoryTest.log';
+        $file_handler = new FileHandler();
+        $file_handler->createFileIfNotExist($this->log_path);
+    }
 
     public function setUp(): void
     {
         $this->log = $this->createMock(LogInterface::class);
 
         $this->repository = new InFileLogRepository(
-            './var/logs/inFileLogRepositoryTest.log',
+            $this->log_path,
             '[{level} - {time}]: {message} - {context}'
         );
     }
@@ -50,10 +60,10 @@ class InFileLogRepositoryTest extends TestCase
         $this->repository->save($this->log);
 
         // Running the test alone fails but running the collection is does not
-        $this->assertFileExists('./var/logs/inFileLogRepositoryTest.log');
+        $this->assertFileExists($this->log_path);
         $this->assertStringContainsString(
             '[INFO - 2005-08-15T15:52:01+00:00]: message info - line 23',
-            file_get_contents('./var/logs/inFileLogRepositoryTest.log')
+            file_get_contents($this->log_path)
         );
         $this->assertEquals(LogLevel::INFO, $this->log->getLogLevel()->getValue());
     }

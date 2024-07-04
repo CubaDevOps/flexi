@@ -26,6 +26,9 @@ jobs:
         uses: huggingface/semver-release-action@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branches: main
+          tag_prefix: "v"
 
       - name: Create GitHub Release
         if: steps.semver.outputs.released == 'true'

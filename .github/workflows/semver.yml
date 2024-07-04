@@ -30,7 +30,8 @@ jobs:
   # run this job only if the tests pass
 
   release:
-    if: ${{ !failure() }}
+    needs: tests
+    if: ${{ needs.tests.result == 'success' }}
     name: Release
     runs-on: ubuntu-latest
     permissions:

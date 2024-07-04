@@ -5,36 +5,61 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  release:
-    name: Release
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      #      - name: Setup Git user
-      #        run: |
-      #          git config --global user.name "github-actions[bot]"
-      #          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run tests
+        run: composer run-script test
+
+  # run this job only if the tests pass
+
+  release:
+    if: ${{ job.tests.outcome == 'success' }}
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to create releases
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Format Code
+        run: composer run-script format
+
+      - name: Clean Dev Dependencies
+        run: |
+          rm -rf ./vendor
+          composer install --no-dev
 
       - name: Release
         id: semver
         uses: huggingface/semver-release-action@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create GitHub Release
-        if: steps.semver.outputs.released == 'true'
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.semver.outputs.tag }}
-          release_name: "Flexi Framework ${{ steps.semver.outputs.version }}"
-          body: "Changelog: ${{ steps.semver.outputs.changelog }}"
-          draft: false
-          prerelease: false

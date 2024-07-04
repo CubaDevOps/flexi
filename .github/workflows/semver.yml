@@ -1,6 +1,6 @@
 name: Automatic Versioning and Release
 on:
-  pull_request:
+  push:
     branches:
       - main
 
@@ -14,4 +14,19 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Release
+        id: semver
         uses: huggingface/semver-release-action@latest
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        if: steps.semver.outputs.released == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.semver.outputs.tag }}
+          release_name: "Flexi Framework ${{ steps.semver.outputs.version }}"
+          body: "Changelog: ${{ steps.semver.outputs.changelog }}"
+          draft: false
+          prerelease: false

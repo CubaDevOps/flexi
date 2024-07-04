@@ -16,19 +16,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Git user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      #      - name: Setup Git user
+      #        run: |
+      #          git config --global user.name "github-actions[bot]"
+      #          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Release
         id: semver
         uses: huggingface/semver-release-action@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          branches: main
-          tag_prefix: "v"
 
       - name: Create GitHub Release
         if: steps.semver.outputs.released == 'true'

@@ -35,7 +35,8 @@ class InFileLogRepositoryTest extends TestCase
 
     public function testSave(): void
     {
-        $logLevel = new LogLevel('info');
+        $level = LogLevel::INFO;
+        $logLevel = new LogLevel($level);
 
         $this->log->expects($this->exactly(2))
             ->method('getLogLevel')->willReturn($logLevel);
@@ -62,7 +63,7 @@ class InFileLogRepositoryTest extends TestCase
         // Running the test alone fails but running the collection is does not
         $this->assertFileExists($this->log_path);
         $this->assertStringContainsString(
-            '[INFO - 2005-08-15T15:52:01+00:00]: message info - line 23',
+            '[' . $level . ' - 2005-08-15T15:52:01+00:00]: message info - line 23',
             file_get_contents($this->log_path)
         );
         $this->assertEquals(LogLevel::INFO, $this->log->getLogLevel()->getValue());

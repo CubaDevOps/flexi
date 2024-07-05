@@ -21,6 +21,12 @@ jobs:
         with:
           php-version: '7.4'
 
+      - name: Configure .env file
+        run: |
+          cp .env.example .env
+          mkdir -p var/logs
+          touch var/logs/app.log
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 

@@ -48,6 +48,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+          fetch-depth: 0
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -85,11 +88,14 @@ jobs:
 
       - name: Update composer.json with next version
         if: ${{ steps.check_release.outputs.released == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
           NEXT_VERSION=${{ steps.version.outputs.version }}
           jq --arg new_version "$NEXT_VERSION" '.version = $new_version' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "GitHub Actions"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions"
+          chmod -R ugo+rwX .
           git add composer.json
           git commit -m "chore: Bump version to $NEXT_VERSION"
           git push https://${{ secrets.GIT_USER }}:${{ secrets.GIT_TOKEN }}@github.com/CubaDevOps/flexi.git HEAD:main

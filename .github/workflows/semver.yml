@@ -23,7 +23,7 @@ jobs:
 
       - name: Configure .env file
         run: |
-          cp .env.example .env
+          cp env.example .env
           mkdir -p var/logs
           touch var/logs/app.log
 

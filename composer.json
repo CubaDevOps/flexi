@@ -63,7 +63,7 @@
     "fix": "psalter --issues=all",
     "format": "php-cs-fixer fix --rules=@PSR12,@Symfony,declare_strict_types --allow-risky=yes .",
     "post-root-package-install": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+      "@php -r \"file_exists('.env') || copy('env.example', '.env');\""
     ],
     "update-framework": [
       "composer update cubadevops/flexi --with-dependencies"

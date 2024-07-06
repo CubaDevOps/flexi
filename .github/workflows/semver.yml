@@ -92,7 +92,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git add composer.json
           git commit -m "chore: Bump version to $NEXT_VERSION"
-          git push
+          git push https://${{ secrets.GIT_USER }}:${{ secrets.GIT_TOKEN }}@github.com/CubaDevOps/flexi.git HEAD:main
 
       - name: Release
         if: ${{ steps.check_release.outputs.released == 'true' }}

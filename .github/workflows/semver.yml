@@ -62,7 +62,7 @@ jobs:
 
       - name: Clean Dev Dependencies
         run: |
-          rm -rf ./vendor
+          rm -rf ./vendor ./tests ./phpunit.xml ./psalm.xml ./.github
           composer install --no-dev
 
       - name: Release

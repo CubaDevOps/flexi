@@ -9,6 +9,9 @@ permissions:
 
 jobs:
   tests:
+    if: |
+      github.event_name == 'push' &&
+      !contains(github.event.head_commit.message, '[skip ci]')
     name: Tests
     runs-on: ubuntu-latest
 
@@ -80,7 +83,11 @@ jobs:
         id: check_release
         run: |
           CURRENT_VERSION=$(jq -r '.version' composer.json)
-          if [ "$CURRENT_VERSION" == "${{ steps.version.outputs.version }}" ]; then
+          NEXT_VERSION="${{ steps.version.outputs.version }}"
+          
+          if [ -z "$NEXT_VERSION" ]; then
+            echo "released=false" >> $GITHUB_OUTPUT
+          elif [ "$CURRENT_VERSION" == "$NEXT_VERSION" ]; then
             echo "released=false" >> $GITHUB_OUTPUT
           else
             echo "released=true" >> $GITHUB_OUTPUT
@@ -96,7 +103,7 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "GitHub Actions"
           git add composer.json
-          git commit -m "chore: Bump version to $NEXT_VERSION"
+          git commit -m "chore: Bump version to $NEXT_VERSION [skip ci]"
           git push https://${{ secrets.GIT_USER }}:${{ secrets.GIT_TOKEN }}@github.com/CubaDevOps/flexi.git HEAD:main
 
       - name: Release

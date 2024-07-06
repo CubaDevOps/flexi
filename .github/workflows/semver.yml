@@ -74,7 +74,7 @@ jobs:
         with:
           dryRun: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
       - name: Check if there is a new version to release
         id: check_release
@@ -95,7 +95,6 @@ jobs:
           jq --arg new_version "$NEXT_VERSION" '.version = $new_version' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "GitHub Actions"
-          chmod -R ugo+rwX .
           git add composer.json
           git commit -m "chore: Bump version to $NEXT_VERSION"
           git push https://${{ secrets.GIT_USER }}:${{ secrets.GIT_TOKEN }}@github.com/CubaDevOps/flexi.git HEAD:main
@@ -105,4 +104,4 @@ jobs:
         id: semver
         uses: huggingface/semver-release-action@latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}

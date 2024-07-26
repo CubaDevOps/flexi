@@ -58,6 +58,7 @@
   },
   "scripts": {
     "test": "phpunit --configuration phpunit.xml",
+    "coverage": "export XDEBUG_MODE=coverage && phpunit --configuration phpunit.xml --coverage-text",
     "psalm": "psalm --show-info=true",
     "fix-dry": "psalter --issues=all --dry-run",
     "fix": "psalter --issues=all",

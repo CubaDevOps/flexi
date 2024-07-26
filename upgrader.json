@@ -1,0 +1,16 @@
+{
+  "repository_provider": "github",
+  "repository_identifier": "cubadevops/flexi",
+  "project_dir": "/var/www/html",
+  "has_root_directory": true,
+  "excluded_resources": [
+    "tests",
+    ".github",
+    "docker",
+    "Dockerfile",
+    "docker-compose.yml",
+    "phpunit.xml",
+    "psalm.xml",
+    "env.example"
+  ]
+}

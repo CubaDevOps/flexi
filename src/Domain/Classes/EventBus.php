@@ -112,21 +112,21 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
      */
-    private function notifyListeners(array $listeners, object $event): void
+    private function notifyListenersAsync(array $listeners, object $event): void
     {
         foreach ($listeners as $listener) {
-            // Skip further listeners if the event is stoppable and propagation is stopped
-            if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
-                break;
+            $pid = pcntl_fork();
+            if ($pid === -1) {
+                // Fork failed, handle synchronously
+                $this->handleListener($listener, $event);
+            } elseif ($pid === 0) {
+                // Child process
+                $this->handleListener($listener, $event);
+                exit(0); // Terminate child process after handling
             }
-
-            /** @var EventListenerInterface $handler_obj */
-            $listener_obj = $this->class_factory->build(
-                $this->container,
-                $listener
-            );
-            $listener_obj->handle($event);
+            // Parent process continues execution
         }
+        pcntl_wait($status); // Optionally, wait for child processes to complete
     }
 
     public function hasHandler(string $identifier): bool
@@ -150,6 +150,18 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
     public function getDtoClassFromAlias(string $id): string
     {
         return NotFoundCliCommand::class;
+    }
+
+    private function handleListener(string $listener, object $event): void
+    {
+        // Skip further listeners if the event is stoppable and propagation is stopped
+        if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
+            return;
+        }
+
+        /** @var EventListenerInterface $listener_obj */
+        $listener_obj = $this->class_factory->build($this->container, $listener);
+        $listener_obj->handle($event);
     }
 
     /**

@@ -6,13 +6,15 @@ namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
+use Psr\EventDispatcher\StoppableEventInterface;
 
-class Event implements EventInterface
+class Event implements EventInterface, StoppableEventInterface
 {
     private string $name;
     private array $data;
     private \DateTimeImmutable $occurredOn;
     private string $fired_by;
+    private bool $is_stopped = false;
 
     public function __construct(string $name, string $fired_by, array $data = [])
     {
@@ -86,5 +88,18 @@ class Event implements EventInterface
     public function get(string $name)
     {
         return $this->toArray()[$name];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPropagationStopped(): bool
+    {
+        return $this->is_stopped;
+    }
+
+    public function stopPropagation(): void
+    {
+        $this->is_stopped = true;
     }
 }

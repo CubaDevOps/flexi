@@ -102,7 +102,7 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
      */
-    public function notify(object $dto): void
+    public function notify(EventInterface $dto): void
     {
         $this->dispatch($dto);
     }

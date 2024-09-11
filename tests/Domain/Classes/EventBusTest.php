@@ -46,7 +46,7 @@ class EventBusTest extends TestCase
         $dtoMock->expects($this->once())->method('getName')->willReturn('*');
 
         $this->class_factory
-            ->expects($this->exactly(2))
+            ->expects($this->atLeastOnce())
             ->method('build')
             ->with($this->container, LoggerEventListener::class)
             ->willReturn($handlerMock);

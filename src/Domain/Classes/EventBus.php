@@ -176,11 +176,11 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
      */
     public function dispatch(object $event): object
     {
-        $eventName = get_class($event);
+        $identifier = $event instanceof EventInterface ? $event->getName() : get_class($event);
 
         // Notify specific event listeners
-        if (isset($this->events[$eventName])) {
-            $this->notifyListeners($this->events[$eventName], $event);
+        if (isset($this->events[$identifier])) {
+            $this->notifyListeners($this->events[$identifier], $event);
         }
 
         // Notify listeners for all events (*)

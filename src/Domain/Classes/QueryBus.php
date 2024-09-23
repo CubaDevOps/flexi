@@ -117,14 +117,14 @@ class QueryBus implements BusInterface
         $event_before = new Event("core.query.before_execute.$identifier", __CLASS__, [
             'command' => $identifier,
         ]);
-        $this->event_bus->notify($event_before);
+        $this->event_bus->dispatch($event_before);
 
         $response = $handler_obj->handle($dto);
 
         $event_after = new Event("core.query.after_execute.$identifier", __CLASS__, [
             'command' => $identifier,
         ]);
-        $this->event_bus->notify($event_after);
+        $this->event_bus->dispatch($event_after);
 
         return $response;
     }

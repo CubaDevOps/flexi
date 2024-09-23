@@ -113,12 +113,12 @@ class CommandBus implements BusInterface
         $event_before = new Event('core.command.before_execute', __CLASS__, [
             'command' => $identifier,
         ]);
-        $this->event_bus->notify($event_before);
+        $this->event_bus->dispatch($event_before);
         $response = $handler_obj->handle($dto);
         $event_after = new Event('core.command.after_execute', __CLASS__, [
             'command' => $identifier,
         ]);
-        $this->event_bus->notify($event_after);
+        $this->event_bus->dispatch($event_after);
 
         return $response;
     }

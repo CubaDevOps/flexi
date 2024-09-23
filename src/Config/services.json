@@ -105,7 +105,8 @@
         "arguments": [
           "@container",
           "CubaDevOps\\Flexi\\Domain\\Classes\\EventBus",
-          "./src/Config/listeners.json"
+          "./src/Config/listeners.json",
+          "ENV.dispatch_mode"
         ]
       }
     },

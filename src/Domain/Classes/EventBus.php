@@ -85,7 +85,9 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
         $this->events[$identifier][] = $handler;
     }
 
+
     /**
+     * @throws \ReflectionException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
@@ -93,18 +95,8 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
     public function execute(DTOInterface $dto): void
     {
         if ($dto instanceof EventInterface) {
-            $this->notify($dto);
+            $this->dispatch($dto);
         }
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws \ReflectionException
-     */
-    public function notify(EventInterface $dto): void
-    {
-        $this->dispatch($dto);
     }
 
     /**

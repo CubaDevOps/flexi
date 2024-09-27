@@ -4,12 +4,16 @@ namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
 use CubaDevOps\Flexi\Application\EventListeners\LoggerEventListener;
 use CubaDevOps\Flexi\Domain\Classes\EventBus;
+use CubaDevOps\Flexi\Domain\Classes\InFileLogRepository;
 use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use CubaDevOps\Flexi\Infrastructure\Classes\PsrLogger;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Log\LoggerInterface;
 
 class EventBusTest extends TestCase
 {
@@ -27,6 +31,17 @@ class EventBusTest extends TestCase
     {
         $this->container = $this->createMock(ContainerInterface::class);
         $this->class_factory = $this->createMock(ClassFactory::class);
+
+        $logger = new PsrLogger($this->createMock(InFileLogRepository::class));
+        $configuration = $this->createMock(Configuration::class);
+
+        $this->container
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->willReturnMap([
+                ['logger', $logger],
+                [Configuration::class, $configuration]
+            ]);
 
         $this->eventBus = new EventBus($this->container, $this->class_factory);
 

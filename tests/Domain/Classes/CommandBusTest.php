@@ -55,7 +55,7 @@ class CommandBusTest extends TestCase
 
         $this->event_bus
             ->expects($this->exactly(2))
-            ->method('notify')->willReturnSelf();
+            ->method('dispatch')->willReturnSelf();
 
         $this->class_factory
             ->expects($this->once())

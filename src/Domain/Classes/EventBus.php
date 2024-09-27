@@ -12,13 +12,13 @@ use CubaDevOps\Flexi\Domain\Interfaces\EventListenerInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Domain\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
+use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 
-class EventBus implements EventBusInterface, EventDispatcherInterface
+class EventBus implements EventBusInterface
 {
     use JsonFileReader;
     use GlobFileReader;
@@ -26,25 +26,19 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
     private array $events = [];
     private ContainerInterface $container;
     private ClassFactory $class_factory;
-    private int $dispatch_mode;
-
-    public const DISPATCH_SYNC = 0;
-    public const DISPATCH_ASYNC = 1;
-    /**
-     * @var mixed
-     */
     private LoggerInterface $logger;
+    private Configuration $configuration;
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __construct(ContainerInterface $container, ClassFactory $class_factory, int $dispatch_mode)
+    public function __construct(ContainerInterface $container, ClassFactory $class_factory)
     {
         $this->container = $container;
         $this->class_factory = $class_factory;
-        $this->dispatch_mode = $dispatch_mode;
         $this->logger = $container->get('logger'); //Todo: inject dependency
+        $this->configuration = $container->get(Configuration::class); //Todo: Maybe inject as a dependency as well?
     }
 
     /**
@@ -131,7 +125,7 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
             return $event;
         }
 
-        if (self::DISPATCH_ASYNC === $this->dispatch_mode) {
+        if ($this->configuration->isDispatchModeEnabled()) {
             $this->dispatchAsync($listeners, $event);
         } else {
             $this->notifyListeners($listeners, $event);
@@ -240,10 +234,5 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
 
             exit(0);
         }
-    }
-
-    public function dispatchMode(): int
-    {
-        return $this->dispatch_mode;
     }
 }

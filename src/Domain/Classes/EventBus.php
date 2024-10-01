@@ -15,8 +15,10 @@ use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\EventDispatcher\StoppableEventInterface;
 
-class EventBus implements EventBusInterface
+class EventBus implements EventBusInterface, EventDispatcherInterface
 {
     use JsonFileReader;
     use GlobFileReader;
@@ -102,11 +104,7 @@ class EventBus implements EventBusInterface
      */
     public function notify(EventInterface $dto): void
     {
-        $identifier = $dto->getName();
-        if (isset($this->events[$identifier])) {
-            $this->notifyListeners($this->events[$identifier], $dto);
-        }
-        $this->notifyListenersOffAllEvents($dto);
+        $this->dispatch($dto);
     }
 
     /**
@@ -114,30 +112,21 @@ class EventBus implements EventBusInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
      */
-    private function notifyListeners(array $listeners, EventInterface $dto): void
+    private function notifyListeners(array $listeners, object $event): void
     {
         foreach ($listeners as $listener) {
+            // Skip further listeners if the event is stoppable and propagation is stopped
+            if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
+                break;
+            }
+
             /** @var EventListenerInterface $handler_obj */
             $listener_obj = $this->class_factory->build(
                 $this->container,
                 $listener
             );
-            $listener_obj->handle($dto);
+            $listener_obj->handle($event);
         }
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws \ReflectionException
-     * @throws NotFoundExceptionInterface
-     */
-    private function notifyListenersOffAllEvents(EventInterface $dto): void
-    {
-        if (empty($this->events['*'])) {
-            return;
-        }
-
-        $this->notifyListeners($this->events['*'], $dto);
     }
 
     public function hasHandler(string $identifier): bool
@@ -161,5 +150,32 @@ class EventBus implements EventBusInterface
     public function getDtoClassFromAlias(string $id): string
     {
         return NotFoundCliCommand::class;
+    }
+
+    /**
+     * Dispatches an event to all relevant listeners.
+     *
+     * @param object $event The event object to dispatch.
+     *
+     * @return object The event after processing by listeners.
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws \ReflectionException
+     */
+    public function dispatch(object $event): object
+    {
+        $identifier = $event instanceof EventInterface ? $event->getName() : get_class($event);
+
+        // Notify specific event listeners
+        if (isset($this->events[$identifier])) {
+            $this->notifyListeners($this->events[$identifier], $event);
+        }
+
+        // Notify listeners for all events (*)
+        if (isset($this->events['*'])) {
+            $this->notifyListeners($this->events['*'], $event);
+        }
+
+        return $event;
     }
 }

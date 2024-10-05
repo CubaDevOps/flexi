@@ -198,15 +198,19 @@ class EventBus implements EventBusInterface
 
         // Close the standard file descriptors to prevent writing to the console
         try {
-            fclose(STDIN);
-            fclose(STDOUT);
-            fclose(STDERR);
+            if (defined('STDIN') && is_resource(STDIN)) {
+                fclose(STDIN);
+            }
+
+            if (defined('STDOUT') && is_resource(STDOUT)) {
+                fclose(STDOUT);
+            }
+
+            if (defined('STDERR') && is_resource(STDERR)) {
+                fclose(STDERR);
+            }
         } catch (\Exception $e) {
             $this->logger->warning("Error closing file descriptors: " . $e->getMessage(),[__CLASS__]);
-        } finally {
-            fclose(STDIN);
-            fclose(STDOUT);
-            fclose(STDERR);
         }
     }
 
@@ -234,6 +238,7 @@ class EventBus implements EventBusInterface
 
             exit(0);
         }
+        pcntl_waitpid($pid, $status, WNOHANG);
     }
 
     /**

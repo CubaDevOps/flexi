@@ -18,9 +18,13 @@ class BusFactory
     private static array $instance = []; // Todo replace with an independent cache system
 
     /**
+     * @param ContainerInterface $container
+     * @param string $type
+     * @param string $file
+     * @return BusInterface
      * @throws ContainerExceptionInterface
-     * @throws \JsonException
      * @throws NotFoundExceptionInterface
+     * @throws \JsonException
      * @throws \ReflectionException
      */
     public static function getInstance(

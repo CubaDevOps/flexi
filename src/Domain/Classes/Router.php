@@ -106,7 +106,7 @@ class Router
     ): ResponseInterface {
         $request_path = $request->getUri()->getPath();
         $event = new Event('core.onRequest', __CLASS__, ['request' => $request]);
-        $this->event_bus->notify($event);
+        $this->event_bus->dispatch($event);
         $this->assertThatRouteCollectionIsNotEmpty();
 
         if (!$this->routes_indexed_by_path->offsetExists($request_path)) {
@@ -135,7 +135,7 @@ class Router
             'from' => $previous_route,
             'to' => $not_found_route->getPath(),
         ]);
-        $this->event_bus->notify($event);
+        $this->event_bus->dispatch($event);
         $response = $this->response_factory->createResponse();
 
         return $response
@@ -184,7 +184,7 @@ class Router
         $response = $this->executeStack($route, $request);
 
         $event = new Event('core.onResponse', __CLASS__, ['response' => $response]);
-        $this->event_bus->notify($event);
+        $this->event_bus->dispatch($event);
 
         return $response;
     }

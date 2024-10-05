@@ -94,7 +94,7 @@ class RouterTest extends TestCase
             ->method('getMethod')->willReturn('GET');
 
         $this->event_bus->expects($this->exactly(2))
-            ->method('notify')->willReturnSelf();
+            ->method('dispatch')->willReturnSelf();
 
         $this->class_factory->expects($this->once())
             ->method('build')->willReturn($healthHandlerMock);

@@ -12,13 +12,13 @@ use CubaDevOps\Flexi\Domain\Interfaces\EventListenerInterface;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Domain\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
+use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\EventDispatcher\StoppableEventInterface;
+use Psr\Log\LoggerInterface;
 
-class EventBus implements EventBusInterface, EventDispatcherInterface
+class EventBus implements EventBusInterface
 {
     use JsonFileReader;
     use GlobFileReader;
@@ -26,11 +26,19 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
     private array $events = [];
     private ContainerInterface $container;
     private ClassFactory $class_factory;
+    private LoggerInterface $logger;
+    private Configuration $configuration;
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __construct(ContainerInterface $container, ClassFactory $class_factory)
     {
         $this->container = $container;
         $this->class_factory = $class_factory;
+        $this->logger = $container->get('logger'); //Todo: inject dependency
+        $this->configuration = $container->get(Configuration::class); //Todo: Maybe inject as a dependency as well?
     }
 
     /**
@@ -85,49 +93,47 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
         $this->events[$identifier][] = $handler;
     }
 
+
     /**
+     * @throws \ReflectionException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws \ReflectionException
      */
     public function execute(DTOInterface $dto): void
     {
         if ($dto instanceof EventInterface) {
-            $this->notify($dto);
+            $this->dispatch($dto);
         }
     }
 
     /**
+     * Dispatches an event to all relevant listeners.
+     *
+     * @param object $event The event object to dispatch.
+     * @return object The event after processing by listeners.
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
      */
-    public function notify(EventInterface $dto): void
+    public function dispatch(object $event): object
     {
-        $this->dispatch($dto);
-    }
+        $identifier = $event instanceof EventInterface ? $event->getName() : get_class($event);
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws \ReflectionException
-     */
-    private function notifyListeners(array $listeners, object $event): void
-    {
-        foreach ($listeners as $listener) {
-            // Skip further listeners if the event is stoppable and propagation is stopped
-            if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
-                break;
-            }
+        $listeners = array_merge($this->getListeners($identifier), $this->getListeners('*'));
 
-            /** @var EventListenerInterface $handler_obj */
-            $listener_obj = $this->class_factory->build(
-                $this->container,
-                $listener
-            );
-            $listener_obj->handle($event);
+        if (empty($listeners)) {
+            return $event;
         }
+
+        if ($this->asyncMode()) {
+            $this->dispatchAsync($listeners, $event);
+        } else {
+            $this->notifyListeners($listeners, $event);
+        }
+
+        return $event;
     }
+
 
     public function hasHandler(string $identifier): bool
     {
@@ -153,29 +159,95 @@ class EventBus implements EventBusInterface, EventDispatcherInterface
     }
 
     /**
-     * Dispatches an event to all relevant listeners.
-     *
-     * @param object $event The event object to dispatch.
-     *
-     * @return object The event after processing by listeners.
+     * @throws \ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function notifyListeners(array $listeners, object $event): void
+    {
+        foreach ($listeners as $listener) {
+            $this->handleListener($listener, $event);
+        }
+
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws \ReflectionException
+     * @throws NotFoundExceptionInterface
+     */
+    private function handleListener(string $listener, object $event): void
+    {
+        if (!($event instanceof EventInterface) || $event->isPropagationStopped()) {
+            return;
+        }
+
+        /** @var EventListenerInterface $listener_obj */
+        $listener_obj = $this->class_factory->build($this->container, $listener);
+        $listener_obj->handle($event);
+    }
+
+    /**
+     * @return void
+     */
+    private function closeBuffers(): void
+    {
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();  // Flush all data to the client
+        }
+
+        // Close the standard file descriptors to prevent writing to the console
+        try {
+            if (defined('STDIN') && is_resource(STDIN)) {
+                fclose(STDIN);
+            }
+
+            if (defined('STDOUT') && is_resource(STDOUT)) {
+                fclose(STDOUT);
+            }
+
+            if (defined('STDERR') && is_resource(STDERR)) {
+                fclose(STDERR);
+            }
+        } catch (\Exception $e) {
+            $this->logger->warning("Error closing file descriptors: " . $e->getMessage(),[__CLASS__]);
+        }
+    }
+
+    /**
+     * @param array $listeners
+     * @param object $event
+     * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
      */
-    public function dispatch(object $event): object
+    private function dispatchAsync(array $listeners, object $event): void
     {
-        $identifier = $event instanceof EventInterface ? $event->getName() : get_class($event);
+        $pid = pcntl_fork();
 
-        // Notify specific event listeners
-        if (isset($this->events[$identifier])) {
-            $this->notifyListeners($this->events[$identifier], $event);
+        if ($pid === -1) {
+            $this->logger->error("Could not fork process");
+            throw new \RuntimeException("Could not fork process");
         }
 
-        // Notify listeners for all events (*)
-        if (isset($this->events['*'])) {
-            $this->notifyListeners($this->events['*'], $event);
-        }
+        if ($pid === 0) {
+            $this->notifyListeners($listeners, $event);
 
-        return $event;
+            $this->closeBuffers(); // Close the standard file descriptors to prevent blank output on parent process
+
+            exit(0);
+        }
+        pcntl_waitpid($pid, $status, WNOHANG);
+    }
+
+    /**
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function asyncMode(): bool
+    {
+        return PHP_SAPI === 'cli' && ($this->configuration->has('dispatch_mode') && (int)$this->configuration->get('dispatch_mode'));
     }
 }

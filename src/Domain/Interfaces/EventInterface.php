@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Interfaces;
 
-interface EventInterface extends DTOInterface
+use Psr\EventDispatcher\StoppableEventInterface;
+
+interface EventInterface extends DTOInterface, StoppableEventInterface
 {
     public function getName(): string;
 

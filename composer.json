@@ -1,7 +1,7 @@
 {
   "name": "cubadevops/flexi",
   "description": "The flexible framework that respects standards",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "time": "2024-06-02",
   "license": "MIT",
   "type": "project",
@@ -66,7 +66,8 @@
     "fix": "psalter --issues=all",
     "format": "php-cs-fixer fix --rules=@PSR12,@Symfony,declare_strict_types --allow-risky=yes .",
     "post-root-package-install": [
-      "@php -r \"file_exists('.env') || copy('env.example', '.env');\""
+      "@php -r \"file_exists('.env') || copy('env.example', '.env');\"",
+      "@php -r \"if (!file_exists('var/logs')) { mkdir('var/logs', 0777, true); } touch('var/logs/app.log');\""
     ],
     "update-framework": [
       "upgrader upgrade-safely"

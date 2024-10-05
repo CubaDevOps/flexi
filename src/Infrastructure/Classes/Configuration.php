@@ -43,9 +43,4 @@ class Configuration implements ContainerInterface
     {
         return $this->config->has($id);
     }
-
-    public function isDispatchModeEnabled(): bool
-    {
-        return $this->config->get('dispatch_mode') ?? false;
-    }
 }

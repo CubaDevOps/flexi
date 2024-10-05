@@ -125,7 +125,7 @@ class EventBus implements EventBusInterface
             return $event;
         }
 
-        if ($this->configuration->isDispatchModeEnabled()) {
+        if ($this->asyncMode()) {
             $this->dispatchAsync($listeners, $event);
         } else {
             $this->notifyListeners($listeners, $event);
@@ -234,5 +234,15 @@ class EventBus implements EventBusInterface
 
             exit(0);
         }
+    }
+
+    /**
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function asyncMode(): bool
+    {
+        return PHP_SAPI === 'cli' && ($this->configuration->has('dispatch_mode') && (int)$this->configuration->get('dispatch_mode'));
     }
 }

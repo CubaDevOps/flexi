@@ -6,9 +6,8 @@ namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
-use Psr\EventDispatcher\StoppableEventInterface;
 
-class Event implements EventInterface, StoppableEventInterface
+class Event implements EventInterface
 {
     private string $name;
     private array $data;

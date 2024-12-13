@@ -14,6 +14,16 @@
       "controller": "CubaDevOps\\Flexi\\Infrastructure\\Controllers\\NotFoundController"
     },
     {
+      "name": "trigger-event",
+      "path": "/trigger-event",
+      "method": "POST",
+      "controller": "CubaDevOps\\Flexi\\Infrastructure\\Controllers\\WebHookController",
+      "middlewares": [
+        "CubaDevOps\\Flexi\\Infrastructure\\Middlewares\\JWTAuthMiddleware"
+      ],
+      "parameters": []
+    },
+    {
       "glob": "./modules/*/Config/routes.json"
     }
   ]

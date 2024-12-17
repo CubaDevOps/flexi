@@ -35,8 +35,9 @@ class JWTAuthMiddleware implements MiddlewareInterface
             try {
                 // Decode the JWT
                 $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
+
                 // You can attach user info to the request if needed
-                $request = $request->withAttribute('user', $decoded);
+                // $request = $request->withAttribute('user', $decoded);
             } catch (\Exception $e) {
                 return $this->response_factory->createResponse(401, 'Unauthorized');
             }

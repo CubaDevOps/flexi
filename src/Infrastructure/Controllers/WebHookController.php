@@ -22,6 +22,10 @@ class WebHookController extends HttpHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        if (!$this->queue->isEmpty()) {
+            return $this->getNextMiddleware()->process($request, $this);
+        }
+
         try {
             $validatedData = $this->validate($request);
         } catch (Exception $e) {
@@ -31,7 +35,7 @@ class WebHookController extends HttpHandler
         $event = new Event(
             $validatedData['event_name'],
             $validatedData['trigger_date'],
-            json_decode($validatedData['data'], true)
+            $validatedData['data']
         );
 
         try {
@@ -45,20 +49,17 @@ class WebHookController extends HttpHandler
 
     private function validate(ServerRequestInterface $request): array
     {
-        $errors = [];
+        $data = json_decode($request->getBody()->getContents(), true);
 
-        $eventName = $request->getAttribute('event_name');
-        if (empty($eventName) || !is_string($eventName)) {
+        if (empty($data['event_name']) || !is_string($data['event_name'])) {
             $errors['event_name'] = 'The event_name field is required and must be a string.';
         }
 
-        $triggerDate = $request->getAttribute('trigger_date');
-        if (empty($triggerDate) || !strtotime($triggerDate)) {
+        if (empty($data['trigger_date']) || !strtotime($data['trigger_date'])) {
             $errors['trigger_date'] = 'The trigger_date field is required and must be a valid date.';
         }
 
-        $data = $request->getAttribute('data');
-        if (empty($data) || is_null(json_decode($data, true))) {
+        if (empty($data['data'])) {
             $errors['data'] = 'The data field is required and must be a valid JSON string.';
         }
 
@@ -67,9 +68,9 @@ class WebHookController extends HttpHandler
         }
 
         return [
-            'event_name'    => $eventName,
-            'trigger_date'  => $triggerDate,
-            'data'          => json_decode($data, true),
+            'event_name'    => $data['event_name'],
+            'trigger_date'  => $data['trigger_date'],
+            'data'          => $data['data'],
         ];
     }
 }

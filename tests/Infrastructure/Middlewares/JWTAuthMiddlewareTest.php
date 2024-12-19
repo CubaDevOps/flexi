@@ -2,8 +2,8 @@
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\Middlewares;
 
-use CubaDevOps\Flexi\Infrastructure\Middlewares\JWTAuthMiddleware;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use CubaDevOps\Flexi\Infrastructure\Middlewares\JWTAuthMiddleware;
 use Firebase\JWT\JWT;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -18,21 +18,6 @@ class JWTAuthMiddlewareTest extends TestCase
     private RequestHandlerInterface $handler;
     private ServerRequestInterface $request;
     private ResponseInterface $unauthorizedResponse;
-
-    protected function setUp(): void
-    {
-        $this->configuration = $this->createMock(Configuration::class);
-        $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
-        $this->handler = $this->createMock(RequestHandlerInterface::class);
-        $this->request = $this->createMock(ServerRequestInterface::class);
-        $this->unauthorizedResponse = $this->createMock(ResponseInterface::class);
-
-        $this->responseFactory
-            ->method('createResponse')
-            ->willReturnCallback(function (int $status, string $reason) {
-                return $this->unauthorizedResponse;
-            });
-    }
 
     public function testValidJWT()
     {
@@ -81,9 +66,29 @@ class JWTAuthMiddlewareTest extends TestCase
             ->with('Authorization')
             ->willReturn('');
 
+        $this->unauthorizedResponse->expects($this->once())
+            ->method('withHeader')
+            ->with('WWW-Authenticate', 'Bearer')
+            ->willReturnSelf();
+
         $middleware = new JWTAuthMiddleware($this->configuration, $this->responseFactory);
         $response = $middleware->process($this->request, $this->handler);
 
         $this->assertSame($this->unauthorizedResponse, $response);
+    }
+
+    protected function setUp(): void
+    {
+        $this->configuration = $this->createMock(Configuration::class);
+        $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $this->handler = $this->createMock(RequestHandlerInterface::class);
+        $this->request = $this->createMock(ServerRequestInterface::class);
+        $this->unauthorizedResponse = $this->createMock(ResponseInterface::class);
+
+        $this->responseFactory
+            ->method('createResponse')
+            ->willReturnCallback(function (int $status, string $reason) {
+                return $this->unauthorizedResponse;
+            });
     }
 }

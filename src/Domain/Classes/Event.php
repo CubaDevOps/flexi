@@ -20,7 +20,7 @@ class Event implements EventInterface
         $this->name = $name;
         $this->data = $data;
         $this->fired_by = $fired_by;
-        $this->occurredOn = new \DateTimeImmutable();
+        $this->occurredOn = new \DateTimeImmutable(); //Todo: refactor to pass `occurredOn` as parameter or verify if it's passed in array data , otherwise use the current time, this allows to replay events from external sources
     }
 
     public function getName(): string

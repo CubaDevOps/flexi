@@ -29,14 +29,12 @@ class WebHookControllerTest extends TestCase
     public function testHandleSuccess(): void
     {
         $data = [
-            'event_name' => 'test_event',
-            'trigger_date' => '2024-12-17T18:00:00Z',
+            'event' => 'test_event',
             'data' => ['key' => 'value']
         ];
-        $jsonData = json_encode($data);
 
-        $this->streamMock->method('getContents')->willReturn($jsonData);
-        $this->requestMock->method('getBody')->willReturn($this->streamMock);
+        $this->mockRequestBody($data);
+        $this->mockRequestPayload(['fired_by' => 'tester']);
 
         $this->eventBusMock
             ->expects($this->once())
@@ -44,38 +42,59 @@ class WebHookControllerTest extends TestCase
             ->with($this->isInstanceOf(Event::class));
 
         $response = $this->webHookController->handle($this->requestMock);
+
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testHandleValidationError(): void
     {
-        $data = ['test' => 'required fields empty'];
-        $jsonData = json_encode($data);
+        $data = ['event' => '', 'data' => null];
 
-        $this->streamMock->method('getContents')->willReturn($jsonData);
-        $this->requestMock->method('getBody')->willReturn($this->streamMock);
+        $this->mockRequestBody($data);
+        $this->mockRequestPayload(['fired_by' => '']);
 
         $response = $this->webHookController->handle($this->requestMock);
+
         $this->assertEquals(400, $response->getStatusCode());
     }
 
     public function testHandleDispatchError(): void
     {
         $data = [
-            'event_name' => 'test_event',
-            'trigger_date' => '2024-12-17T18:00:00Z',
+            'event' => 'test_event',
             'data' => ['key' => 'value']
         ];
-        $jsonData = json_encode($data);
 
-        $this->streamMock->method('getContents')->willReturn($jsonData);
-        $this->requestMock->method('getBody')->willReturn($this->streamMock);
+        $this->mockRequestBody($data);
+        $this->mockRequestPayload(['fired_by' => 'tester']);
 
         $this->eventBusMock
             ->method('dispatch')
-            ->willThrowException(new Exception('Dispatch failed'));
+            ->willThrowException(new \ReflectionException('Dispatch failed'));
 
         $response = $this->webHookController->handle($this->requestMock);
+
         $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    private function mockRequestBody(array $data): void
+    {
+        $jsonData = json_encode($data);
+
+        $this->streamMock
+            ->method('getContents')
+            ->willReturn($jsonData);
+
+        $this->requestMock
+            ->method('getBody')
+            ->willReturn($this->streamMock);
+    }
+
+    private function mockRequestPayload(array $payload): void
+    {
+        $this->requestMock
+            ->method('getAttribute')
+            ->with('payload')
+            ->willReturn($payload);
     }
 }

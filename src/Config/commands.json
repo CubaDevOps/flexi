@@ -2,6 +2,11 @@
   "handlers": [
     {
       "glob": "./modules/*/Config/commands.json"
+    },
+    {
+      "id": "CubaDevOps\\Flexi\\Domain\\Classes\\Event",
+      "cli_alias": "event:trigger",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\TriggerEvent"
     }
   ]
 }

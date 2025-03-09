@@ -85,7 +85,7 @@ class EventTest extends TestCase
         ];
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid data provided for '. Event::class);
+        $this->expectExceptionMessage('Invalid parameters provided for '. Event::class);
 
         Event::fromArray($data);
     }

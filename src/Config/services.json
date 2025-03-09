@@ -110,6 +110,10 @@
       }
     },
     {
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\EventBusInterface",
+      "alias": "CubaDevOps\\Flexi\\Domain\\Classes\\EventBus"
+    },
+    {
       "name": "logger",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\PsrLogger",

@@ -24,7 +24,9 @@
   "require": {
     "php": ">=7.4",
     "ext-json": "*",
+    "ext-pcntl": "*",
     "cubadevops/upgrader": "^1.6",
+    "firebase/php-jwt": "6.10.0",
     "guzzlehttp/guzzle": "^7.7",
     "psr/cache": "^1.0",
     "psr/container": "^2.0",
@@ -38,11 +40,9 @@
     "psr/log": "^1.1",
     "psr/simple-cache": "^1.0",
     "symfony/error-handler": "^5.4",
-    "vlucas/phpdotenv": "^5.5",
-    "ext-pcntl": "*"
+    "vlucas/phpdotenv": "^5.5"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^9.6",
     "vimeo/psalm": "^5.22.2",
     "friendsofphp/php-cs-fixer": "^3.57"

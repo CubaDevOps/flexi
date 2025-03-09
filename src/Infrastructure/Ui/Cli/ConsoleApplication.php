@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 
 use CubaDevOps\Flexi\Domain\Classes\CommandBus;
+use CubaDevOps\Flexi\Domain\Classes\EventBus;
 use CubaDevOps\Flexi\Domain\Classes\QueryBus;
 use CubaDevOps\Flexi\Domain\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
@@ -60,14 +61,14 @@ class ConsoleApplication
             return ConsoleOutputFormatter::format($e->getMessage(), 'error');
         }
 
-        $command_handler = new CommandHandler($container->get(CommandBus::class));
-        $query_handler = new QueryHandler($container->get(QueryBus::class));
 
         try {
-            if ($input->isCommand()) {
-                $result = $command_handler->handle($input);
+            if ($input->getType() === CliType::COMMAND) {
+                $result = (new CommandHandler($container->get(CommandBus::class)))->handle($input);
+            } elseif ($input->getType() === CliType::QUERY) {
+                $result = (new QueryHandler($container->get(QueryBus::class)))->handle($input);
             } else {
-                $result = $query_handler->handle($input);
+                $result = (new EventHandler($container->get(EventBus::class)))->handle($input);
             }
 
             return ConsoleOutputFormatter::format($result);
@@ -76,7 +77,10 @@ class ConsoleApplication
                 throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
             }
 
-            return ConsoleOutputFormatter::format('Command not found.', 'error');
+            return ConsoleOutputFormatter::format(
+                $input->getType() . ': ' . $input->getCommandName() . ' not found.',
+                'error'
+            );
         }
     }
 

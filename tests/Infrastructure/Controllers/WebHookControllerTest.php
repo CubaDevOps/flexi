@@ -30,11 +30,11 @@ class WebHookControllerTest extends TestCase
     {
         $data = [
             'event' => 'test_event',
+            'fired_by' => 'tester',
             'data' => ['key' => 'value']
         ];
 
-        $this->mockRequestBody($data);
-        $this->mockRequestPayload(['fired_by' => 'tester']);
+        $this->mockRequestPayload($data);
 
         $this->eventBusMock
             ->expects($this->once())
@@ -48,10 +48,13 @@ class WebHookControllerTest extends TestCase
 
     public function testHandleValidationError(): void
     {
-        $data = ['event' => '', 'data' => null];
+        $data = [
+            'event' => '',
+            'fired_by' => '',
+            'data' => ['key' => 'value']
+        ];
 
-        $this->mockRequestBody($data);
-        $this->mockRequestPayload(['fired_by' => '']);
+        $this->mockRequestPayload($data);
 
         $response = $this->webHookController->handle($this->requestMock);
 
@@ -62,11 +65,11 @@ class WebHookControllerTest extends TestCase
     {
         $data = [
             'event' => 'test_event',
+            'fired_by' => 'tester',
             'data' => ['key' => 'value']
         ];
 
-        $this->mockRequestBody($data);
-        $this->mockRequestPayload(['fired_by' => 'tester']);
+        $this->mockRequestPayload($data);
 
         $this->eventBusMock
             ->method('dispatch')
@@ -77,24 +80,11 @@ class WebHookControllerTest extends TestCase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    private function mockRequestBody(array $data): void
-    {
-        $jsonData = json_encode($data);
-
-        $this->streamMock
-            ->method('getContents')
-            ->willReturn($jsonData);
-
-        $this->requestMock
-            ->method('getBody')
-            ->willReturn($this->streamMock);
-    }
-
     private function mockRequestPayload(array $payload): void
     {
         $this->requestMock
             ->method('getAttribute')
             ->with('payload')
-            ->willReturn($payload);
+            ->willReturn((object)$payload);
     }
 }

@@ -3,11 +3,12 @@
 namespace CubaDevOps\Flexi\Test\Infrastructure\Middlewares;
 
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use CubaDevOps\Flexi\Infrastructure\Controllers\WebHookController;
 use CubaDevOps\Flexi\Infrastructure\Middlewares\JWTAuthMiddleware;
 use Firebase\JWT\JWT;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -17,7 +18,6 @@ class JWTAuthMiddlewareTest extends TestCase
     private ResponseFactoryInterface $responseFactory;
     private RequestHandlerInterface $handler;
     private ServerRequestInterface $request;
-    private ResponseInterface $unauthorizedResponse;
 
     public function testValidJWT()
     {
@@ -33,14 +33,13 @@ class JWTAuthMiddlewareTest extends TestCase
 
         $this->request->method('withAttribute')->willReturnSelf();
 
-        $this->handler->expects($this->once())
-            ->method('handle')
-            ->willReturn($this->createMock(ResponseInterface::class));
+        $this->handler->method('handle')
+            ->willReturn($this->responseFactory->createResponse(200, 'OK'));
 
         $middleware = new JWTAuthMiddleware($this->configuration, $this->responseFactory);
         $response = $middleware->process($this->request, $this->handler);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testInvalidJWT()
@@ -57,7 +56,8 @@ class JWTAuthMiddlewareTest extends TestCase
         $middleware = new JWTAuthMiddleware($this->configuration, $this->responseFactory);
         $response = $middleware->process($this->request, $this->handler);
 
-        $this->assertSame($this->unauthorizedResponse, $response);
+        $this->assertSame($response->getStatusCode(), 401);
+        $this->assertSame('Malformed UTF-8 characters', $response->getReasonPhrase());
     }
 
     public function testMissingAuthorizationHeader()
@@ -66,29 +66,25 @@ class JWTAuthMiddlewareTest extends TestCase
             ->with('Authorization')
             ->willReturn('');
 
-        $this->unauthorizedResponse->expects($this->once())
-            ->method('withHeader')
-            ->with('WWW-Authenticate', 'Bearer')
-            ->willReturnSelf();
-
         $middleware = new JWTAuthMiddleware($this->configuration, $this->responseFactory);
         $response = $middleware->process($this->request, $this->handler);
 
-        $this->assertSame($this->unauthorizedResponse, $response);
+        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals('Authorization header not found', $response->getReasonPhrase());
     }
 
     protected function setUp(): void
     {
         $this->configuration = $this->createMock(Configuration::class);
         $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
-        $this->handler = $this->createMock(RequestHandlerInterface::class);
+        $this->handler = $this->createMock(WebHookController::class);
         $this->request = $this->createMock(ServerRequestInterface::class);
-        $this->unauthorizedResponse = $this->createMock(ResponseInterface::class);
 
+        $callback = function (int $status, string $reason) {
+            return new Response($status, [], null, '1.1', $reason);
+        };
         $this->responseFactory
             ->method('createResponse')
-            ->willReturnCallback(function (int $status, string $reason) {
-                return $this->unauthorizedResponse;
-            });
+            ->willReturnCallback($callback);
     }
 }

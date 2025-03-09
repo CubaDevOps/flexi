@@ -17,6 +17,7 @@ class Event implements EventInterface
 
     public function __construct(string $name, string $fired_by, array $data = [])
     {
+        self::assertRequiredFields(['event' => $name, 'fired_by' => $fired_by, 'data' => $data]);
         $this->name = $name;
         $this->data = $data;
         $this->fired_by = $fired_by;
@@ -28,16 +29,25 @@ class Event implements EventInterface
      */
     public static function fromArray(array $data): DTOInterface
     {
-        if (!self::validate($data)) {
-            throw new \InvalidArgumentException('Invalid data provided for ' . self::class);
-        }
+        self::assertRequiredFields($data);
 
         return new self($data['event'], $data['fired_by'], $data['data'] ?? []);
     }
 
     public static function validate(array $data): bool
     {
-        return isset($data['event'], $data['fired_by']);
+        return !empty($data['event']) && !empty($data['fired_by']);
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    private static function assertRequiredFields(array $data): void
+    {
+        if (!self::validate($data)) {
+            throw new \InvalidArgumentException('Invalid parameters provided for ' . self::class);
+        }
     }
 
     public function getName(): string

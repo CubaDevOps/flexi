@@ -20,10 +20,24 @@ class Event implements EventInterface
         $this->name = $name;
         $this->data = $data;
         $this->fired_by = $fired_by;
-
-        //Todo: maybe 'occurredOn' could be a trait of its own [created_at, updated_at]
-        // we are better of taking the current time in our system
         $this->occurredOn = new \DateTimeImmutable();
+    }
+
+    /**
+     * @return self
+     */
+    public static function fromArray(array $data): DTOInterface
+    {
+        if (!self::validate($data)) {
+            throw new \InvalidArgumentException('Invalid data provided for ' . self::class);
+        }
+
+        return new self($data['event'], $data['fired_by'], $data['data'] ?? []);
+    }
+
+    public static function validate(array $data): bool
+    {
+        return isset($data['event'], $data['fired_by']);
     }
 
     public function getName(): string
@@ -36,9 +50,13 @@ class Event implements EventInterface
         return $this->name;
     }
 
-    public function occurredOn(): \DateTimeImmutable
+    /**
+     * @throws \JsonException
+     */
+    public function serialize(): string
     {
-        return $this->occurredOn;
+        //Todo refactor to use JsonHandler Trait, implement serialize and deserialize methods for json
+        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -56,13 +74,9 @@ class Event implements EventInterface
         ];
     }
 
-    /**
-     * @throws \JsonException
-     */
-    public function serialize(): string
+    public function occurredOn(): \DateTimeImmutable
     {
-        //Todo refactor to use JsonHandler Trait, implement serialize and deserialize methods for json
-        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
+        return $this->occurredOn;
     }
 
     public function firedBy(): string
@@ -70,26 +84,9 @@ class Event implements EventInterface
         return $this->fired_by;
     }
 
-    /**
-     * @return self
-     */
-    public static function fromArray(array $data): DTOInterface
-    {
-        if (!self::validate($data)) {
-            throw new \InvalidArgumentException('Invalid data provided for '.self::class);
-        }
-
-        return new self($data['event'], $data['fired_by'], $data['data'] ?? []);
-    }
-
-    public static function validate(array $data): bool
-    {
-        return isset($data['event'], $data['fired_by']);
-    }
-
     public function get(string $name)
     {
-        return $this->toArray()[$name];
+        return $this->toArray()[$name] ?? null;
     }
 
     /**

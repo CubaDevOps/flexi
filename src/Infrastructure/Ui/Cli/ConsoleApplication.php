@@ -90,10 +90,10 @@ class ConsoleApplication
     public static function printUsage(): void
     {
         echo '- Usage: ' . ConsoleOutputFormatter::format(
-                '--command(-c)|--query(-q)',
+                '--command(-c)|--query(-q)|--event(-e)',
                 'green',
                 false
-            ) . ' command_name ' . ConsoleOutputFormatter::format('arg1=blabla arg2=blabla', 'green');
+            ) . ' command_name|query_name|event_name ' . ConsoleOutputFormatter::format('arg1=blabla arg2=blabla', 'green');
         echo '- Try ' . ConsoleOutputFormatter::format(
                 'command:list',
                 'green',

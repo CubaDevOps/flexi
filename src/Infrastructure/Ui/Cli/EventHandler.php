@@ -25,10 +25,10 @@ class EventHandler
         }
 
         if ($input->getCommandName() === 'trigger') {
-            $data = json_decode((string)$input->getArgument('data', '{}'), true, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode($input->getArgument('data', '{}'), true, 512, JSON_THROW_ON_ERROR);
             $event = new Event($input->getArgument('name'), $input->getArgument('fired_by', 'cli'), $data);
             $this->event_bus->dispatch($event);
-            return 'Event triggered';
+            return 'Event "' . $input->getArgument('name') . '" triggered: ' . $event->serialize();
         }
 
         if ($input->getCommandName() === 'listeners') {

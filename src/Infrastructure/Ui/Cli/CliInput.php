@@ -12,14 +12,14 @@ class CliInput
      * @var false
      */
     private bool $show_help;
-    private bool $is_command;
+    private string $type;
 
-    public function __construct(string $command_name, array $args, bool $is_command, $show_help = false)
+    public function __construct(string $command_name, array $args, string $type = 'query', $show_help = false)
     {
         $this->command_name = $command_name;
         $this->args = $args;
         $this->show_help = $show_help;
-        $this->is_command = $is_command;
+        $this->type = $type;
     }
 
     public function __toString(): string
@@ -47,8 +47,8 @@ class CliInput
         return $this->show_help;
     }
 
-    public function isCommand(): bool
+    public function getType(): string
     {
-        return $this->is_command;
+        return $this->type;
     }
 }

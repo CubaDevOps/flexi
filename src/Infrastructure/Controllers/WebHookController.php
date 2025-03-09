@@ -2,24 +2,21 @@
 
 namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Domain\Classes\EventBus;
+use CubaDevOps\Flexi\Domain\Classes\Event;
+use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
-use CubaDevOps\Flexi\Infrastructure\Commands\DispatchEventCommand;
-use InvalidArgumentException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use ReflectionException;
+use stdClass;
 
 class WebHookController extends HttpHandler
 {
-    private DispatchEventCommand $command;
+    private EventBusInterface $event_bus;
 
-    public function __construct(EventBus $eventBus)
+    public function __construct(EventBusInterface $event_bus)
     {
         parent::__construct();
-        $this->command = new DispatchEventCommand($eventBus);
+        $this->event_bus = $event_bus;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -29,12 +26,10 @@ class WebHookController extends HttpHandler
         }
 
         try {
-            $data = json_decode($request->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-            $data['fired_by'] = $request->getAttribute('payload')['fired_by'] ?? null;
-
-            $this->command->execute($data);
-        } catch (InvalidArgumentException|NotFoundExceptionInterface|ContainerExceptionInterface|ReflectionException $e) {
+            /** @var StdClass $payload */
+            $payload = $request->getAttribute('payload');
+            $this->event_bus->dispatch(new Event($payload->event, $payload->fired_by, (array)($payload->data ?? null)));
+        } catch (\Exception $e) {
             return $this->createResponse(400, $e->getMessage());
         }
 

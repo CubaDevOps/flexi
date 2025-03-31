@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Utils;
 
+use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 
 class ClassFactory
 {
-    private array $cache = [];
+    use CacheKeyGeneratorTrait;
+    private CacheInterface $cache;
 
-    public function __construct()
+    public function __construct(CacheInterface $cache)
     {
+        $this->cache = $cache;
     }
 
     /**
@@ -22,6 +26,7 @@ class ClassFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
+     * @throws InvalidArgumentException
      */
     public function build(
         ContainerInterface $container,
@@ -29,8 +34,8 @@ class ClassFactory
         array $arguments = []
     ) {
         $key = $this->getCacheKey($className, '__construct', $arguments);
-        if (isset($this->cache[$key])) {
-            return $this->cache[$key];
+        if ($this->cache->has($key)) {
+            return $this->cache->get($key);
         }
 
         $reflectionClass = new \ReflectionClass($className);
@@ -51,14 +56,10 @@ class ClassFactory
             $arguments
         );
 
-        $this->cache[$key] = $reflectionClass->newInstanceArgs($args);
+        $instance = $reflectionClass->newInstanceArgs($args);
+        $this->cache->set($key, $instance);
 
-        return $this->cache[$key];
-    }
-
-    private function getCacheKey(string $class, string $method, array $arguments): string
-    {
-        return md5($class.$method.serialize($arguments));
+        return $instance;
     }
 
     /**
@@ -144,6 +145,7 @@ class ClassFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
+     * @throws InvalidArgumentException
      */
     public function buildFromFactory(
         ContainerInterface $container,
@@ -152,8 +154,8 @@ class ClassFactory
         array $params = []
     ) {
         $key = $this->getCacheKey($class, $method, $params);
-        if (isset($this->cache[$key])) {
-            return $this->cache[$key];
+        if ($this->cache->has($key)) {
+            return $this->cache->get($key);
         }
 
         $reflection = new \ReflectionMethod($class, $method);
@@ -165,8 +167,9 @@ class ClassFactory
         }
 
         $args = $this->resolveArguments($reflection, $container, $params);
-        $this->cache[$key] = $reflection->invokeArgs(null, $args);
+        $instance = $reflection->invokeArgs(null, $args);
+        $this->cache->set($key, $instance);
 
-        return $this->cache[$key];
+        return $instance;
     }
 }

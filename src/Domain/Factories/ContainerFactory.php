@@ -21,7 +21,7 @@ class ContainerFactory
     public static function getInstance(string $file = ''): Container
     {
         if (!self::$instance) {
-            $container = new Container();
+            $container = new Container(new InMemoryCache());
             if ($file) {
                 $container->loadServices($file);
             }

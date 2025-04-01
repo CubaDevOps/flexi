@@ -25,11 +25,6 @@ class ObjectBuilder implements ObjectBuilderInterface
         $this->cache = $cache;
     }
 
-    public function __construct(CacheInterface $cache)
-    {
-        $this->cache = $cache;
-    }
-
     /**
      * Builds an instance of the given class name.
      *

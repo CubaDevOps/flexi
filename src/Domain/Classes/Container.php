@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Classes;
 
+use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Domain\Utils\CacheKeyGeneratorTrait;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Domain\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
@@ -11,11 +13,13 @@ use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 
 class Container implements ContainerInterface
 {
     use JsonFileReader;
     use GlobFileReader;
+    use CacheKeyGeneratorTrait;
 
     /**
      * @var Service[]
@@ -23,12 +27,12 @@ class Container implements ContainerInterface
     private array $services = [];
     private array $aliases = [];
     private ClassFactory $factory;
+    private CacheInterface $cache;
 
-    private array $cache = [];
-
-    public function __construct()
+    public function __construct(CacheInterface $cache)
     {
-        $this->factory = new ClassFactory();
+        $this->cache = $cache;
+        $this->factory = new ClassFactory($cache);
     }
 
     /**
@@ -94,11 +98,6 @@ class Container implements ContainerInterface
             || 'container' === $id;
     }
 
-    public function isAlias(string $id): bool
-    {
-        return isset($this->aliases[$id]);
-    }
-
     private function getServiceClassFromArray(
         string $name,
         array $definition
@@ -141,35 +140,55 @@ class Container implements ContainerInterface
         $this->services[$id] = $service;
     }
 
+    public function isAlias(string $id): bool
+    {
+        return isset($this->aliases[$id]);
+    }
+
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
+     * @throws InvalidArgumentException
      */
     public function get(string $id): object
     {
         if ('container' === $id) {
             return $this;
         }
+        if ('cache' === $id || CacheInterface::class === $id) {
+            return $this->cache;
+        }
+        if (ClassFactory::class === $id) {
+            return $this->factory;
+        }
 
         $this->assertThatServiceExist($id);
 
         $service_id = $this->isAlias($id) ? $this->aliases[$id] : $id;
 
-        $service = $this->services[$service_id];
+        $cache_key = $this->getCacheKey($service_id,'_cache', []);
 
-        return $this->cache[$service->getName()] ?? $this->buildFromService($service);
+        if ($this->cache->has($cache_key)) {
+            return $this->cache->get($cache_key);
+        }
+
+        $service_instance = $this->buildFromService($this->services[$service_id]);
+        $this->cache->set($cache_key, $service_instance);
+
+        return $service_instance;
     }
 
     /**
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
      * @throws ContainerExceptionInterface
+     * @throws InvalidArgumentException
      */
     private function buildFromService(Service $service)
     {
-        $this->cache[$service->getName()] = ServiceType::TYPE_CLASS === $service->getType()->getValue(
-        ) ? $this->factory->build(
+        //Todo add support for service type of Instance
+        return ServiceType::TYPE_CLASS === $service->getType()->getValue() ? $this->factory->build(
             $this,
             $service->getDefinition()->getClass(),
             $service->getDefinition()->getArguments()
@@ -179,7 +198,5 @@ class Container implements ContainerInterface
             $service->getDefinition()->getMethod(),
             $service->getDefinition()->getArguments()
         );
-
-        return $this->cache[$service->getName()];
     }
 }

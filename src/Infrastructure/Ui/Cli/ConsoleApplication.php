@@ -74,7 +74,7 @@ class ConsoleApplication
             }
 
             return ConsoleOutputFormatter::format(
-                $input->getType() . ': ' . $input->getCommandName() . ' not found.',
+                $input->getType().': '.$input->getCommandName().' not found.',
                 'error'
             );
         }

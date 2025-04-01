@@ -2,11 +2,12 @@
 
 namespace CubaDevOps\Flexi\Test\Domain\Utils;
 
-use CubaDevOps\Flexi\Domain\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Domain\Factories\RouterFactory;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Factories\ConfigurationFactory;
+use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
+use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\HasNoConstructor;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\IsNotInstantiable;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +20,7 @@ class ClassFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->classFactory = new ClassFactory();
+        $this->classFactory = new ClassFactory(CacheFactory::getInstance());
 
         $this->container = ContainerFactory::getInstance('./tests/TestData/Configurations/container-test.json');
     }

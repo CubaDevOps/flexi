@@ -24,7 +24,7 @@ leverages Dependency Injection (DI), a flexible routing system, CQRS and an even
 ## Features
 
 - **Modularity & Extensibility**: Flexi offers a modular architecture that promotes code organization and reusability. Its extensibility allows developers to customize and extend functionality according to specific project requirements.
-- **Dependency Injection**: Built-in support for Dependency Injection simplifies management and injection of dependencies, enhancing code maintainability and testability. DI in Flexi is implemented using a container that manages service with lazy loading instantiation. 
+- **Dependency Injection**: Built-in support for Dependency Injection simplifies management and injection of dependencies, enhancing code maintainability and testability. DI in Flexi is implemented using a container that manages service with lazy loading instantiation.
 - **Flexible Routing**: With a flexible routing system, developers can easily define and manage HTTP request handling, streamlining development of complex routing logic enriched with middleware support.
 - **Event-Driven Architecture**: Flexi's event-driven architecture enables asynchronous handling of events by event listeners, fostering loose coupling and flexibility in application design.
 - **CQRS & Scalability**: Support for Command Query Responsibility Segregation (CQRS) promotes scalability and performance optimization. Combined with features like asynchronous processing, Flexi facilitates the development of scalable applications capable of handling high traffic and data loads.
@@ -233,7 +233,7 @@ The `Router` class is responsible for managing routes and dispatching requests t
 ```php
 use CubaDevOps\Flexi\Domain\Classes\Router;
 use Psr\Http\Message\ServerRequestInterface;
-use CubaDevOps\Flexi\Domain\Factories\ContainerFactory;
+use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
 
 /** @var Router $router */
 $router = ContainerFactory::getInstance()->get(Router::class); // or use router alias
@@ -252,7 +252,7 @@ accordingly.
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Classes\Event;
 use CubaDevOps\Flexi\Application\UseCase\Health;
-use CubaDevOps\Flexi\Domain\Factories\ContainerFactory;
+use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Domain\Classes\EventBus;
 
 $eventBus = ContainerFactory::getInstance()->get(EventBus::class);

@@ -12,13 +12,18 @@ use Psr\SimpleCache\InvalidArgumentException;
 
 class ClassFactory
 {
+    use CacheKeyGeneratorTrait;
+    
     private const ERROR_NOT_INSTANTIABLE = 'Class is not instantiable: %s';
     private const ERROR_UNRESOLVED_DEPENDENCY = 'Unable to resolve dependency: %s';
     private const ERROR_PARAMETER_NO_TYPE = 'Parameter %s has no type';
     private const ERROR_INVALID_DEFINITION = 'Invalid service definition';
+    
+    private CacheInterface $cache;
 
-    public function __construct()
+    public function __construct(CacheInterface $cache)
     {
+        $this->cache = $cache;
     }
 
     /**
@@ -31,9 +36,15 @@ class ClassFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
+     * @throws InvalidArgumentException
      */
-    public function build(ContainerInterface $container, string $className): object
+    public function build(ContainerInterface $container, string $className, array $arguments = []): object
     {
+        $key = $this->getCacheKey($className, '__construct', $arguments);
+        if ($this->cache->has($key)) {
+            return $this->cache->get($key);
+        }
+
         $reflectionClass = new \ReflectionClass($className);
 
         if (!$reflectionClass->isInstantiable()) {
@@ -48,7 +59,10 @@ class ClassFactory
 
         $dependencies = $this->resolveConstructorDependencies($constructor->getParameters(), $container);
 
-        return $reflectionClass->newInstanceArgs($dependencies);
+        $instance = $reflectionClass->newInstanceArgs($dependencies);
+        $this->cache->set($key, $instance);
+
+        return $instance;
     }
 
     /**

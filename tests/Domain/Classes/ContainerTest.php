@@ -16,6 +16,7 @@ use CubaDevOps\Flexi\Domain\Classes\VersionRepository;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -34,7 +35,7 @@ class ContainerTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->container = new Container();
+        $this->container = new Container(CacheFactory::getInstance());
 
         $this->container->loadServices('./src/Config/services.json');
     }

@@ -98,11 +98,6 @@ class Container implements ContainerInterface
             || 'container' === $id;
     }
 
-    public function isAlias(string $id): bool
-    {
-        return isset($this->aliases[$id]);
-    }
-
     private function getServiceClassFromArray(
         string $name,
         array $definition
@@ -145,6 +140,11 @@ class Container implements ContainerInterface
         $this->services[$id] = $service;
     }
 
+    public function isAlias(string $id): bool
+    {
+        return isset($this->aliases[$id]);
+    }
+
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -167,13 +167,14 @@ class Container implements ContainerInterface
 
         $service_id = $this->isAlias($id) ? $this->aliases[$id] : $id;
 
-        $service = $this->services[$service_id];
+        $cache_key = $this->getCacheKey($service_id,'_cache', []);
 
-        if ($this->cache->has($service_id)) {
-            return $this->cache->get($service_id);
+        if ($this->cache->has($cache_key)) {
+            return $this->cache->get($cache_key);
         }
-        $service_instance = $this->buildFromService($service);
-        $this->cache->set($service_id, $service_instance);
+
+        $service_instance = $this->buildFromService($this->services[$service_id]);
+        $this->cache->set($cache_key, $service_instance);
 
         return $service_instance;
     }
@@ -186,6 +187,7 @@ class Container implements ContainerInterface
      */
     private function buildFromService(Service $service)
     {
+        //Todo add support for service type of Instance
         return ServiceType::TYPE_CLASS === $service->getType()->getValue() ? $this->factory->build(
             $this,
             $service->getDefinition()->getClass(),

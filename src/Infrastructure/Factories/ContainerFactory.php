@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Factories;
+namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
+use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
 use CubaDevOps\Flexi\Domain\Classes\Container;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -21,7 +22,8 @@ class ContainerFactory
     public static function getInstance(string $file = ''): Container
     {
         if (!self::$instance) {
-            $container = new Container(new InMemoryCache());
+            $cache = CacheFactory::getInstance();
+            $container = new Container($cache);
             if ($file) {
                 $container->loadServices($file);
             }

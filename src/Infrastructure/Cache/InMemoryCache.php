@@ -71,7 +71,7 @@ class InMemoryCache implements CacheInterface
             $result &= $this->set($key, $value, $ttl);
         }
 
-        return $result;
+        return (bool)$result;
     }
 
     public function set($key, $value, $ttl = null): bool
@@ -91,7 +91,7 @@ class InMemoryCache implements CacheInterface
             $result &= $this->delete($key);
         }
 
-        return $result;
+        return (bool)$result;
     }
 
     public function delete($key): bool

@@ -43,7 +43,6 @@ class InMemoryCache implements CacheInterface
     }
 
     /**
-     * @return mixed
      * @throws InvalidArgumentCacheException
      */
     public function get($key, $default = null)
@@ -72,7 +71,7 @@ class InMemoryCache implements CacheInterface
             $result &= $this->set($key, $value, $ttl);
         }
 
-        return (bool)$result;
+        return $result;
     }
 
     public function set($key, $value, $ttl = null): bool
@@ -92,7 +91,7 @@ class InMemoryCache implements CacheInterface
             $result &= $this->delete($key);
         }
 
-        return (bool)$result;
+        return $result;
     }
 
     public function delete($key): bool

@@ -167,7 +167,7 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\InMemoryCache",
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\CacheInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\InMemoryCache",
         "arguments": []
@@ -175,7 +175,7 @@
     },
     {
       "name": "cache",
-      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\InMemoryCache"
+      "alias": "CubaDevOps\\Flexi\\Domain\\Interfaces\\CacheInterface"
     },
     {
       "glob": "./modules/*/Config/services.json"

@@ -17,11 +17,11 @@ class CacheFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function getInstance(): CacheInterface
+    public static function getInstance($driver = null): CacheInterface
     {
         $configuration = ConfigurationFactory::getInstance();
-        $cache_driver = $configuration->get('cache_driver');
-        $cache_dir = (new self)->normalize($configuration->get('cache_dir') ?? $configuration->get('ROOT_DIR') . '/var/cache');
+
+        $cache_driver = $driver ?? $configuration->get('cache_driver');
 
         //Todo: implement other cache drivers
         switch ($cache_driver) {
@@ -29,9 +29,9 @@ class CacheFactory
             case 'memory':
                 return new InMemoryCache();
             case 'file':
+            default:
+                $cache_dir = (new self)->normalize($configuration->get('cache_dir') ?? $configuration->get('ROOT_DIR') . '/var/cache');
                 return new FileCache($cache_dir);
         }
-
-        return new FileCache($cache_dir);
     }
 }

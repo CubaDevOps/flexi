@@ -11,18 +11,13 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class ObjectBuilder implements ObjectBuilderInterface
 {
-    use CacheKeyGeneratorTrait;
-
     private const ERROR_NOT_INSTANTIABLE = 'Class is not instantiable: %s';
     private const ERROR_UNRESOLVED_DEPENDENCY = 'Unable to resolve dependency: %s';
     private const ERROR_PARAMETER_NO_TYPE = 'Parameter %s has no type';
     private const ERROR_INVALID_DEFINITION = 'Invalid service definition';
 
-    private CacheInterface $cache;
-
-    public function __construct(CacheInterface $cache)
+    public function __construct()
     {
-        $this->cache = $cache;
     }
 
     /**
@@ -35,15 +30,9 @@ class ObjectBuilder implements ObjectBuilderInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
-     * @throws InvalidArgumentException
      */
-    public function build(ContainerInterface $container, string $className, array $arguments = []): object
+    public function build(ContainerInterface $container, string $className): object
     {
-        $key = $this->getCacheKey($className, '__construct', $arguments);
-        if ($this->cache->has($key)) {
-            return $this->cache->get($key);
-        }
-
         $reflectionClass = new \ReflectionClass($className);
 
         if (!$reflectionClass->isInstantiable()) {
@@ -58,10 +47,7 @@ class ObjectBuilder implements ObjectBuilderInterface
 
         $dependencies = $this->resolveConstructorDependencies($constructor->getParameters(), $container);
 
-        $instance = $reflectionClass->newInstanceArgs($dependencies);
-        $this->cache->set($key, $instance);
-
-        return $instance;
+        return $reflectionClass->newInstanceArgs($dependencies);
     }
 
     /**

@@ -43,6 +43,7 @@ class InMemoryCache implements CacheInterface
     }
 
     /**
+     * @return mixed
      * @throws InvalidArgumentCacheException
      */
     public function get($key, $default = null)

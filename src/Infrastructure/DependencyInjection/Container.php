@@ -15,8 +15,6 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class Container implements ContainerInterface
 {
-    use CacheKeyGeneratorTrait;
-
     private const CONTAINER_CACHE_KEY = 'container';
     private const SERVICE_CACHE_KEY_PREFIX = 'service.';
     private const SERVICE_DEFINITIONS_KEY = 'service_definitions';
@@ -79,19 +77,11 @@ class Container implements ContainerInterface
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws \ReflectionException
-     * @throws InvalidArgumentException
      */
     public function get(string $id): object
     {
         if (in_array($id, $this->selfReference, true)) {
             return $this;
-        }
-        if ('cache' === $id || CacheInterface::class === $id) {
-            return $this->cache;
-        }
-        if (ClassFactory::class === $id) {
-            return $this->factory;
         }
 
         $cacheKey = $this->generateServiceCacheKey($id);
@@ -115,10 +105,6 @@ class Container implements ContainerInterface
      *
      * @param string $id
      * @return object
-     * @throws NotFoundExceptionInterface
-     * @throws \ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws InvalidArgumentException
      */
     private function resolveServiceInstance(string $id): object
     {

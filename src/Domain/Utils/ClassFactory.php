@@ -4,169 +4,197 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Utils;
 
+use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 
 class ClassFactory
 {
-    private array $cache = [];
+    private const ERROR_NOT_INSTANTIABLE = 'Class is not instantiable: %s';
+    private const ERROR_UNRESOLVED_DEPENDENCY = 'Unable to resolve dependency: %s';
+    private const ERROR_PARAMETER_NO_TYPE = 'Parameter %s has no type';
+    private const ERROR_INVALID_DEFINITION = 'Invalid service definition';
 
     public function __construct()
     {
     }
 
     /**
-     * @return object|mixed
+     * Builds an instance of the given class name.
+     *
+     * @param ContainerInterface $container
+     * @param string $className
+     * @return object
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
      */
-    public function build(
-        ContainerInterface $container,
-        string $className,
-        array $arguments = []
-    ) {
-        $key = $this->getCacheKey($className, '__construct', $arguments);
-        if (isset($this->cache[$key])) {
-            return $this->cache[$key];
-        }
-
+    public function build(ContainerInterface $container, string $className): object
+    {
         $reflectionClass = new \ReflectionClass($className);
 
         if (!$reflectionClass->isInstantiable()) {
-            throw new \RuntimeException('Class is not instantiable: '.$className);
+            throw new \RuntimeException(sprintf(self::ERROR_NOT_INSTANTIABLE, $className));
         }
 
         $constructor = $reflectionClass->getConstructor();
 
-        if (null === $constructor) {
-            return $reflectionClass->newInstanceWithoutConstructor();
+        if (null === $constructor || empty($constructor->getParameters())) {
+            return new $className;
         }
 
-        $args = $this->resolveArguments(
-            $constructor,
-            $container,
-            $arguments
-        );
+        $dependencies = $this->resolveConstructorDependencies($constructor->getParameters(), $container);
 
-        $this->cache[$key] = $reflectionClass->newInstanceArgs($args);
-
-        return $this->cache[$key];
-    }
-
-    private function getCacheKey(string $class, string $method, array $arguments): string
-    {
-        return md5($class.$method.serialize($arguments));
+        return $reflectionClass->newInstanceArgs($dependencies);
     }
 
     /**
-     * @return (array|false|mixed|string)[]
+     * Builds an instance from a service definition.
      *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     *
-     * @psalm-return list{0?: array|false|mixed|string,...}
+     * @param ContainerInterface $container
+     * @param array $serviceDefinition
+     * @return object
      */
-    private function resolveArguments(
-        \ReflectionFunctionAbstract $method,
-        ContainerInterface $container,
-        array $arguments
-    ): array {
-        $dependencies = [];
-        foreach ($method->getParameters() as $index => $parameter) {
-            if (isset($arguments[$index])) {
-                $dependencies[] = $this->resolveFromArguments($arguments[$index], $container);
-            } elseif ($container->has($parameter->getName())) {
-                $dependencies[] = $container->get($parameter->getName());
-            } elseif (
-                $this->isObject($parameter)
-                && $container->has($this->getParameterClassName($parameter))
-            ) {
-                $dependencies[] = $container->get(
-                    $this->getParameterClassName($parameter)
-                );
-            } elseif ($parameter->isDefaultValueAvailable()) {
-                $dependencies[] = $parameter->getDefaultValue();
-            } else {
-                throw new \RuntimeException('Unable to resolve dependency: '.$parameter->getName());
+    public function buildFromDefinition(ContainerInterface $container, array $serviceDefinition): object
+    {
+        if (isset($serviceDefinition['factory'])) {
+            return $this->buildFromFactory($container, $serviceDefinition['factory']);
+        }
+
+        if (isset($serviceDefinition['class'])) {
+            return $this->buildFromClass($container, $serviceDefinition['class']);
+        }
+
+        throw new \RuntimeException(self::ERROR_INVALID_DEFINITION);
+    }
+
+    /**
+     * Resolves constructor dependencies.
+     *
+     * @param \ReflectionParameter[] $parameters
+     * @param ContainerInterface $container
+     * @return array
+     */
+    private function resolveConstructorDependencies(array $parameters, ContainerInterface $container): array
+    {
+        return array_map(function (\ReflectionParameter $parameter) use ($container) {
+            $name = $parameter->getName();
+            $type = $parameter->getType();
+
+            if (!$type) {
+                throw new \Exception(sprintf(self::ERROR_PARAMETER_NO_TYPE, $name));
             }
-        }
 
-        return $dependencies;
+            if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
+                return $this->resolveDependency($container, $type->getName(), $name);
+            }
+
+            if ($parameter->isOptional()) {
+                return $parameter->getDefaultValue();
+            }
+
+            throw new \RuntimeException(sprintf(self::ERROR_UNRESOLVED_DEPENDENCY, $name));
+        }, $parameters);
     }
 
     /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * Resolves a single dependency from the container.
+     *
+     * @param ContainerInterface $container
+     * @param string $typeName
+     * @param string $parameterName
+     * @return mixed
      */
-    private function resolveFromArguments($argument, ContainerInterface $container)
+    private function resolveDependency(ContainerInterface $container, string $typeName, string $parameterName)
     {
-        if (is_array($argument)) {
-            return $argument;
+        if ($container->has($typeName)) {
+            return $container->get($typeName);
         }
 
-        $dependency = $argument;
-        if ($this->isEnvArg($argument)) {
-            $dependency = getenv(
-                str_replace(['env.', 'ENV.'], '', $argument)
-            );
-        } elseif ($this->isServiceArg($argument)) {
-            $id = ltrim($argument, '@');
-            $dependency = $container->get($id);
+        if ($container->has($parameterName)) {
+            return $container->get($parameterName);
         }
 
-        return $dependency;
+        throw new \RuntimeException(sprintf(self::ERROR_UNRESOLVED_DEPENDENCY, $parameterName));
     }
 
+    /**
+     * Builds an instance using a factory definition.
+     *
+     * @param ContainerInterface $container
+     * @param array $factoryDefinition
+     * @return mixed
+     */
+    private function buildFromFactory(ContainerInterface $container, array $factoryDefinition)
+    {
+        $class = $factoryDefinition['class'];
+        $method = $factoryDefinition['method'];
+        $arguments = $this->resolveArguments($factoryDefinition['arguments'] ?? [], $container);
+
+        return $class::$method(...$arguments);
+    }
+
+    /**
+     * Builds an instance using a class definition.
+     *
+     * @param ContainerInterface $container
+     * @param array $classDefinition
+     * @return object
+     */
+    private function buildFromClass(ContainerInterface $container, array $classDefinition): object
+    {
+        $class = $classDefinition['name'];
+        $arguments = $this->resolveArguments($classDefinition['arguments'] ?? [], $container);
+
+        return new $class(...$arguments);
+    }
+
+    /**
+     * Resolves arguments for a service definition.
+     *
+     * @param array $args
+     * @param ContainerInterface $container
+     * @return array
+     */
+    private function resolveArguments(array $args, ContainerInterface $container): array
+    {
+        return array_map(function ($arg) use ($container) {
+            if (is_string($arg)) {
+                if ($this->isServiceArg($arg)) {
+                    return $container->get(ltrim($arg, '@'));
+                }
+
+                if ($this->isEnvArg($arg)) {
+                    return getenv(substr($arg, 4));
+                }
+            }
+
+            return $arg;
+        }, $args);
+    }
+
+    /**
+     * Checks if the argument is an environment variable.
+     *
+     * @param string $id
+     * @return bool
+     */
     private function isEnvArg(string $id): bool
     {
-        return 0 === strpos($id, 'ENV.') || 0 === strpos($id, 'env.');
-    }
-
-    private function isServiceArg(string $id): bool
-    {
-        return 0 === strpos($id, '@');
-    }
-
-    private function isObject(\ReflectionParameter $parameter): bool
-    {
-        return $parameter->getType() && (class_exists($parameter->getType()->getName()) || interface_exists($parameter->getType()->getName()));
-    }
-
-    private function getParameterClassName(\ReflectionParameter $parameter): string
-    {
-        return $parameter->getType() ? $parameter->getType()->getName() : '';
+        return str_starts_with($id, 'ENV.') || str_starts_with($id, 'env.');
     }
 
     /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws \ReflectionException
+     * Checks if the argument is a service reference.
+     *
+     * @param string $id
+     * @return bool
      */
-    public function buildFromFactory(
-        ContainerInterface $container,
-        string $class,
-        string $method,
-        array $params = []
-    ) {
-        $key = $this->getCacheKey($class, $method, $params);
-        if (isset($this->cache[$key])) {
-            return $this->cache[$key];
-        }
-
-        $reflection = new \ReflectionMethod($class, $method);
-        if (!$reflection->isStatic()) {
-            throw new \RuntimeException("$method need to be declared as static to use as factory method");
-        }
-        if (count($params) < $reflection->getNumberOfRequiredParameters()) {
-            throw new \RuntimeException("$method has {$reflection->getNumberOfRequiredParameters()} required parameters");
-        }
-
-        $args = $this->resolveArguments($reflection, $container, $params);
-        $this->cache[$key] = $reflection->invokeArgs(null, $args);
-
-        return $this->cache[$key];
+    private function isServiceArg(string $id): bool
+    {
+        return str_starts_with($id, '@');
     }
 }

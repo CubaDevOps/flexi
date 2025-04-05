@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Web;
 
 use CubaDevOps\Flexi\Domain\Classes\Router;
-use CubaDevOps\Flexi\Domain\Factories\ContainerFactory;
+use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Infrastructure\Factories\ConfigurationFactory;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\ErrorHandler\ErrorHandler;
 
@@ -23,6 +24,7 @@ class Application
      * @throws \JsonException
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
+     * @throws InvalidArgumentException
      */
     public static function run(): void
     {
@@ -40,6 +42,7 @@ class Application
      * @throws \ReflectionException
      * @throws ContainerExceptionInterface
      * @throws \JsonException
+     * @throws InvalidArgumentException
      */
     private static function handle(): StreamInterface
     {

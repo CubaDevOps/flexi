@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 
 class CliInputParser
 {
-    public const FORMAT = '/(--command|--query|-c|-q) [a-zA-Z0-9]+(\s[a-zA-Z0-9]+=[a-zA-Z0-9]+)*(\s(--help|-h))?/';
+    public const FORMAT = '/(--command|--query|--event|-c|-q|-e) [a-zA-Z0-9]+(\s[a-zA-Z0-9]+=[a-zA-Z0-9]+)*(\s(--help|-h))?/';
 
     public static function parse(array $input): CliInput
     {
@@ -16,10 +16,12 @@ class CliInputParser
         $commandName = array_shift($input);
         $arguments = [];
         $show_help = false;
-        $is_command = false;
+        $type = CliType::QUERY;
 
         if ('--command' === $command_type || '-c' === $command_type) {
-            $is_command = true;
+            $type = CliType::COMMAND;
+        } elseif ('--event' === $command_type || '-e' === $command_type) {
+            $type = CliType::EVENT;
         }
 
         foreach ($input as $arg) {
@@ -32,7 +34,7 @@ class CliInputParser
             $arguments[$optionName] = $optionValue ?? false;
         }
 
-        return new CliInput($commandName, $arguments, $is_command, $show_help);
+        return new CliInput($commandName, $arguments, $type, $show_help);
     }
 
     private static function assertIsValidInput(array $input): void

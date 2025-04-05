@@ -9,6 +9,7 @@ use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouteMock;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use stdClass;
 
 class RouteTest extends TestCase
 {
@@ -122,11 +123,11 @@ class RouteTest extends TestCase
         $route = new RouteMock('test_route', '/test', 'TestController', 'GET', [], $middlewares);
 
         $factory->method('build')
-            ->will($this->onConsecutiveCalls('middleware1_instance', 'middleware2_instance'));
+            ->will($this->onConsecutiveCalls(new stdClass, new stdClass));
 
         $handler->expects($this->once())
             ->method('setMiddlewares')
-            ->with($this->equalTo(['middleware1_instance', 'middleware2_instance']));
+            ->with($this->equalTo([new stdClass, new stdClass]));
 
         $route->throughMiddlewares($container, $factory, $handler);
 

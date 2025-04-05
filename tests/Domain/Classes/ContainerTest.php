@@ -13,10 +13,13 @@ use CubaDevOps\Flexi\Domain\Classes\Router;
 use CubaDevOps\Flexi\Domain\Classes\Service;
 use CubaDevOps\Flexi\Domain\Classes\ServiceClassDefinition;
 use CubaDevOps\Flexi\Domain\Classes\VersionRepository;
+use CubaDevOps\Flexi\Domain\Exceptions\ContainerException;
+use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
-use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
+use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -35,12 +38,12 @@ class ContainerTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->container = new Container(CacheFactory::getInstance());
-
-        $this->container->loadServices('./src/Config/services.json');
+        $this->container = ContainerFactory::getInstance('./src/Config/services.json');
     }
 
     /**
+     * Test retrieving services from the container.
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
@@ -57,17 +60,13 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(QueryBus::class, $this->container->get(QueryBus::class));
         $this->assertInstanceOf(EventBus::class, $this->container->get(EventBus::class));
         $this->assertInstanceOf(InFileLogRepository::class, $this->container->get(InFileLogRepository::class));
-        $this->assertInstanceOf(
-            ResponseFactoryInterface::class,
-            $this->container->get(ResponseFactoryInterface::class)
-        );
-        $this->assertInstanceOf(
-            ServerRequestFactoryInterface::class,
-            $this->container->get(ServerRequestFactoryInterface::class)
-        );
+        $this->assertInstanceOf(ResponseFactoryInterface::class, $this->container->get(ResponseFactoryInterface::class));
+        $this->assertInstanceOf(ServerRequestFactoryInterface::class, $this->container->get(ServerRequestFactoryInterface::class));
     }
 
     /**
+     * Test retrieving the container itself.
+     *
      * @throws \ReflectionException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -78,18 +77,23 @@ class ContainerTest extends TestCase
     }
 
     /**
+     * Test retrieving a service that does not exist.
+     *
      * @throws ContainerExceptionInterface
      * @throws \ReflectionException
      * @throws NotFoundExceptionInterface
      */
     public function testGetServiceDoesNotExist(): void
     {
-        $service = Service::class;
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Service not found: ' . $service);
+        $service = 'non_existent_service';
+        $this->expectException(ServiceNotFoundException::class);
+        $this->expectExceptionMessage(sprintf('Class %s does not exist', $service));
         $this->container->get($service);
     }
 
+    /**
+     * Test checking if services exist in the container.
+     */
     public function testHasService(): void
     {
         $this->assertTrue($this->container->has(Configuration::class));
@@ -107,22 +111,38 @@ class ContainerTest extends TestCase
         $this->assertTrue($this->container->has(ServerRequestFactoryInterface::class));
     }
 
-    public function testIsAlias(): void
-    {
-        $this->assertTrue($this->container->isAlias('session'));
-        $this->assertFalse($this->container->isAlias('logger'));
-    }
-
+    /**
+     * Test adding a new service to the container.
+     */
     public function testAddService(): void
     {
-        $this->container->addService(
+        $this->container->set(
             'test',
             new Service(
-                'test', new ServiceType('alias'), new ServiceClassDefinition(
-                Configuration::class, []
-            )
+                'test',
+                new ServiceType('alias'),
+                new ServiceClassDefinition(Configuration::class, [])
             )
         );
         $this->assertTrue($this->container->has('test'));
+    }
+
+    /**
+     * Test resolving aliases.
+     */
+    public function testResolveAlias(): void
+    {
+        $this->container->set('alias_service', Configuration::class);
+        $this->assertInstanceOf(Configuration::class, $this->container->get('alias_service'));
+    }
+
+    /**
+     * Test invalid service definition.
+     */
+    public function testInvalidServiceDefinition(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Service definition must be an object, an array, or a string class name.');
+        $this->container->set('invalid_service', 12345);
     }
 }

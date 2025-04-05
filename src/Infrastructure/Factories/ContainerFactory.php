@@ -6,6 +6,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
 use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
 use CubaDevOps\Flexi\Domain\Classes\Container;
+use CubaDevOps\Flexi\Domain\Utils\ServicesDefinitionParser;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -25,7 +26,11 @@ class ContainerFactory
             $cache = CacheFactory::getInstance();
             $container = new Container($cache);
             if ($file) {
-                $container->loadServices($file);
+                $services_parser = new ServicesDefinitionParser($cache);
+                $services = $services_parser->parse($file);
+                foreach ($services as $name => $service) {
+                    $container->set($name, $service);
+                }
             }
             self::$instance = $container;
         }

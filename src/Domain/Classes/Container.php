@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Classes;
 
+use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
 use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Domain\Utils\CacheKeyGeneratorTrait;
 use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
-use CubaDevOps\Flexi\Domain\Utils\GlobFileReader;
-use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -91,7 +89,11 @@ class Container implements ContainerInterface
             return $this->cache->get($cacheKey);
         }
 
-        $serviceInstance = $this->resolveServiceInstance($id);
+        try {
+            $serviceInstance = $this->resolveServiceInstance($id);
+        } catch (\Throwable $th) {
+            throw new ServiceNotFoundException(sprintf('Class %s does not exist', $id), 0, $th);
+        }
 
         $this->cacheServiceInstance($id, $serviceInstance);
 

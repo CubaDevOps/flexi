@@ -2,11 +2,12 @@
 
 namespace CubaDevOps\Flexi\Test\Domain\Utils;
 
-use CubaDevOps\Flexi\Infrastructure\Factories\RouterFactory;
-use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
+use CubaDevOps\Flexi\Domain\Factories\RouterFactory;
+use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
-use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
+use CubaDevOps\Flexi\Infrastructure\Factories\ConfigurationFactory;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
+use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\HasNoConstructor;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\IsNotInstantiable;
 use PHPUnit\Framework\TestCase;
@@ -58,26 +59,29 @@ class ClassFactoryTest extends TestCase
     {
         $factory_definition = [
             'factory' => [
-                'class' => ContainerFactory::class,
-                'method' => 'createDefault',
+                'class' => ConfigurationFactory::class,
+                'method' => 'getInstance',
                 'arguments' => []
             ]
         ];
-        $container = $this->classFactory->buildFromDefinition($this->container, $factory_definition);
-        $this->assertInstanceOf(ContainerInterface::class, $container);
+        $configuration = $this->classFactory->buildFromDefinition($this->container, $factory_definition);
+        $this->assertInstanceOf(Configuration::class, $configuration);
+        $this->assertNotEmpty($configuration->get('debug'));
     }
 
     public function testBuildFromClassDefinition(): void
     {
         $classDefinition = [
             'class' => [
-                'name' => HasNoConstructor::class,
+                'name' => Configuration::class,
                 'arguments' => []
             ]
         ];
 
-        $instance = $this->classFactory->buildFromDefinition($this->container, $classDefinition);
+        $configuration = $this->classFactory->buildFromDefinition($this->container, $classDefinition);
 
-        $this->assertInstanceOf(HasNoConstructor::class, $instance);
+        $this->assertInstanceOf(Configuration::class, $configuration);
+
+        $this->assertNotEmpty($configuration->get('debug'));
     }
 }

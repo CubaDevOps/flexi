@@ -15,7 +15,7 @@ use CubaDevOps\Flexi\Domain\Classes\ServiceClassDefinition;
 use CubaDevOps\Flexi\Domain\Classes\VersionRepository;
 use CubaDevOps\Flexi\Domain\Exceptions\ContainerException;
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
@@ -52,7 +52,7 @@ class ContainerTest extends TestCase
     {
         $this->assertInstanceOf(Configuration::class, $this->container->get(Configuration::class));
         $this->assertInstanceOf(NativeSessionStorage::class, $this->container->get(NativeSessionStorage::class));
-        $this->assertInstanceOf(ClassFactory::class, $this->container->get(ClassFactory::class));
+        $this->assertInstanceOf(ObjectBuilderInterface::class, $this->container->get(ObjectBuilderInterface::class));
         $this->assertInstanceOf(Router::class, $this->container->get(Router::class));
         $this->assertInstanceOf(VersionRepository::class, $this->container->get(VersionRepository::class));
         $this->assertInstanceOf(HtmlRender::class, $this->container->get('html_render'));
@@ -98,7 +98,7 @@ class ContainerTest extends TestCase
     {
         $this->assertTrue($this->container->has(Configuration::class));
         $this->assertTrue($this->container->has(NativeSessionStorage::class));
-        $this->assertTrue($this->container->has(ClassFactory::class));
+        $this->assertTrue($this->container->has(ObjectBuilderInterface::class));
         $this->assertTrue($this->container->has(Router::class));
         $this->assertTrue($this->container->has(VersionRepository::class));
         $this->assertTrue($this->container->has('html_render'));

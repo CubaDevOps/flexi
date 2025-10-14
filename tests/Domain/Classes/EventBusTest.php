@@ -6,7 +6,7 @@ use CubaDevOps\Flexi\Application\EventListeners\LoggerEventListener;
 use CubaDevOps\Flexi\Domain\Classes\EventBus;
 use CubaDevOps\Flexi\Domain\Classes\InFileLogRepository;
 use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Classes\PsrLogger;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class EventBusTest extends TestCase
 {
     private EventBus $eventBus;
     private ContainerInterface $container;
-    private ClassFactory $class_factory;
+    private ObjectBuilderInterface $class_factory;
 
     /**
      * @throws NotFoundExceptionInterface
@@ -30,7 +30,7 @@ class EventBusTest extends TestCase
     public function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->class_factory = $this->createMock(ClassFactory::class);
+        $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
 
         $logger = new PsrLogger($this->createMock(InFileLogRepository::class));
         $configuration = $this->createMock(Configuration::class);

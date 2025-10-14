@@ -10,7 +10,7 @@ use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
 use Psr\Container\ContainerExceptionInterface;
@@ -26,12 +26,12 @@ class CommandBus implements BusInterface
     private array $aliases = [];
     private ContainerInterface $container;
     private EventBusInterface $event_bus;
-    private ClassFactory $class_factory;
+    private ObjectBuilderInterface $class_factory;
 
     /**
      * @param EventBus $event_bus
      */
-    public function __construct(ContainerInterface $container, EventBusInterface $event_bus, ClassFactory $class_factory)
+    public function __construct(ContainerInterface $container, EventBusInterface $event_bus, ObjectBuilderInterface $class_factory)
     {
         $this->container = $container;
         $this->event_bus = $event_bus;

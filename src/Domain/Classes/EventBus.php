@@ -9,7 +9,7 @@ use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\EventListenerInterface;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
@@ -25,7 +25,7 @@ class EventBus implements EventBusInterface
 
     private array $events = [];
     private ContainerInterface $container;
-    private ClassFactory $class_factory;
+    private ObjectBuilderInterface $class_factory;
     private LoggerInterface $logger;
     private Configuration $configuration;
 
@@ -33,7 +33,7 @@ class EventBus implements EventBusInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __construct(ContainerInterface $container, ClassFactory $class_factory)
+    public function __construct(ContainerInterface $container, ObjectBuilderInterface $class_factory)
     {
         $this->container = $container;
         $this->class_factory = $class_factory;

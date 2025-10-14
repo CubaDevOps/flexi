@@ -8,7 +8,7 @@ use CubaDevOps\Flexi\Domain\Classes\CommandBus;
 use CubaDevOps\Flexi\Domain\Classes\EventBus;
 use CubaDevOps\Flexi\Domain\Classes\QueryBus;
 use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -33,8 +33,8 @@ class BusFactory
         string $file = ''
     ): BusInterface {
         if (!isset(self::$instance[$type])) {
-            /** @var ClassFactory $class_factory */
-            $class_factory = $container->get(ClassFactory::class);
+            /** @var ObjectBuilderInterface $class_factory */
+            $class_factory = $container->get(ObjectBuilderInterface::class);
             switch ($type) {
                 case CommandBus::class:
                     self::$instance[$type] = new CommandBus($container, new EventBus($container, $class_factory), $class_factory);

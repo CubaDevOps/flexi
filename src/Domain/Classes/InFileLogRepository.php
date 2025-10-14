@@ -17,7 +17,12 @@ class InFileLogRepository implements LogRepositoryInterface
 
     public function __construct(string $path, string $format)
     {
-        $this->ensureFileExists($path);
+        try {
+            $this->ensureFileExists($path);
+        } catch (\Throwable $th) {
+            $file_path = $this->normalize($path);
+            $this->createFile($file_path);
+        }
         $this->path = $path;
         $this->format = $format;
     }

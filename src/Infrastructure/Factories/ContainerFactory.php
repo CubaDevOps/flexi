@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
+use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
 use CubaDevOps\Flexi\Domain\Classes\Container;
 use CubaDevOps\Flexi\Domain\Utils\ServicesDefinitionParser;
@@ -24,7 +25,8 @@ class ContainerFactory
     {
         if (!self::$instance) {
             $cache = CacheFactory::getInstance();
-            $container = new Container($cache);
+            $object_builder = new ObjectBuilder();
+            $container = new Container($cache, $object_builder);
             if ($file) {
                 $services_parser = new ServicesDefinitionParser($cache);
                 $services = $services_parser->parse($file);

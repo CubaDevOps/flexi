@@ -6,8 +6,8 @@ namespace CubaDevOps\Flexi\Domain\Factories;
 
 use CubaDevOps\Flexi\Domain\Classes\Router;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use Psr\Http\Message\ResponseFactoryInterface;
 
 class RouterFactory
@@ -20,7 +20,7 @@ class RouterFactory
     public static function getInstance(
         SessionStorageInterface $session,
         EventBusInterface $event_bus,
-        ClassFactory $class_factory,
+        ObjectBuilderInterface $class_factory,
         ResponseFactoryInterface $response_factory,
         string $routesFilePath
     ): Router {

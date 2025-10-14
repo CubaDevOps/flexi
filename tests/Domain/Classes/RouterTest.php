@@ -5,8 +5,8 @@ namespace CubaDevOps\Flexi\Test\Domain\Classes;
 use CubaDevOps\Flexi\Domain\Classes\Route;
 use CubaDevOps\Flexi\Domain\Classes\Router;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Infrastructure\Controllers\HealthController;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouterMock;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +25,7 @@ class RouterTest extends TestCase
 
     private SessionStorageInterface $session;
     private EventBusInterface $event_bus;
-    private ClassFactory $class_factory;
+    private ObjectBuilderInterface $class_factory;
     private ResponseFactoryInterface $response_factory;
 
     private Router $router;
@@ -37,7 +37,7 @@ class RouterTest extends TestCase
     {
         $this->session = $this->createMock(SessionStorageInterface::class);
         $this->event_bus = $this->createMock(EventBusInterface::class);
-        $this->class_factory = $this->createMock(ClassFactory::class);
+        $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
         $this->response_factory = $this->createMock(ResponseFactoryInterface::class);
 
         $this->router = new RouterMock($this->session, $this->event_bus, $this->class_factory, $this->response_factory);

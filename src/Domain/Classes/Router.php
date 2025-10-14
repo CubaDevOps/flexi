@@ -6,8 +6,8 @@ namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
 use CubaDevOps\Flexi\Domain\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Domain\Utils\JsonFileReader;
 use Psr\Container\ContainerExceptionInterface;
@@ -26,13 +26,13 @@ class Router
     protected ObjectCollection $routes_indexed_by_path;
     protected SessionStorageInterface $session;
     protected EventBusInterface $event_bus;
-    protected ClassFactory $class_factory;
+    protected ObjectBuilderInterface $class_factory;
     protected ResponseFactoryInterface $response_factory;
 
     public function __construct(
         SessionStorageInterface $session,
         EventBusInterface $event_bus,
-        ClassFactory $class_factory,
+        ObjectBuilderInterface $class_factory,
         ResponseFactoryInterface $response_factory
     ) {
         $this->session = $session;

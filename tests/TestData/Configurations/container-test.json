@@ -32,7 +32,7 @@
         "arguments": [
           "@CubaDevOps\\Flexi\\Domain\\Interfaces\\SessionStorageInterface",
           "@CubaDevOps\\Flexi\\Domain\\Interfaces\\EventBusInterface",
-          "@CubaDevOps\\Flexi\\Domain\\Utils\\ClassFactory",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ObjectBuilderInterface",
           "@Psr\\Http\\Message\\ResponseFactoryInterface"
         ]
       }

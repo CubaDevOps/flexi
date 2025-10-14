@@ -16,7 +16,7 @@ use CubaDevOps\Flexi\Domain\ValueObjects\CollectionType;
  *
  * @extends ArrayObject<TKey,TValue>
  */
-class Collection extends \ArrayObject implements CollectionInterface
+class Collection extends ArrayObject implements CollectionInterface
 {
     private CollectionType $type;
 

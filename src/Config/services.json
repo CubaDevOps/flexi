@@ -1,11 +1,33 @@
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
-      "factory": {
-        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\ConfigurationFactory",
-        "method": "getInstance",
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\DomainCacheInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\DomainCache",
         "arguments": []
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ObjectBuilderInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ObjectBuilder",
+        "arguments": []
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ConfigurationRepositoryInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ConfigurationRepository",
+        "arguments": []
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ConfigurationRepositoryInterface"
+        ]
       }
     },
     {
@@ -35,15 +57,6 @@
       "alias": "CubaDevOps\\Flexi\\Domain\\Classes\\NativeSessionStorage"
     },
     {
-      "name": "CubaDevOps\\Flexi\\Domain\\Utils\\ClassFactory",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Domain\\Utils\\ClassFactory",
-        "arguments": [
-          "CubaDevOps\\Flexi\\Domain\\Interfaces\\CacheInterface"
-        ]
-      }
-    },
-    {
       "name": "CubaDevOps\\Flexi\\Domain\\Classes\\Router",
       "factory": {
         "class": "CubaDevOps\\Flexi\\Domain\\Factories\\RouterFactory",
@@ -51,7 +64,7 @@
         "arguments": [
           "@session",
           "@CubaDevOps\\Flexi\\Domain\\Classes\\EventBus",
-          "@CubaDevOps\\Flexi\\Domain\\Utils\\ClassFactory",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ObjectBuilderInterface",
           "@Psr\\Http\\Message\\ResponseFactoryInterface",
           "./src/Config/routes.json"
         ]

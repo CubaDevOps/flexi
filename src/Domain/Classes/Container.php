@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
-use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Domain\Interfaces\DomainCacheInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -24,13 +24,13 @@ class Container implements ContainerInterface
     private array $serviceDefinitions;
     private array $selfReference = ['container', ContainerInterface::class];
 
-    private ClassFactory $factory;
-    private CacheInterface $cache;
+    private ObjectBuilderInterface $factory;
+    private DomainCacheInterface $cache;
 
-    public function __construct(CacheInterface $cache)
+    public function __construct(DomainCacheInterface $cache, ObjectBuilderInterface $factory)
     {
         $this->cache = $cache;
-        $this->factory = new ClassFactory();
+        $this->factory = $factory;
 
         // Initialize the container with the default service definitions
         $this->serviceDefinitions = $cache->get(self::SERVICE_DEFINITIONS_KEY, []);

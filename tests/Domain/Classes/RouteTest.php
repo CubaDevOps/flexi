@@ -3,7 +3,7 @@
 namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Classes\Route;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouteMock;
 use PHPUnit\Framework\TestCase;
@@ -116,7 +116,7 @@ class RouteTest extends TestCase
     public function testThroughMiddlewaresSetsMiddlewares()
     {
         $container = $this->createMock(ContainerInterface::class);
-        $factory = $this->createMock(ClassFactory::class);
+        $factory = $this->createMock(ObjectBuilderInterface::class);
         $handler = $this->createMock(HttpHandler::class);
 
         $middlewares = ['middleware1', 'middleware2'];
@@ -138,7 +138,7 @@ class RouteTest extends TestCase
     public function testThroughMiddlewaresDoesNotSetMiddlewares()
     {
         $container = $this->createMock(ContainerInterface::class);
-        $factory = $this->createMock(ClassFactory::class);
+        $factory = $this->createMock(ObjectBuilderInterface::class);
         $handler = $this->createMock(HttpHandler::class);
 
         $route = new RouteMock('test_route', '/test', 'TestController', 'GET');

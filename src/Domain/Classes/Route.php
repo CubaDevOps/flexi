@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -107,7 +107,7 @@ class Route
      * @throws \ReflectionException
      * @throws NotFoundExceptionInterface
      */
-    public function throughMiddlewares(ContainerInterface $container, ClassFactory $factory, RequestHandlerInterface $handler): RequestHandlerInterface
+    public function throughMiddlewares(ContainerInterface $container, ObjectBuilderInterface $factory, RequestHandlerInterface $handler): RequestHandlerInterface
     {
         if ($this->hasMiddlewares()) {
             $middlewares = [];

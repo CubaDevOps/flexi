@@ -12,7 +12,7 @@ use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
 use CubaDevOps\Flexi\Domain\DTO\EmptyVersionDTO;
 use CubaDevOps\Flexi\Domain\DTO\QueryListDTO;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Modules\Home\Application\RenderHome;
 use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +25,7 @@ class CommandBusTest extends TestCase
     private CommandBus $commandBus;
     private ContainerInterface $container;
     private EventBusInterface $event_bus;
-    private ClassFactory $class_factory;
+    private ObjectBuilderInterface $class_factory;
 
     /**
      * @throws NotFoundExceptionInterface
@@ -37,7 +37,7 @@ class CommandBusTest extends TestCase
     {
         $this->container = $this->createMock(ContainerInterface::class);
         $this->event_bus = $this->createMock(EventBusInterface::class);
-        $this->class_factory = $this->createMock(ClassFactory::class);
+        $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
 
         $this->commandBus = new CommandBus($this->container, $this->event_bus, $this->class_factory);
 

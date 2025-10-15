@@ -2,23 +2,25 @@
 
 namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\Classes\CommandBus;
-use CubaDevOps\Flexi\Domain\Classes\Container;
-use CubaDevOps\Flexi\Domain\Classes\EventBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
+use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
+use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Domain\Classes\HtmlRender;
-use CubaDevOps\Flexi\Domain\Classes\InFileLogRepository;
-use CubaDevOps\Flexi\Domain\Classes\NativeSessionStorage;
-use CubaDevOps\Flexi\Domain\Classes\QueryBus;
-use CubaDevOps\Flexi\Domain\Classes\Router;
+use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
+use CubaDevOps\Flexi\Infrastructure\Session\NativeSessionStorage;
+use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
+use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use CubaDevOps\Flexi\Domain\Classes\Service;
 use CubaDevOps\Flexi\Domain\Classes\ServiceClassDefinition;
-use CubaDevOps\Flexi\Domain\Classes\VersionRepository;
+use CubaDevOps\Flexi\Infrastructure\Persistence\VersionRepository;
 use CubaDevOps\Flexi\Domain\Exceptions\ContainerException;
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
+use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyCache;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
@@ -38,7 +40,16 @@ class ContainerTest extends TestCase
      */
     public function setUp(): void
     {
+        // Reset the singleton to ensure fresh instance with all services
+        $reflection = new \ReflectionClass(ContainerFactory::class);
+        $property = $reflection->getProperty('instance');
+        $property->setAccessible(true);
+        $property->setValue(null, null);
+
         $this->container = ContainerFactory::getInstance('./src/Config/services.json');
+
+        // Replace the cache with DummyCache to avoid cache interference in tests
+        $this->container->set(CacheInterface::class, new DummyCache());
     }
 
     /**

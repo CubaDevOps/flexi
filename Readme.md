@@ -336,6 +336,59 @@ class AuthCheckMiddleware implements MiddlewareInterface
 }
 ```
 
+## Testing
+
+Flexi includes a comprehensive test suite using PHPUnit. Tests use a separate environment configuration to ensure isolation from development and production environments.
+
+### Running Tests
+
+```bash
+# Run all tests
+./vendor/bin/phpunit tests/
+
+# Run specific test file
+./vendor/bin/phpunit tests/Infrastructure/TestEnvironmentTest.php
+
+# Run with coverage
+./vendor/bin/phpunit tests/ --coverage-html coverage/
+```
+
+### Test Environment
+
+Tests automatically use `.env.testing` configuration file with test-specific settings:
+
+- **Synchronous event dispatch**: Events are dispatched synchronously for predictable testing
+- **In-memory cache**: Faster tests without disk I/O
+- **Separate logs**: Test logs go to `var/logs/test.log`
+- **Isolated cache**: Test cache uses `var/cache/test/` directory
+
+To customize test environment:
+
+1. Copy `.env.testing.example` to `.env.testing`
+2. Modify values as needed
+3. Tests will automatically use these values
+
+For more details, see [tests/README.md](tests/README.md).
+
+### Writing Tests
+
+```php
+<?php
+
+namespace CubaDevOps\Flexi\Test\YourNamespace;
+
+use PHPUnit\Framework\TestCase;
+
+class YourTest extends TestCase
+{
+    public function testSomething(): void
+    {
+        // Test environment variables from .env.testing are automatically loaded
+        $this->assertTrue(true);
+    }
+}
+```
+
 ## Documentation
 
 The documentation is available online at [https://flexi.cubadevops.com](https://flexi.cubadevops.com) (Under construction and not yet available).

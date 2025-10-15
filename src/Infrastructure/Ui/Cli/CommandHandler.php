@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Domain\Classes\CommandBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use CubaDevOps\Flexi\Domain\Interfaces\CliDTOInterface;
 use CubaDevOps\Flexi\Domain\Utils\DTOFactory;
 use Psr\Container\ContainerExceptionInterface;

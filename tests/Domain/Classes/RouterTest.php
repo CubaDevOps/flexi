@@ -3,7 +3,7 @@
 namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Classes\Route;
-use CubaDevOps\Flexi\Domain\Classes\Router;
+use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
@@ -27,6 +27,7 @@ class RouterTest extends TestCase
     private EventBusInterface $event_bus;
     private ObjectBuilderInterface $class_factory;
     private ResponseFactoryInterface $response_factory;
+    private \Psr\Container\ContainerInterface $container;
 
     private Router $router;
 
@@ -39,8 +40,9 @@ class RouterTest extends TestCase
         $this->event_bus = $this->createMock(EventBusInterface::class);
         $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
         $this->response_factory = $this->createMock(ResponseFactoryInterface::class);
+        $this->container = $this->createMock(\Psr\Container\ContainerInterface::class);
 
-        $this->router = new RouterMock($this->session, $this->event_bus, $this->class_factory, $this->response_factory);
+        $this->router = new RouterMock($this->session, $this->event_bus, $this->class_factory, $this->response_factory, $this->container);
 
         $route = new Route(
             self::ROUTE_NAME,
@@ -121,7 +123,7 @@ class RouterTest extends TestCase
         $_SERVER['REQUEST_SCHEME']  = 'https';
 
         $emptyRouter = new Router(
-            $this->session, $this->event_bus, $this->class_factory, $this->response_factory
+            $this->session, $this->event_bus, $this->class_factory, $this->response_factory, $this->container
         );
 
         $uriInterfaceMock = $this->createMock(UriInterface::class);

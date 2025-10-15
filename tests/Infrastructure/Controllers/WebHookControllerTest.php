@@ -3,7 +3,7 @@
 namespace CubaDevOps\Flexi\Test\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Infrastructure\Controllers\WebHookController;
-use CubaDevOps\Flexi\Domain\Classes\EventBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Domain\Classes\Event;
 use Exception;
 use PHPUnit\Framework\TestCase;

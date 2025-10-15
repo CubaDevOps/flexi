@@ -163,9 +163,17 @@ class ObjectBuilder implements ObjectBuilderInterface
                 }
 
                 if ($this->isEnvArg($arg)) {
-                    $value = getenv(substr($arg, 4));
-                    if(empty($value)){
-                        return null;
+                    $key = substr($arg, 4);
+                    $value = getenv($key);
+
+                    // Fallback to $_ENV if getenv returns false
+                    if ($value === false && isset($_ENV[$key])) {
+                        $value = $_ENV[$key];
+                    }
+
+                    // If still no value, throw exception for required env vars
+                    if($value === false || $value === null || $value === ''){
+                        throw new \RuntimeException(sprintf('Environment variable "%s" is not set or is empty', $key));
                     }
 
                     if ($this->is_boolean($value)) {

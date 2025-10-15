@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
+use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 
 class Template
 {

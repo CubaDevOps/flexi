@@ -3,7 +3,7 @@
 namespace CubaDevOps\Flexi\Test\Application\UseCase;
 
 use CubaDevOps\Flexi\Application\UseCase\ListCommands;
-use CubaDevOps\Flexi\Domain\Classes\CommandBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Domain\DTO\CommandListDTO;
 use PHPUnit\Framework\TestCase;

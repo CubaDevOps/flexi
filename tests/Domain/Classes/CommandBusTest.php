@@ -5,7 +5,7 @@ namespace CubaDevOps\Flexi\Test\Domain\Classes;
 use CubaDevOps\Flexi\Application\UseCase\Health;
 use CubaDevOps\Flexi\Application\UseCase\ListCommands;
 use CubaDevOps\Flexi\Application\UseCase\ListQueries;
-use CubaDevOps\Flexi\Domain\Classes\CommandBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Domain\DTO\CommandListDTO;
 use CubaDevOps\Flexi\Domain\DTO\DummyDTO;

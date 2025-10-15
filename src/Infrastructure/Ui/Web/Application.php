@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Web;
 
-use CubaDevOps\Flexi\Domain\Classes\Router;
+use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Infrastructure\Factories\ConfigurationFactory;
 use GuzzleHttp\Psr7\ServerRequest;

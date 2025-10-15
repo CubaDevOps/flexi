@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Domain\Classes\QueryBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Domain\DTO\EmptyVersionDTO;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use Psr\Container\ContainerExceptionInterface;

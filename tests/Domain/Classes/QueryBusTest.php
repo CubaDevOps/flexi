@@ -6,7 +6,7 @@ use CubaDevOps\Flexi\Application\UseCase\Health;
 use CubaDevOps\Flexi\Application\UseCase\ListCommands;
 use CubaDevOps\Flexi\Application\UseCase\ListQueries;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Domain\Classes\QueryBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Domain\DTO\CommandListDTO;
 use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
 use CubaDevOps\Flexi\Domain\DTO\EmptyVersionDTO;

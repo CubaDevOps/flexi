@@ -7,7 +7,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 use CubaDevOps\Flexi\Domain\Classes\Template;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
-use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
+use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use Psr\Http\Message\ResponseInterface;

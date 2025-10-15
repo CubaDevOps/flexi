@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\Classes\InFileLogRepository;
+use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
 use CubaDevOps\Flexi\Domain\Interfaces\LogInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;

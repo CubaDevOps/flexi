@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Factories;
 
-use CubaDevOps\Flexi\Domain\Classes\CommandBus;
-use CubaDevOps\Flexi\Domain\Classes\EventBus;
-use CubaDevOps\Flexi\Domain\Classes\QueryBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use Psr\Container\ContainerExceptionInterface;

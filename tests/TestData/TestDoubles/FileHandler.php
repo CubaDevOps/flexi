@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
+use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 
 class FileHandler
 {

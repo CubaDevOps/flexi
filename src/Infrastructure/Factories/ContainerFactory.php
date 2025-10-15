@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
 use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
-use CubaDevOps\Flexi\Domain\Classes\Container;
+use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
 use CubaDevOps\Flexi\Domain\Utils\ServicesDefinitionParser;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

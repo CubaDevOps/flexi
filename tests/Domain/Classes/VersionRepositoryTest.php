@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\Classes\VersionRepository;
+use CubaDevOps\Flexi\Infrastructure\Persistence\VersionRepository;
 use CubaDevOps\Flexi\Domain\Entities\DummyEntity;
 use CubaDevOps\Flexi\Domain\Interfaces\CriteriaInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\ID;

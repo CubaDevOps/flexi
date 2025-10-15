@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Test\Domain\Utils;
 
-use CubaDevOps\Flexi\Domain\Factories\RouterFactory;
+use CubaDevOps\Flexi\Infrastructure\Factories\RouterFactory;
 use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Factories\ConfigurationFactory;

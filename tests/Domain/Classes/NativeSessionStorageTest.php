@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\Classes\NativeSessionStorage;
+use CubaDevOps\Flexi\Infrastructure\Session\NativeSessionStorage;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

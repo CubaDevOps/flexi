@@ -3,7 +3,7 @@
 namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
 use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
+use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 use CubaDevOps\Flexi\Infrastructure\Cache\FileCache;
 use CubaDevOps\Flexi\Infrastructure\Cache\InMemoryCache;
 use Psr\Container\ContainerExceptionInterface;

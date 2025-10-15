@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Domain\Interfaces\LogInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\LogRepositoryInterface;
-use CubaDevOps\Flexi\Domain\Utils\FileHandlerTrait;
+use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 
 class InFileLogRepository implements LogRepositoryInterface
 {

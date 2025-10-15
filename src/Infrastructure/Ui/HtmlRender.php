@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Classes;
+namespace CubaDevOps\Flexi\Infrastructure\Ui;
 
+use CubaDevOps\Flexi\Domain\Classes\Template;
 use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
 
 class HtmlRender implements TemplateEngineInterface

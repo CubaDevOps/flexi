@@ -5,7 +5,7 @@ namespace CubaDevOps\Flexi\Test\Domain\Classes;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
-use CubaDevOps\Flexi\Domain\Classes\HtmlRender;
+use CubaDevOps\Flexi\Infrastructure\Ui\HtmlRender;
 use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
 use CubaDevOps\Flexi\Infrastructure\Session\NativeSessionStorage;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;

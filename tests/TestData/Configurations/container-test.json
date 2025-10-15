@@ -27,7 +27,7 @@
     {
       "name": "CubaDevOps\\Flexi\\Domain\\Classes\\Router",
       "factory": {
-        "class": "CubaDevOps\\Flexi\\Domain\\Factories\\RouterFactory",
+        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory",
         "method": "getInstance",
         "arguments": [
           "@CubaDevOps\\Flexi\\Domain\\Interfaces\\SessionStorageInterface",

@@ -85,7 +85,7 @@
     {
       "name": "html_render",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Domain\\Classes\\HtmlRender",
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\HtmlRender",
         "arguments": []
       }
     },

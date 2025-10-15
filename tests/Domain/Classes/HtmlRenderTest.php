@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Test\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\Classes\HtmlRender;
+use CubaDevOps\Flexi\Infrastructure\Ui\HtmlRender;
 use CubaDevOps\Flexi\Domain\Classes\Template;
 use PHPUnit\Framework\TestCase;
 

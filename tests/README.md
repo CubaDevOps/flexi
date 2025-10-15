@@ -96,7 +96,7 @@ class YourTest extends TestCase
     {
         // Test code here
         // Environment variables from .env.testing are already loaded
-        
+
         if (defined('TESTING_ENVIRONMENT') && TESTING_ENVIRONMENT) {
             // This code only runs during tests
         }

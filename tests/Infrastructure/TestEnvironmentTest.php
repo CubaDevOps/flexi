@@ -52,7 +52,7 @@ class TestEnvironmentTest extends TestCase
     public function testTestDirectoriesExist(): void
     {
         $rootDir = dirname(__DIR__, 2);
-        
+
         $this->assertDirectoryExists($rootDir . '/var/logs');
         $this->assertDirectoryExists($rootDir . '/var/cache/test');
         $this->assertDirectoryIsWritable($rootDir . '/var/logs');

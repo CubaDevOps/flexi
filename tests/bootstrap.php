@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * PHPUnit Bootstrap for Testing Environment
- * 
+ *
  * This bootstrap file is executed before running tests.
  * It loads the .env.testing file instead of .env to ensure
  * test-specific configuration is used.

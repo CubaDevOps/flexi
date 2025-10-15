@@ -84,14 +84,14 @@ should be instantiated, either directly or via factory methods.
     },
     {
       "name": "session",
-      "alias": "CubaDevOps\\Flexi\\Domain\\Classes\\NativeSessionStorage"
+      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Session\\NativeSessionStorage"
     },
     {
       "name": "logger",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\PsrLogger",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Domain\\Classes\\InFileLogRepository"
+          "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository"
         ]
       }
     },
@@ -253,7 +253,7 @@ use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Classes\Event;
 use CubaDevOps\Flexi\Application\UseCase\Health;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
-use CubaDevOps\Flexi\Domain\Classes\EventBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 
 $eventBus = ContainerFactory::getInstance()->get(EventBus::class);
 $event = new Event('health-check', Health::class, ['from' => $_SERVER['REMOTE_ADDR']);
@@ -267,7 +267,7 @@ Flexi implements the CQRS pattern with separate handling for commands and querie
 #### Command Example
 
 ```php
-use CubaDevOps\Flexi\Domain\Classes\CommandBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 
 // Assume $command is a class that implements the DTOInterface
 $commandBus->execute($command);
@@ -276,7 +276,7 @@ $commandBus->execute($command);
 #### Query Example
 
 ```php
-use CubaDevOps\Flexi\Domain\Classes\QueryBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 
 // Assume $query is a class that implements the DTOInterface
 $result = $queryBus->execute($query);

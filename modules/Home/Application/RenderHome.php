@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Modules\Home\Application;
 
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Domain\Classes\Template;
+use CubaDevOps\Flexi\Infrastructure\Ui\Template;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;

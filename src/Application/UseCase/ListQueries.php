@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Application\UseCase;
 
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Domain\DTO\QueryListDTO;
+use CubaDevOps\Flexi\Application\Queries\ListQueriesQuery;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
@@ -21,7 +21,7 @@ class ListQueries implements HandlerInterface
     }
 
     /**
-     * @param QueryListDTO $dto
+     * @param ListQueriesQuery $dto
      *
      * @return MessageInterface
      *

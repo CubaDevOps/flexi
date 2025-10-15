@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Interfaces;
 
-use CubaDevOps\Flexi\Domain\Classes\Template;
+use CubaDevOps\Flexi\Infrastructure\Ui\Template;
 
 interface TemplateEngineInterface
 {

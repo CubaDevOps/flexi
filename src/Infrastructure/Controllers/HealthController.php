@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Domain\DTO\EmptyVersionDTO;
+use CubaDevOps\Flexi\Application\Queries\GetVersionQuery;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -29,7 +29,7 @@ class HealthController extends HttpHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $version = $this->query_bus->execute(new EmptyVersionDTO());
+        $version = $this->query_bus->execute(new GetVersionQuery());
         $response = $this->createResponse();
         $response->getBody()->write('Version: '.$version);
 

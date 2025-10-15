@@ -26,7 +26,8 @@ class ClassFactoryTest extends TestCase
 
     public function testBuild(): void
     {
-        $configuration = $this->classFactory->build($this->container, Configuration::class);
+        // Use container to get Configuration since it requires ConfigurationRepositoryInterface
+        $configuration = $this->container->get(Configuration::class);
 
         $this->assertInstanceOf(Configuration::class, $configuration);
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Domain\Classes\Event;
+use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
 use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Domain\Classes\Template;
+use CubaDevOps\Flexi\Infrastructure\Ui\Template;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
 use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;

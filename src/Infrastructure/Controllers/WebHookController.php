@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Domain\Classes\Event;
+use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use Psr\Http\Message\ResponseInterface;

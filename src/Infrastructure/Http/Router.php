@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Http;
 
-use CubaDevOps\Flexi\Domain\Classes\Event;
+use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Domain\Classes\ObjectCollection;
 use CubaDevOps\Flexi\Domain\Classes\Route;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;

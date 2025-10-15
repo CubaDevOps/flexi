@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Application\UseCase;
 
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Domain\DTO\CommandListDTO;
+use CubaDevOps\Flexi\Application\Commands\ListCommandsCommand;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
@@ -21,7 +21,7 @@ class ListCommands implements HandlerInterface
     }
 
     /**
-     * @param CommandListDTO $dto
+     * @param ListCommandsCommand $dto
      *
      * @return MessageInterface
      *

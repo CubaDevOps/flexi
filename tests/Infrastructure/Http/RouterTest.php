@@ -7,8 +7,8 @@ use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
-use CubaDevOps\Flexi\Infrastructure\Controllers\HealthController;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouterMock;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\TestHttpHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -82,9 +82,11 @@ class RouterTest extends TestCase
         $this->router->addRoute($route);
 
         $uriInterfaceMock = $this->createMock(UriInterface::class);
-        $healthHandlerMock = $this->createMock(HealthController::class);
+        $testHandler = new TestHttpHandler();
         $serverRequestMock = $this->createMock(ServerRequestInterface::class);
         $responseInterfaceMock = $this->createMock(ResponseInterface::class);
+
+        $testHandler->setMockResponse($responseInterfaceMock);
 
         $serverRequestMock->expects($this->once())
             ->method('getUri')->willReturn($uriInterfaceMock);
@@ -99,10 +101,7 @@ class RouterTest extends TestCase
             ->method('dispatch')->willReturnSelf();
 
         $this->class_factory->expects($this->once())
-            ->method('build')->willReturn($healthHandlerMock);
-
-        $healthHandlerMock->expects($this->once())
-            ->method('handle')->willReturn($responseInterfaceMock);
+            ->method('build')->willReturn($testHandler);
 
         $response = $this->router->dispatch($serverRequestMock);
 

@@ -27,7 +27,7 @@ class HealthController extends HttpHandler
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
      */
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    protected function process(ServerRequestInterface $request): ResponseInterface
     {
         $version = $this->query_bus->execute(new GetVersionQuery());
         $response = $this->createResponse();

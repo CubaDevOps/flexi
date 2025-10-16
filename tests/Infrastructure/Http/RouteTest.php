@@ -112,40 +112,4 @@ class RouteTest extends TestCase
     {
         $this->assertTrue($this->route->hasMiddlewares());
     }
-
-    public function testThroughMiddlewaresSetsMiddlewares()
-    {
-        $container = $this->createMock(ContainerInterface::class);
-        $factory = $this->createMock(ObjectBuilderInterface::class);
-        $handler = $this->createMock(HttpHandler::class);
-
-        $middlewares = ['middleware1', 'middleware2'];
-        $route = new RouteMock('test_route', '/test', 'TestController', 'GET', [], $middlewares);
-
-        $factory->method('build')
-            ->will($this->onConsecutiveCalls(new stdClass, new stdClass));
-
-        $handler->expects($this->once())
-            ->method('setMiddlewares')
-            ->with($this->equalTo([new stdClass, new stdClass]));
-
-        $route->throughMiddlewares($container, $factory, $handler);
-
-        $this->assertTrue($route->has_middlewares_spy);
-        $this->assertSame($middlewares, $route->getMiddlewares());
-    }
-
-    public function testThroughMiddlewaresDoesNotSetMiddlewares()
-    {
-        $container = $this->createMock(ContainerInterface::class);
-        $factory = $this->createMock(ObjectBuilderInterface::class);
-        $handler = $this->createMock(HttpHandler::class);
-
-        $route = new RouteMock('test_route', '/test', 'TestController', 'GET');
-
-        $route->throughMiddlewares($container, $factory, $handler);
-
-        $this->assertFalse($route->has_middlewares_spy);
-        $this->assertSame([], $route->getMiddlewares());
-    }
 }

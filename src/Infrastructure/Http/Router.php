@@ -235,10 +235,36 @@ class Router
             $route->getController()
         );
 
-        return $route->hasMiddlewares() ? $route->throughMiddlewares(
-            $this->container,
-            $this->class_factory,
-            $handler
-        )->handle($request) : $handler->handle($request);
+        // Configure middlewares if the route has them
+        if ($route->hasMiddlewares()) {
+            $handler = $this->configureMiddlewares($handler, $route);
+        }
+
+        return $handler->handle($request);
+    }
+
+    /**
+     * Configures middlewares in the handler if it's an HttpHandler instance
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws \ReflectionException
+     */
+    private function configureMiddlewares(
+        RequestHandlerInterface $handler,
+        Route $route
+    ): RequestHandlerInterface {
+        if (!$handler instanceof \CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler) {
+            return $handler;
+        }
+
+        $middlewares = [];
+        foreach ($route->getMiddlewares() as $middlewareClass) {
+            $middlewares[] = $this->class_factory->build($this->container, $middlewareClass);
+        }
+
+        $handler->setMiddlewares($middlewares);
+
+        return $handler;
     }
 }

@@ -33,7 +33,7 @@ class NotFoundController extends HttpHandler
         parent::__construct();
     }
 
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    protected function process(ServerRequestInterface $request): ResponseInterface
     {
         $template = new Template($this->normalize('./src/Infrastructure/Ui/Templates/404.html'));
 

@@ -19,12 +19,8 @@ class WebHookController extends HttpHandler
         $this->event_bus = $event_bus;
     }
 
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    protected function process(ServerRequestInterface $request): ResponseInterface
     {
-        if (!$this->queue->isEmpty()) {
-            return $this->getNextMiddleware()->process($request, $this);
-        }
-
         try {
             /** @var StdClass $payload */
             $payload = $request->getAttribute('payload');

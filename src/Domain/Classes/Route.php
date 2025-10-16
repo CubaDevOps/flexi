@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-
 class Route
 {
     public const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD', 'TRACE', 'CONNECT'];
@@ -100,24 +94,6 @@ class Route
     public function getMiddlewares(): array
     {
         return $this->middlewares;
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws \ReflectionException
-     * @throws NotFoundExceptionInterface
-     */
-    public function throughMiddlewares(ContainerInterface $container, ObjectBuilderInterface $factory, RequestHandlerInterface $handler): RequestHandlerInterface
-    {
-        if ($this->hasMiddlewares()) {
-            $middlewares = [];
-            foreach ($this->getMiddlewares() as $middleware) {
-                $middlewares[] = $factory->build($container, $middleware);
-            }
-            $handler->setMiddlewares($middlewares);
-        }
-
-        return $handler;
     }
 
     public function hasMiddlewares(): bool

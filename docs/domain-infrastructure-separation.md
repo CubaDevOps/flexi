@@ -1,16 +1,16 @@
-# Refactoring: Separación de Responsabilidades - Route y Router
+# Refactoring: Separation of Responsibilities - Route and Router
 
-## Problema Identificado
+## Identified Problem
 
-En la implementación anterior, la clase `Route` (dominio) tenía la responsabilidad de configurar los middlewares en el `HttpHandler` (infraestructura), violando los principios de **Clean Architecture** y **Domain-Driven Design**.
+In the previous implementation, the `Route` class (domain) had the responsibility of configuring middlewares in the `HttpHandler` (infrastructure), violating **Clean Architecture** and **Domain-Driven Design** principles.
 
-### Código Anterior (Problemático)
+### Previous Code (Problematic)
 
 ```php
 // src/Domain/Classes/Route.php
 namespace CubaDevOps\Flexi\Domain\Classes;
 
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler; // ❌ Dominio depende de Infraestructura
+use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler; // ❌ Domain depends on Infrastructure
 use Psr\Container\ContainerInterface;
 
 class Route
@@ -25,38 +25,38 @@ class Route
             foreach ($this->getMiddlewares() as $middleware) {
                 $middlewares[] = $factory->build($container, $middleware);
             }
-            $handler->setMiddlewares($middlewares); // ❌ Dominio manipula Infraestructura
+            $handler->setMiddlewares($middlewares); // ❌ Domain manipulates Infrastructure
         }
         return $handler;
     }
 }
 ```
 
-### Problemas Identificados
+### Identified Problems
 
-1. **Violación de Clean Architecture**: El dominio (`Route`) conoce detalles de infraestructura (`HttpHandler`)
-2. **Acoplamiento incorrecto**: Dependencia de dominio → infraestructura
-3. **Responsabilidad incorrecta**: `Route` debería solo representar el concepto de una ruta
-4. **Dificultad de testing**: Más difícil testear por el acoplamiento
+1. **Clean Architecture Violation**: Domain (`Route`) knows infrastructure details (`HttpHandler`)
+2. **Incorrect coupling**: Domain dependency → infrastructure
+3. **Incorrect responsibility**: `Route` should only represent the route concept
+4. **Testing difficulty**: Harder to test due to coupling
 
-## Solución Implementada
+## Implemented Solution
 
-### Principio de Diseño Aplicado
+### Applied Design Principle
 
 **Separation of Concerns (SoC)** + **Dependency Inversion Principle (DIP)**
 
-- **Dominio (Route)**: Solo almacena y representa el concepto de una ruta
-- **Infraestructura (Router)**: Orquesta la configuración de middlewares en handlers
+- **Domain (Route)**: Only stores and represents the route concept
+- **Infrastructure (Router)**: Orchestrates middleware configuration in handlers
 
-### Código Refactorizado
+### Refactored Code
 
-#### 1. Route - Concepto Puro de Dominio
+#### 1. Route - Pure Domain Concept
 
 ```php
 // src/Domain/Classes/Route.php
 namespace CubaDevOps\Flexi\Domain\Classes;
 
-class Route // ✅ Sin dependencias de infraestructura
+class Route // ✅ No infrastructure dependencies
 {
     private string $path;
     private string $controller;
@@ -65,7 +65,7 @@ class Route // ✅ Sin dependencias de infraestructura
     private string $name;
     private array $middlewares;
 
-    // Solo getters y lógica de dominio pura
+    // Only getters and pure domain logic
     public function getMiddlewares(): array
     {
         return $this->middlewares;
@@ -78,7 +78,7 @@ class Route // ✅ Sin dependencias de infraestructura
 }
 ```
 
-#### 2. Router - Orquestación en Infraestructura
+#### 2. Router - Infrastructure Orchestration
 
 ```php
 // src/Infrastructure/Http/Router.php
@@ -93,7 +93,7 @@ class Router
             $route->getController()
         );
 
-        // ✅ Router (infraestructura) configura middlewares
+        // ✅ Router (infrastructure) configures middlewares
         if ($route->hasMiddlewares()) {
             $handler = $this->configureMiddlewares($handler, $route);
         }
@@ -102,7 +102,7 @@ class Router
     }
 
     /**
-     * ✅ Responsabilidad de configuración en la capa de infraestructura
+     * ✅ Configuration responsibility in infrastructure layer
      */
     private function configureMiddlewares(
         RequestHandlerInterface $handler,
@@ -127,7 +127,7 @@ class Router
 }
 ```
 
-## Beneficios del Refactoring
+## Refactoring Benefits
 
 ### 1. Clean Architecture Compliance
 
@@ -155,37 +155,37 @@ class Router
 
 ### 2. Single Responsibility Principle
 
-- **Route**: Representa el concepto de una ruta (path, controller, method, middlewares)
-- **Router**: Orquesta el dispatch de requests y configuración de middlewares
+- **Route**: Represents the route concept (path, controller, method, middlewares)
+- **Router**: Orchestrates request dispatch and middleware configuration
 
-### 3. Testabilidad Mejorada
+### 3. Improved Testability
 
 ```php
-// Tests de Route más simples - solo dominio
+// Route tests simpler - domain only
 public function testGetMiddlewares()
 {
     $route = new Route('test', '/test', 'Controller', 'GET', [], ['Middleware1']);
     $this->assertEquals(['Middleware1'], $route->getMiddlewares());
 }
 
-// Tests de Router - orquestación de infraestructura
+// Router tests - infrastructure orchestration
 public function testConfigureMiddlewares()
 {
-    // Test que el Router configura correctamente los middlewares
-    // en el handler
+    // Test that Router correctly configures middlewares
+    // in the handler
 }
 ```
 
-### 4. Mejor Mantenibilidad
+### 4. Better Maintainability
 
-- Cambios en cómo se configuran middlewares: Solo afecta a `Router`
-- Cambios en el concepto de Route: Solo afecta a `Route`
-- No hay acoplamiento entre capas
+- Changes in how middlewares are configured: Only affects `Router`
+- Changes in Route concept: Only affects `Route`
+- No coupling between layers
 
-### 5. Adherencia a DDD
+### 5. DDD Adherence
 
 ```php
-// Route es ahora un Value Object/Entity puro
+// Route is now a pure Value Object/Entity
 $route = new Route(
     name: 'api.users.create',
     path: '/api/users',
@@ -195,93 +195,95 @@ $route = new Route(
     middlewares: [AuthMiddleware::class, ValidationMiddleware::class]
 );
 
-// El dominio no sabe cómo se ejecutan los middlewares
-// Solo sabe que la ruta TIENE middlewares
+// Domain doesn't know how middlewares are executed
+// Only knows that the route HAS middlewares
 ```
 
-## Comparación Antes vs Después
+## Before vs After Comparison
 
-| Aspecto | Antes | Después |
+| Aspect | Before | After |
 |---------|-------|---------|
-| **Acoplamiento** | Dominio → Infraestructura ❌ | Infraestructura → Dominio ✅ |
-| **Responsabilidad Route** | Representación + Configuración ❌ | Solo Representación ✅ |
-| **Responsabilidad Router** | Solo Dispatch ❌ | Dispatch + Orquestación ✅ |
-| **Testing** | Tests complejos y acoplados ❌ | Tests aislados y simples ✅ |
-| **Mantenibilidad** | Cambios afectan múltiples capas ❌ | Cambios localizados ✅ |
-| **Clean Architecture** | Violada ❌ | Cumplida ✅ |
+| **Coupling** | Domain → Infrastructure ❌ | Infrastructure → Domain ✅ |
+| **Route Responsibility** | Representation + Configuration ❌ | Only Representation ✅ |
+| **Router Responsibility** | Only Dispatch ❌ | Dispatch + Orchestration ✅ |
+| **Testing** | Complex and coupled tests ❌ | Isolated and simple tests ✅ |
+| **Maintainability** | Changes affect multiple layers ❌ | Localized changes ✅ |
+| **Clean Architecture** | Violated ❌ | Compliant ✅ |
 
-## Flujo de Ejecución Actualizado
+## Updated Execution Flow
 
 ```
-1. Request llega al Router
+1. Request arrives at Router
                 ↓
-2. Router encuentra la Route por path
+2. Router finds Route by path
                 ↓
-3. Router construye el Handler (Controller)
+3. Router builds Handler (Controller)
                 ↓
-4. Router verifica si Route tiene middlewares
+4. Router verifies if Route has middlewares
                 ↓
-5. SI tiene middlewares:
+5. IF has middlewares:
    → Router::configureMiddlewares()
-   → Construye instancias de middlewares
-   → Configura en HttpHandler
+   → Builds middleware instances
+   → Configures in HttpHandler
                 ↓
-6. Router ejecuta handler->handle($request)
+6. Router executes handler->handle($request)
                 ↓
-7. HttpHandler ejecuta cadena de middlewares automáticamente
+7. HttpHandler executes middleware chain automatically
                 ↓
-8. Response retorna
+8. Response returns
 ```
 
-## Principios SOLID Aplicados
+## Applied SOLID Principles
 
 ### ✅ Single Responsibility Principle (SRP)
 - **Route**: Solo representa una ruta
 - **Router**: Solo orquesta el dispatch
 
 ### ✅ Open/Closed Principle (OCP)
-- Abierto a extensión: Nuevos tipos de handlers
-- Cerrado a modificación: La lógica core no cambia
+- Open to extension: New handler types
+- Closed to modification: Core logic doesn't change
 
 ### ✅ Liskov Substitution Principle (LSP)
-- Cualquier `RequestHandlerInterface` puede usarse
-- `HttpHandler` es una especialización válida
+- Any `RequestHandlerInterface` can be used
+- `HttpHandler` is a valid specialization
 
 ### ✅ Interface Segregation Principle (ISP)
-- `Route` no implementa interfaces innecesarias
-- Solo expone métodos relevantes
+- `Route` doesn't implement unnecessary interfaces
+- Only exposes relevant methods
 
 ### ✅ Dependency Inversion Principle (DIP)
-- Dominio no depende de infraestructura
-- Infraestructura depende de abstracciones del dominio
+- Domain doesn't depend on infrastructure
+- Infrastructure depends on domain abstractions
 
 ## Testing
 
-### Resultados
+### Results
 ```bash
 PHPUnit 9.6.29
 OK (175 tests, 345 assertions)
 ```
 
-✅ Todos los tests pasan
-✅ Se eliminaron tests obsoletos de `Route::throughMiddlewares()`
-✅ La funcionalidad se mantiene intacta
+✅ All tests pass
+✅ Obsolete `Route::throughMiddlewares()` tests removed
+✅ Functionality remains intact
 
-## Conclusión
+## Conclusion
 
-Este refactoring mejora significativamente la arquitectura del framework:
+This refactoring significantly improves the framework's architecture:
 
-1. **Cumple con Clean Architecture**: Dependencias apuntan hacia el dominio
-2. **Mejor separación de responsabilidades**: Cada clase tiene un propósito claro
-3. **Más fácil de mantener**: Cambios localizados
-4. **Más fácil de testear**: Menos acoplamiento
-5. **Dominio puro**: `Route` es un concepto de dominio limpio
+1. **Complies with Clean Architecture**: Dependencies point toward domain
+2. **Better separation of responsibilities**: Each class has a clear purpose
+3. **Easier to maintain**: Localized changes
+4. **Easier to test**: Less coupling
+5. **Pure domain**: `Route` is a clean domain concept
 
-El framework ahora sigue las mejores prácticas de arquitectura de software y diseño orientado al dominio.
+The framework now follows software architecture and domain-driven design best practices.
 
 ---
 
-**Fecha**: 16 de octubre de 2025
-**Autor**: Refactoring de arquitectura
-**Estado**: ✅ Implementado y Testeado
-**Principios**: Clean Architecture, DDD, SOLID
+**Date**: October 16, 2025
+**Author**: Architecture refactoring
+**Status**: ✅ Implemented and Tested
+**Principles**: Clean Architecture, DDD, SOLID
+
+````

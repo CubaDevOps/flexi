@@ -1,13 +1,13 @@
-# Análisis y Mejoras en la Gestión de Middlewares
+# Analysis and Improvements in Middleware Management
 
-## Estado Actual
+## Current State
 
-### Problema Identificado
+### Identified Problem
 
-En la implementación actual del framework, cada controlador que extiende de `HttpHandler` debe conocer e implementar manualmente el mecanismo de cola para gestionar middlewares:
+In the current framework implementation, each controller that extends `HttpHandler` must know and manually implement the queue mechanism to manage middlewares:
 
 ```php
-// Antes: El desarrollador debía hacer esto en cada controlador
+// Before: The developer had to do this in each controller
 public function handle(ServerRequestInterface $request): ResponseInterface
 {
     if (!$this->queue->isEmpty()) {
@@ -17,18 +17,18 @@ public function handle(ServerRequestInterface $request): ResponseInterface
 }
 ```
 
-### Problemática
+### Problems
 
-1. **Violación DRY**: Código repetitivo en cada controlador
-2. **Conocimiento técnico innecesario**: El desarrollador debe entender el patrón de cadena de responsabilidad
-3. **Propensa a errores**: Fácil olvidar implementar la cadena o hacerlo incorrectamente
-4. **Difícil de mantener**: Cambios en el mecanismo requieren modificar todos los controladores
+1. **DRY Violation**: Repetitive code in each controller
+2. **Unnecessary technical knowledge**: The developer must understand the chain of responsibility pattern
+3. **Error-prone**: Easy to forget to implement the chain or do it incorrectly
+4. **Difficult to maintain**: Changes to the mechanism require modifying all controllers
 
-## Solución Implementada
+## Implemented Solution
 
-### Patrón Template Method
+### Template Method Pattern
 
-Se implementó el **patrón Template Method** para encapsular la lógica de gestión de middlewares en la clase base `HttpHandler`:
+The **Template Method pattern** was implemented to encapsulate the middleware management logic in the `HttpHandler` base class:
 
 ```php
 abstract class HttpHandler implements RequestHandlerInterface
@@ -36,8 +36,8 @@ abstract class HttpHandler implements RequestHandlerInterface
     protected \SplQueue $queue;
 
     /**
-     * Método FINAL que gestiona automáticamente la cadena de middlewares
-     * Este método es final para garantizar que la cadena siempre se ejecute correctamente
+     * FINAL method that automatically manages the middleware chain
+     * This method is final to guarantee that the chain always executes correctly
      */
     final public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -49,27 +49,27 @@ abstract class HttpHandler implements RequestHandlerInterface
     }
 
     /**
-     * Método abstracto que cada controlador debe implementar
-     * con su lógica específica
+     * Abstract method that each controller must implement
+     * with its specific logic
      */
     abstract protected function process(ServerRequestInterface $request): ResponseInterface;
 }
 ```
 
-### Beneficios de la Solución
+### Solution Benefits
 
-1. **Cumple con PSR-7 y PSR-15**:
-   - `handle()` es público y cumple con `RequestHandlerInterface`
-   - Los middlewares siguen implementando `MiddlewareInterface`
+1. **Complies with PSR-7 and PSR-15**:
+   - `handle()` is public and complies with `RequestHandlerInterface`
+   - Middlewares continue implementing `MiddlewareInterface`
 
-2. **Simplicidad para el desarrollador**:
+2. **Simplicity for the developer**:
 ```php
-// Ahora: El desarrollador solo implementa la lógica del negocio
+// Now: The developer only implements business logic
 class WebHookController extends HttpHandler
 {
     protected function process(ServerRequestInterface $request): ResponseInterface
     {
-        // Solo lógica del negocio, sin preocuparse por middlewares
+        // Only business logic, without worrying about middlewares
         $payload = $request->getAttribute('payload');
         $this->event_bus->dispatch(new Event($payload->event, ...));
         return $this->createResponse();
@@ -77,34 +77,34 @@ class WebHookController extends HttpHandler
 }
 ```
 
-3. **Gestión automática de middlewares**:
+3. **Automatic middleware management**:
 ```php
-// La cadena se construye automáticamente desde Route
+// The chain is built automatically from Route
 $route = new Route(
     'trigger-event',
     '/trigger-event',
     WebHookController::class,
     'POST',
     [],
-    [JWTAuthMiddleware::class] // Middlewares declarativos
+    [JWTAuthMiddleware::class] // Declarative middlewares
 );
 ```
 
-4. **Inmutabilidad del flujo**: Al declarar `handle()` como `final`, garantizamos que:
-   - Ningún controlador puede saltarse la cadena de middlewares
-   - El orden de ejecución es predecible y consistente
-   - La seguridad y validaciones no pueden ser bypasseadas
+4. **Flow immutability**: By declaring `handle()` as `final`, we guarantee that:
+   - No controller can skip the middleware chain
+   - Execution order is predictable and consistent
+   - Security and validations cannot be bypassed
 
-### Arquitectura de la Solución
+### Solution Architecture
 
 ```
 Request
    ↓
 Router::dispatch()
    ↓
-Route::throughMiddlewares() → Configura middlewares en HttpHandler
+Route::throughMiddlewares() → Configures middlewares in HttpHandler
    ↓
-HttpHandler::handle() [FINAL] → Ejecuta cadena de middlewares
+HttpHandler::handle() [FINAL] → Executes middleware chain
    ↓
 Middleware 1 → process($request, $handler)
    ↓
@@ -112,16 +112,16 @@ Middleware 2 → process($request, $handler)
    ↓
 Middleware N → process($request, $handler)
    ↓
-HttpHandler::handle() → (cola vacía)
+HttpHandler::handle() → (empty queue)
    ↓
-ConcreteController::process() → Lógica del negocio
+ConcreteController::process() → Business logic
    ↓
 Response
 ```
 
-## Controladores Actualizados
+## Updated Controllers
 
-Todos los controladores del framework fueron actualizados para usar el nuevo patrón:
+All framework controllers were updated to use the new pattern:
 
 ### 1. HealthController
 ```php
@@ -143,7 +143,7 @@ class NotFoundController extends HttpHandler
     protected function process(ServerRequestInterface $request): ResponseInterface
     {
         $previous_route = $this->session->get('previous_route') ?? '/';
-        // ... lógica específica
+        // ... specific logic
         return $response;
     }
 }
@@ -162,7 +162,7 @@ class WebHookController extends HttpHandler
 }
 ```
 
-### 4. HomeController (Módulo)
+### 4. HomeController (Module)
 ```php
 class HomeController extends HttpHandler
 {
@@ -176,31 +176,31 @@ class HomeController extends HttpHandler
 }
 ```
 
-## Compatibilidad con Estándares PSR
+## PSR Standards Compatibility
 
 ### PSR-7: HTTP Message Interface
-✅ `ServerRequestInterface` se mantiene como tipo de entrada
-✅ `ResponseInterface` se mantiene como tipo de salida
+✅ `ServerRequestInterface` remains as input type
+✅ `ResponseInterface` remains as output type
 
 ### PSR-15: HTTP Server Request Handlers
-✅ `RequestHandlerInterface::handle()` es público y accesible
-✅ `MiddlewareInterface::process()` sigue el contrato estándar
-✅ La cadena de middlewares funciona según el estándar
+✅ `RequestHandlerInterface::handle()` is public and accessible
+✅ `MiddlewareInterface::process()` follows the standard contract
+✅ The middleware chain works according to the standard
 
 ```php
-// Middleware estándar PSR-15
+// Standard PSR-15 middleware
 class JWTAuthMiddleware implements MiddlewareInterface
 {
     public function process(
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        // Validaciones antes
+        // Validations before
         if (!$this->isValid($request)) {
             return $this->createUnauthorizedResponse();
         }
 
-        // Continuar cadena
+        // Continue chain
         return $handler->handle($request);
     }
 }
@@ -208,7 +208,7 @@ class JWTAuthMiddleware implements MiddlewareInterface
 
 ## Testing
 
-Se actualizaron los tests para reflejar el nuevo comportamiento:
+Tests were updated to reflect the new behavior:
 
 ### TestHttpHandler (Test Double)
 ```php
@@ -228,28 +228,28 @@ class TestHttpHandler extends HttpHandler
 }
 ```
 
-### Resultados
+### Results
 ```
 PHPUnit 9.6.29
 OK (177 tests, 350 assertions)
 ```
 
-✅ Todos los tests pasan exitosamente
+✅ All tests pass successfully
 
-## Conclusiones
+## Conclusions
 
-### Ventajas de la Implementación
+### Implementation Advantages
 
-1. **Transparencia**: Los desarrolladores no necesitan conocer la implementación interna
-2. **Seguridad**: La cadena de middlewares no puede ser bypasseada
-3. **Mantenibilidad**: Cambios en el mecanismo solo afectan a `HttpHandler`
-4. **Cumplimiento de estándares**: Total compatibilidad con PSR-7 y PSR-15
-5. **Simplicidad**: Código más limpio y fácil de entender
+1. **Transparency**: Developers don't need to know the internal implementation
+2. **Security**: The middleware chain cannot be bypassed
+3. **Maintainability**: Changes to the mechanism only affect `HttpHandler`
+4. **Standards compliance**: Full compatibility with PSR-7 and PSR-15
+5. **Simplicity**: Cleaner and easier to understand code
 
-### Ejemplo de Uso Completo
+### Complete Usage Example
 
 ```php
-// 1. Definir ruta con middlewares (routes.json)
+// 1. Define route with middlewares (routes.json)
 {
   "name": "protected-endpoint",
   "path": "/api/protected",
@@ -261,30 +261,30 @@ OK (177 tests, 350 assertions)
   ]
 }
 
-// 2. Implementar controlador (solo lógica de negocio)
+// 2. Implement controller (business logic only)
 class ProtectedController extends HttpHandler
 {
     protected function process(ServerRequestInterface $request): ResponseInterface
     {
-        // Los middlewares ya validaron autenticación y rate limiting
+        // Middlewares already validated authentication and rate limiting
         $data = $this->businessLogic->execute($request);
         return $this->createJsonResponse($data);
     }
 }
 
-// 3. ¡Listo! El framework gestiona todo automáticamente
+// 3. Done! The framework manages everything automatically
 ```
 
-## Recomendaciones Futuras
+## Future Recommendations
 
-1. **Documentación**: Crear guía de usuario explicando el patrón
-2. **Middleware Generator**: CLI para generar middlewares estándar
-3. **Middleware Pipeline Visualization**: Tool para visualizar la cadena
-4. **Performance Monitoring**: Métricas por middleware
-5. **Caching de Rutas**: Cachear configuración de rutas compiladas
+1. **Documentation**: Create user guide explaining the pattern
+2. **Middleware Generator**: CLI to generate standard middlewares
+3. **Middleware Pipeline Visualization**: Tool to visualize the chain
+4. **Performance Monitoring**: Metrics per middleware
+5. **Route Caching**: Cache compiled route configuration
 
 ---
 
-**Fecha de Implementación**: 16 de octubre de 2025
-**Autor**: Análisis y mejora de arquitectura
-**Estado**: ✅ Implementado y Testeado
+**Implementation Date**: October 16, 2025
+**Author**: Architecture analysis and improvement
+**Status**: ✅ Implemented and Tested

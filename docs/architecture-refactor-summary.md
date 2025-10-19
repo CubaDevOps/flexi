@@ -1,59 +1,60 @@
-# ✅ Reorganización Arquitectónica - Resumen Ejecutivo
+````markdown
+# ✅ Architectural Reorganization - Executive Summary
 
-## 🎯 Objetivo Completado
+## 🎯 Objective Completed
 
-Reorganizar el proyecto **flexi** siguiendo principios de **Clean Architecture** y **CQRS** para mejorar la mantenibilidad, testabilidad y escalabilidad del código.
+Reorganize the **flexi** project following **Clean Architecture** and **CQRS** principles to improve code maintainability, testability, and scalability.
 
 ---
 
-## 📊 Resultados
+## 📊 Results
 
-### ✅ **Fase 1: Reorganización CQRS y Clean Architecture**
+### ✅ **Phase 1: CQRS and Clean Architecture Reorganization**
 
-#### 🏗️ Estructura Creada
+#### 🏗️ Structure Created
 ```
 src/
 ├── Domain/
-│   ├── Events/          ✅ NUEVO - Eventos de dominio
-│   ├── Services/        ✅ NUEVO - Servicios de dominio puros
-│   └── DTO/            ✅ LIMPIADO - Solo utilidades compartidas
+│   ├── Events/          ✅ NEW - Domain events
+│   ├── Services/        ✅ NEW - Pure domain services
+│   └── DTO/            ✅ CLEANED - Only shared utilities
 │
 ├── Application/
-│   ├── Commands/       ✅ NUEVO - Comandos CQRS
-│   ├── Queries/        ✅ NUEVO - Queries CQRS
-│   └── DTO/            ✅ NUEVO - DTOs de aplicación
+│   ├── Commands/       ✅ NEW - CQRS Commands
+│   ├── Queries/        ✅ NEW - CQRS Queries
+│   └── DTO/            ✅ NEW - Application DTOs
 │
-└── Infrastructure/     ✅ EXISTENTE - Adaptadores
+└── Infrastructure/     ✅ EXISTING - Adapters
 ```
 
-#### 📦 Movimientos Completados
+#### 📦 Completed Movements
 
 **DTOs → Application Layer (CQRS)**
 - ✅ `CommandListDTO` → `Application/Commands/ListCommandsCommand`
 - ✅ `QueryListDTO` → `Application/Queries/ListQueriesQuery`
 - ✅ `EmptyVersionDTO` → `Application/Queries/GetVersionQuery`
 
-**Eventos → Domain/Events**
+**Events → Domain/Events**
 - ✅ `Domain/Classes/Event` → `Domain/Events/Event`
 - ✅ `Domain/Classes/EventListener` → `Domain/Events/EventListener`
 
 **UI → Infrastructure**
 - ✅ `Domain/Classes/Template` → `Infrastructure/Ui/Template`
 
-#### 📝 Archivos Actualizados
+#### 📝 Updated Files
 
-**Archivos de código:** 19 archivos
-- Application layer: 3 archivos
-- Infrastructure layer: 11 archivos
-- Domain layer: 1 archivo
-- Tests: 4 archivos
+**Code files:** 19 files
+- Application layer: 3 files
+- Infrastructure layer: 11 files
+- Domain layer: 1 file
+- Tests: 4 files
 
-**Archivos de configuración:** 1 archivo
-- `src/Config/queries.json` - IDs actualizados con nuevos namespaces
+**Configuration files:** 1 file
+- `src/Config/queries.json` - IDs updated with new namespaces
 
-#### 🗑️ Archivos Eliminados
+#### 🗑️ Deleted Files
 
-6 archivos antiguos duplicados removidos:
+6 old duplicate files removed:
 - `Domain/Classes/Event.php`
 - `Domain/Classes/EventListener.php`
 - `Domain/Classes/Template.php`
@@ -65,7 +66,7 @@ src/
 
 ## 🧪 Tests
 
-### Estado: ✅ **TODOS LOS TESTS PASANDO**
+### Status: ✅ **ALL TESTS PASSING**
 
 ```
 PHPUnit 9.6.29
@@ -76,95 +77,95 @@ Failures: 0
 Status: OK ✓
 ```
 
-### Tests Actualizados
-- ✅ `CommandListDTOTest.php` - Actualizado a `ListCommandsCommand`
-- ✅ `QueryListDTOTest.php` - Actualizado a `ListQueriesQuery`
-- ✅ `ListCommandsTest.php` - Imports actualizados
-- ✅ `ListQueriesTest.php` - Imports actualizados
-- ✅ `QueryBusTest.php` - Actualizado con nuevos namespaces
-- ✅ `EventTest.php` - Movido a `Domain/Events`
-- ✅ `TemplateTest.php` - Movido a `Infrastructure/Ui`
-- ✅ `HtmlRenderTest.php` - Imports actualizados
-- ✅ `WebHookControllerTest.php` - Imports actualizados
+### Updated Tests
+- ✅ `CommandListDTOTest.php` - Updated to `ListCommandsCommand`
+- ✅ `QueryListDTOTest.php` - Updated to `ListQueriesQuery`
+- ✅ `ListCommandsTest.php` - Imports updated
+- ✅ `ListQueriesTest.php` - Imports updated
+- ✅ `QueryBusTest.php` - Updated with new namespaces
+- ✅ `EventTest.php` - Moved to `Domain/Events`
+- ✅ `TemplateTest.php` - Moved to `Infrastructure/Ui`
+- ✅ `HtmlRenderTest.php` - Imports updated
+- ✅ `WebHookControllerTest.php` - Imports updated
 
 ---
 
-## 📚 Documentación Generada
+## 📚 Generated Documentation
 
-1. **`docs/architecture-reorganization.md`** - Documento completo con:
-   - Detalles de todos los movimientos realizados
-   - Justificaciones arquitectónicas
-   - Lista completa de archivos actualizados
-   - Beneficios de la reorganización
-   - Próximos pasos recomendados
+1. **`docs/architecture-reorganization.md`** - Complete document with:
+   - Details of all movements performed
+   - Architectural justifications
+   - Complete list of updated files
+   - Benefits of the reorganization
+   - Recommended next steps
 
-2. **`docs/remaining-classes-analysis.md`** - Análisis detallado de:
-   - Clases restantes en `Domain/Classes/`
-   - Recomendaciones de ubicación para cada clase
-   - Justificaciones basadas en Clean Architecture
-   - Plan de acción por fases
+2. **`docs/remaining-classes-analysis.md`** - Detailed analysis of:
+   - Remaining classes in `Domain/Classes/`
+   - Location recommendations for each class
+   - Justifications based on Clean Architecture
+   - Phased action plan
 
 ---
 
-## 🎯 Principios Aplicados
+## 🎯 Applied Principles
 
 ### ✅ Clean Architecture
-- **Regla de Dependencias:** Domain ← Application ← Infrastructure
-- **Separación de Concerns:** Cada capa con responsabilidad única
-- **Inversión de Dependencias:** Interfaces en Domain, implementaciones en Infrastructure
+- **Dependency Rule:** Domain ← Application ← Infrastructure
+- **Separation of Concerns:** Each layer with single responsibility
+- **Dependency Inversion:** Interfaces in Domain, implementations in Infrastructure
 
 ### ✅ CQRS (Command Query Responsibility Segregation)
-- **Comandos:** Separados en `Application/Commands/`
-- **Queries:** Separados en `Application/Queries/`
-- **Nomenclatura Consistente:** `*Command` para comandos, `*Query` para queries
+- **Commands:** Separated in `Application/Commands/`
+- **Queries:** Separated in `Application/Queries/`
+- **Consistent Nomenclature:** `*Command` for commands, `*Query` for queries
 
 ### ✅ Domain-Driven Design (DDD)
-- **Eventos de Dominio:** Claramente separados en `Domain/Events/`
-- **Servicios de Dominio:** Estructura creada en `Domain/Services/`
-- **Value Objects y Entities:** Mantienen su ubicación correcta
+- **Domain Events:** Clearly separated in `Domain/Events/`
+- **Domain Services:** Structure created in `Domain/Services/`
+- **Value Objects and Entities:** Maintain their correct location
 
 ---
 
-## 📋 Clases Restantes por Reorganizar
+## 📋 Remaining Classes to Reorganize
 
-### 🚀 A Mover a Infrastructure (Alta Prioridad)
+### 🚀 To Move to Infrastructure (High Priority)
 - `Route.php` → `Infrastructure/Http/Route.php`
 - `Service.php` → `Infrastructure/DependencyInjection/Service.php`
 - `ServiceClassDefinition.php` → `Infrastructure/DependencyInjection/`
 - `ServiceFactoryDefinition.php` → `Infrastructure/DependencyInjection/`
 
-### 🔄 A Reorganizar en Domain (Media Prioridad)
+### 🔄 To Reorganize in Domain (Medium Priority)
 - `Collection.php` → `Domain/Collections/Collection.php`
 - `ObjectCollection.php` → `Domain/Collections/ObjectCollection.php`
 - `DummySearchCriteria.php` → `Domain/Criteria/DummySearchCriteria.php`
 - `PlainTextMessage.php` → `Domain/ValueObjects/PlainTextMessage.php`
-- `Log.php` → `Domain/Entities/Log.php` o `Domain/ValueObjects/Log.php`
+- `Log.php` → `Domain/Entities/Log.php` or `Domain/ValueObjects/Log.php`
 
 ---
 
-## 💡 Beneficios Obtenidos
+## 💡 Obtained Benefits
 
-### ✅ Claridad Arquitectónica
-- Estructura clara y predecible
-- Responsabilidades bien definidas por capa
-- Fácil navegación y comprensión del código
+### ✅ Architectural Clarity
+- Clear and predictable structure
+- Well-defined responsibilities per layer
+- Easy navigation and code comprehension
 
-### ✅ Mantenibilidad
-- Cambios localizados en capas específicas
-- Menos acoplamiento entre componentes
-- Código más fácil de refactorizar
+### ✅ Maintainability
+- Localized changes in specific layers
+- Less coupling between components
+- Easier code refactoring
 
-### ✅ Testabilidad
-- Dependencias claras y explícitas
-- Fácil crear mocks e interfaces
-- Tests más enfocados y específicos
+### ✅ Testability
+- Clear and explicit dependencies
+- Easy to create mocks and interfaces
+- More focused and specific tests
 
-### ✅ Escalabilidad
-- Base sólida para agregar nuevos features
-- Patrón CQRS permite escalar reads y writes independientemente
-- Estructura preparada para microservicios futuros
+### ✅ Scalability
+- Solid foundation for adding new features
+- CQRS pattern allows independent scaling of reads and writes
+- Structure prepared for future microservices
 
-### ✅ Conformidad con Estándares
+### ✅ Standards Compliance
 - Clean Architecture ✓
 - CQRS ✓
 - DDD ✓
@@ -172,59 +173,61 @@ Status: OK ✓
 
 ---
 
-## 🔮 Próximos Pasos Recomendados
+## 🔮 Recommended Next Steps
 
-### Fase 2 (Opcional pero Recomendado)
-1. **Reorganizar clases restantes de Domain/Classes**
-   - Seguir el plan en `docs/remaining-classes-analysis.md`
-   - Mover Route y Service* a Infrastructure
-   - Crear subdirectorios en Domain (Collections, Criteria)
+### Phase 2 (Optional but Recommended)
+1. **Reorganize remaining classes from Domain/Classes**
+   - Follow the plan in `docs/remaining-classes-analysis.md`
+   - Move Route and Service* to Infrastructure
+   - Create subdirectories in Domain (Collections, Criteria)
 
-2. **Crear servicios de Application**
-   - Application/Services/ para orquestación compleja
-   - Separar lógica de coordinación de casos de uso simples
+2. **Create Application services**
+   - Application/Services/ for complex orchestration
+   - Separate coordination logic from simple use cases
 
-3. **Revisar y mejorar eventos**
-   - Agregar más eventos de dominio donde sea apropiado
-   - Implementar event sourcing si es necesario
+3. **Review and improve events**
+   - Add more domain events where appropriate
+   - Implement event sourcing if necessary
 
-4. **Documentación adicional**
-   - Diagramas de arquitectura
-   - Guía de contribución siguiendo la nueva estructura
+4. **Additional documentation**
+   - Architecture diagrams
+   - Contribution guide following the new structure
    - ADRs (Architecture Decision Records)
 
 ---
 
-## 📊 Métricas
+## 📊 Metrics
 
-| Métrica | Valor |
+| Metric | Value |
 |---------|-------|
-| Archivos creados | 9 |
-| Archivos eliminados | 6 |
-| Archivos modificados | 19 |
-| Tests actualizados | 9 |
-| Tests pasando | 177/177 ✅ |
-| Errores | 0 ✅ |
-| Directorios nuevos | 5 |
-| Líneas de código movidas | ~800 |
+| Files created | 9 |
+| Files deleted | 6 |
+| Files modified | 19 |
+| Tests updated | 9 |
+| Tests passing | 177/177 ✅ |
+| Errors | 0 ✅ |
+| New directories | 5 |
+| Lines of code moved | ~800 |
 
 ---
 
-## ✅ Conclusión
+## ✅ Conclusion
 
-La reorganización arquitectónica se ha completado exitosamente. El proyecto ahora sigue una estructura clara basada en **Clean Architecture** y **CQRS**, con:
+The architectural reorganization has been successfully completed. The project now follows a clear structure based on **Clean Architecture** and **CQRS**, with:
 
-- ✅ **100% de tests pasando**
-- ✅ **Estructura de capas clara**
-- ✅ **DTOs correctamente organizados por responsabilidad**
-- ✅ **Eventos de dominio separados**
-- ✅ **Base sólida para crecimiento futuro**
+- ✅ **100% of tests passing**
+- ✅ **Clear layer structure**
+- ✅ **DTOs correctly organized by responsibility**
+- ✅ **Separated domain events**
+- ✅ **Solid foundation for future growth**
 
-El código es ahora **más mantenible**, **más testeable** y **más escalable**.
+The code is now **more maintainable**, **more testable**, and **more scalable**.
 
 ---
 
-**Fecha:** 15 de octubre de 2025
-**Rama:** architecture-improvements
-**Estado:** ✅ Completado
-**Tests:** ✅ 177/177 Pasando
+**Date:** October 15, 2025
+**Branch:** architecture-improvements
+**Status:** ✅ Completed
+**Tests:** ✅ 177/177 Passing
+
+````

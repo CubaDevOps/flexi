@@ -1,32 +1,32 @@
-# Análisis y Mejora de la Gestión de Middlewares
+# Analysis and Improvement of Middleware Management
 
-## 📊 Análisis de la Situación Actual
+## 📊 Current Situation Analysis
 
-### Arquitectura Actual
+### Current Architecture
 
-El framework implementa un sistema de middlewares basado en PSR-15 con los siguientes componentes:
+The framework implements a PSR-15 based middleware system with the following components:
 
-1. **`HttpHandler`** (clase abstracta):
-   - Implementa `RequestHandlerInterface`
-   - Gestiona una cola (`SplQueue`) de middlewares
-   - Proporciona métodos para agregar middlewares
-   - Requiere que cada controlador implemente `handle()`
+1. **`HttpHandler`** (abstract class):
+   - Implements `RequestHandlerInterface`
+   - Manages a queue (`SplQueue`) of middlewares
+   - Provides methods to add middlewares
+   - Requires each controller to implement `handle()`
 
-2. **Controladores** (extienden `HttpHandler`):
-   - `WebHookController`: Implementa manualmente la lógica de cola de middlewares
-   - `HealthController`: No implementa middlewares (cola vacía)
-   - `NotFoundController`: No implementa middlewares (cola vacía)
+2. **Controllers** (extend `HttpHandler`):
+   - `WebHookController`: Manually implements middleware queue logic
+   - `HealthController`: Does not implement middlewares (empty queue)
+   - `NotFoundController`: Does not implement middlewares (empty queue)
 
 3. **`Router`**:
-   - Lee la configuración de rutas desde JSON
-   - Aplica middlewares a rutas específicas mediante `Route::throughMiddlewares()`
-   - Inyecta middlewares en el handler antes de ejecutar
+   - Reads route configuration from JSON
+   - Applies middlewares to specific routes via `Route::throughMiddlewares()`
+   - Injects middlewares into the handler before executing
 
-### Problemas Identificados
+### Identified Problems
 
-#### 1. **Duplicación de Código Obligatoria**
+#### 1. **Mandatory Code Duplication**
 
-Cada controlador debe implementar manualmente esta lógica:
+Each controller must manually implement this logic:
 
 ```php
 public function handle(ServerRequestInterface $request): ResponseInterface
@@ -35,11 +35,11 @@ public function handle(ServerRequestInterface $request): ResponseInterface
         return $this->getNextMiddleware()->process($request, $this);
     }
 
-    // Lógica del controlador...
+    // Controller logic...
 }
 ```
 
-**Ejemplo en `WebHookController`:**
+**Example in `WebHookController`:**
 ```php
 public function handle(ServerRequestInterface $request): ResponseInterface
 {
@@ -58,41 +58,41 @@ public function handle(ServerRequestInterface $request): ResponseInterface
 }
 ```
 
-#### 2. **Violación de Principios SOLID**
+#### 2. **SOLID Principles Violation**
 
-- **SRP (Single Responsibility)**: El controlador debe conocer la implementación interna de la cola
-- **OCP (Open/Closed)**: No se puede cambiar la estrategia de ejecución sin modificar todos los controladores
-- **DRY (Don't Repeat Yourself)**: Código repetitivo en cada controlador
+- **SRP (Single Responsibility)**: The controller must know the internal queue implementation
+- **OCP (Open/Closed)**: Cannot change execution strategy without modifying all controllers
+- **DRY (Don't Repeat Yourself)**: Repetitive code in each controller
 
-#### 3. **Carga Cognitiva Innecesaria**
+#### 3. **Unnecessary Cognitive Load**
 
-Los desarrolladores deben:
-- Recordar implementar la verificación de la cola
-- Conocer el orden correcto de ejecución
-- Entender cómo funciona `SplQueue`
-- Implementar correctamente la recursión del middleware
+Developers must:
+- Remember to implement the queue check
+- Know the correct execution order
+- Understand how `SplQueue` works
+- Correctly implement middleware recursion
 
-#### 4. **Propenso a Errores**
+#### 4. **Error-Prone**
 
-- Olvidar verificar `isEmpty()` causa que los middlewares no se ejecuten
-- Invertir el orden de la verificación rompe la cadena
-- No es type-safe (la cola puede contener cualquier cosa)
+- Forgetting to check `isEmpty()` causes middlewares not to execute
+- Inverting the order of verification breaks the chain
+- Not type-safe (the queue can contain anything)
 
-## 💡 Propuesta de Mejora
+## 💡 Improvement Proposal
 
-### Objetivo
+### Objective
 
-Implementar un sistema transparente de ejecución de middlewares que:
-1. Respete completamente PSR-15
-2. Elimine la necesidad de código repetitivo
-3. Sea automático y transparente para el desarrollador
-4. Mantenga compatibilidad hacia atrás
+Implement a transparent middleware execution system that:
+1. Fully respects PSR-15
+2. Eliminates the need for repetitive code
+3. Is automatic and transparent to the developer
+4. Maintains backward compatibility
 
-### Solución: Patrón Template Method
+### Solution: Template Method Pattern
 
-Implementar el patrón Template Method en `HttpHandler` para gestionar automáticamente la cadena de middlewares.
+Implement the Template Method pattern in `HttpHandler` to automatically manage the middleware chain.
 
-#### Cambios en `HttpHandler`
+#### Changes in `HttpHandler`
 
 ```php
 <?php
@@ -143,11 +143,11 @@ abstract class HttpHandler implements RequestHandlerInterface
     }
 
     /**
-     * Template Method: Gestiona automáticamente la cadena de middlewares
-     * y delega la lógica específica al método abstracto process()
+     * Template Method: Automatically manages the middleware chain
+     * and delegates specific logic to the abstract process() method
      *
-     * Este método es final para evitar que los controladores lo sobrescriban
-     * y garantizar que la cadena de middlewares siempre se ejecute correctamente.
+     * This method is final to prevent controllers from overriding it
+     * and to ensure that the middleware chain always executes correctly.
      */
     final public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -159,13 +159,13 @@ abstract class HttpHandler implements RequestHandlerInterface
     }
 
     /**
-     * Método abstracto que cada controlador debe implementar con su lógica específica.
+     * Abstract method that each controller must implement with its specific logic.
      *
-     * Este método se invoca automáticamente después de que todos los middlewares
-     * hayan sido procesados.
+     * This method is automatically invoked after all middlewares
+     * have been processed.
      *
-     * @param ServerRequestInterface $request La petición HTTP (potencialmente modificada por middlewares)
-     * @return ResponseInterface La respuesta HTTP
+     * @param ServerRequestInterface $request The HTTP request (potentially modified by middlewares)
+     * @return ResponseInterface The HTTP response
      */
     abstract protected function process(ServerRequestInterface $request): ResponseInterface;
 
@@ -181,9 +181,9 @@ abstract class HttpHandler implements RequestHandlerInterface
 }
 ```
 
-#### Cambios en los Controladores
+#### Changes in Controllers
 
-**`WebHookController` (ANTES):**
+**`WebHookController` (BEFORE):**
 ```php
 public function handle(ServerRequestInterface $request): ResponseInterface
 {
@@ -203,7 +203,7 @@ public function handle(ServerRequestInterface $request): ResponseInterface
 }
 ```
 
-**`WebHookController` (DESPUÉS):**
+**`WebHookController` (AFTER):**
 ```php
 protected function process(ServerRequestInterface $request): ResponseInterface
 {
@@ -219,7 +219,7 @@ protected function process(ServerRequestInterface $request): ResponseInterface
 }
 ```
 
-**`HealthController` (ANTES):**
+**`HealthController` (BEFORE):**
 ```php
 public function handle(ServerRequestInterface $request): ResponseInterface
 {
@@ -231,7 +231,7 @@ public function handle(ServerRequestInterface $request): ResponseInterface
 }
 ```
 
-**`HealthController` (DESPUÉS):**
+**`HealthController` (AFTER):**
 ```php
 protected function process(ServerRequestInterface $request): ResponseInterface
 {
@@ -243,7 +243,7 @@ protected function process(ServerRequestInterface $request): ResponseInterface
 }
 ```
 
-**`NotFoundController` (ANTES):**
+**`NotFoundController` (BEFORE):**
 ```php
 public function handle(ServerRequestInterface $request): ResponseInterface
 {
@@ -267,7 +267,7 @@ public function handle(ServerRequestInterface $request): ResponseInterface
 }
 ```
 
-**`NotFoundController` (DESPUÉS):**
+**`NotFoundController` (AFTER):**
 ```php
 protected function process(ServerRequestInterface $request): ResponseInterface
 {
@@ -291,93 +291,93 @@ protected function process(ServerRequestInterface $request): ResponseInterface
 }
 ```
 
-## 🎯 Beneficios de la Mejora
+## 🎯 Improvement Benefits
 
-### 1. **Simplicidad**
-- Los desarrolladores solo escriben la lógica de negocio
-- No necesitan conocer la implementación interna de middlewares
-- Reduce el código boilerplate en un 100%
+### 1. **Simplicity**
+- Developers only write business logic
+- No need to know the internal middleware implementation
+- Reduces boilerplate code by 100%
 
-### 2. **Conformidad con PSR-15**
-- `handle()` sigue siendo el punto de entrada público (PSR-15)
-- La implementación interna respeta el flujo de middlewares
-- Completamente compatible con el estándar
+### 2. **PSR-15 Compliance**
+- `handle()` remains the public entry point (PSR-15)
+- Internal implementation respects middleware flow
+- Fully compatible with the standard
 
-### 3. **Mantenibilidad**
-- Un solo lugar para cambiar la lógica de ejecución de middlewares
-- Más fácil de testear
-- Menos propenso a errores
+### 3. **Maintainability**
+- Single place to change middleware execution logic
+- Easier to test
+- Less error-prone
 
-### 4. **Principios SOLID**
-- **SRP**: Los controladores solo se encargan de su lógica
-- **OCP**: Se puede extender sin modificar controladores existentes
-- **LSP**: Todos los controladores se comportan consistentemente
-- **DIP**: Los controladores dependen de abstracciones, no de implementaciones
+### 4. **SOLID Principles**
+- **SRP**: Controllers only handle their logic
+- **OCP**: Can be extended without modifying existing controllers
+- **LSP**: All controllers behave consistently
+- **DIP**: Controllers depend on abstractions, not implementations
 
 ### 5. **Type Safety**
-- El método `process()` tiene una firma clara y documentada
-- No hay ambigüedad sobre qué debe implementar cada controlador
+- The `process()` method has a clear and documented signature
+- No ambiguity about what each controller should implement
 
-### 6. **Documentación Clara**
-- Los PHPDoc explican el flujo automático
-- Los desarrolladores entienden inmediatamente qué hacer
+### 6. **Clear Documentation**
+- PHPDoc explains the automatic flow
+- Developers immediately understand what to do
 
-## 🔄 Flujo de Ejecución
+## 🔄 Execution Flow
 
-### Antes
+### Before
 ```
 Router → Handler::handle()
          ↓
-         Desarrollador verifica manualmente isEmpty()
+         Developer manually checks isEmpty()
          ↓
-         Si hay middlewares → getNextMiddleware()->process()
+         If middlewares exist → getNextMiddleware()->process()
          ↓
-         Middleware → Handler::handle() (recursión)
+         Middleware → Handler::handle() (recursion)
          ↓
-         Lógica del controlador
+         Controller logic
 ```
 
-### Después
+### After
 ```
 Router → Handler::handle() (final)
          ↓
-         Verificación automática isEmpty()
+         Automatic isEmpty() check
          ↓
-         Si hay middlewares → getNextMiddleware()->process()
+         If middlewares exist → getNextMiddleware()->process()
          ↓
-         Middleware → Handler::handle() (recursión automática)
+         Middleware → Handler::handle() (automatic recursion)
          ↓
-         Handler::process() (método abstracto implementado por el controlador)
+         Handler::process() (abstract method implemented by controller)
          ↓
-         Lógica del controlador
+         Controller logic
 ```
 
-## 📝 Plan de Implementación
+## 📝 Implementation Plan
 
-### Fase 1: Actualizar `HttpHandler`
-1. Hacer `handle()` final con la lógica automática de middlewares
-2. Crear método abstracto `process()`
-3. Actualizar documentación PHPDoc
+### Phase 1: Update `HttpHandler`
+1. Make `handle()` final with automatic middleware logic
+2. Create abstract `process()` method
+3. Update PHPDoc documentation
 
-### Fase 2: Actualizar Controladores Existentes
-1. `WebHookController`: Cambiar `handle()` por `process()`
-2. `HealthController`: Cambiar `handle()` por `process()`
-3. `NotFoundController`: Cambiar `handle()` por `process()`
+### Phase 2: Update Existing Controllers
+1. `WebHookController`: Change `handle()` to `process()`
+2. `HealthController`: Change `handle()` to `process()`
+3. `NotFoundController`: Change `handle()` to `process()`
 
-### Fase 3: Testing
-1. Ejecutar tests existentes
-2. Crear tests específicos para la cadena de middlewares
-3. Verificar que todos los controladores funcionan correctamente
+### Phase 3: Testing
+1. Run existing tests
+2. Create specific tests for middleware chain
+3. Verify that all controllers work correctly
 
-### Fase 4: Documentación
-1. Actualizar documentación del framework
-2. Crear guía de migración para desarrolladores
-3. Actualizar ejemplos en README
+### Phase 4: Documentation
+1. Update framework documentation
+2. Create migration guide for developers
+3. Update examples in README
 
-## 🧪 Tests Recomendados
+## 🧪 Recommended Tests
 
 ```php
-// Test que verifica que los middlewares se ejecutan automáticamente
+// Test that verifies middlewares are executed automatically
 public function testMiddlewaresAreExecutedAutomatically(): void
 {
     $middleware = new TestMiddleware();
@@ -390,7 +390,7 @@ public function testMiddlewaresAreExecutedAutomatically(): void
     $this->assertTrue($middleware->wasExecuted());
 }
 
-// Test que verifica que process() se llama después de los middlewares
+// Test that verifies process() is called after middlewares
 public function testProcessIsCalledAfterMiddlewares(): void
 {
     $middleware = new TestMiddleware();
@@ -403,7 +403,7 @@ public function testProcessIsCalledAfterMiddlewares(): void
     $this->assertTrue($controller->processWasCalled());
 }
 
-// Test que verifica que process() se llama directamente sin middlewares
+// Test that verifies process() is called directly without middlewares
 public function testProcessIsCalledDirectlyWithoutMiddlewares(): void
 {
     $controller = new TestController();
@@ -415,6 +415,6 @@ public function testProcessIsCalledDirectlyWithoutMiddlewares(): void
 }
 ```
 
-## 🎓 Conclusión
+## 🎓 Conclusion
 
-Esta mejora transforma la gestión de middlewares de un proceso manual y repetitivo a uno automático y transparente, manteniendo la compatibilidad con PSR-15 y mejorando significativamente la experiencia del desarrollador. El framework se vuelve más robusto, mantenible y fácil de usar sin sacrificar flexibilidad ni potencia.
+This improvement transforms middleware management from a manual and repetitive process to an automatic and transparent one, maintaining PSR-15 compatibility and significantly improving the developer experience. The framework becomes more robust, maintainable, and easy to use without sacrificing flexibility or power.

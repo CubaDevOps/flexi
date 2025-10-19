@@ -1,86 +1,86 @@
-# Análisis de Clases Restantes en Domain/Classes
+# Analysis of Remaining Classes in Domain/Classes
 
-## Clases Analizadas
+## Analyzed Classes
 
-### 1. **Route.php** ❌ NO es Domain
-**Ubicación actual:** `Domain/Classes/Route.php`
-**Recomendación:** `Infrastructure/Http/Route.php`
+### 1. **Route.php** ❌ NOT Domain
+**Current location:** `Domain/Classes/Route.php`
+**Recommendation:** `Infrastructure/Http/Route.php`
 
-**Justificación:**
-- Maneja conceptos HTTP (GET, POST, PUT, etc.)
-- Es una preocupación de infraestructura de transporte
-- Trabaja con `RequestHandlerInterface` de PSR
-- Es específico de implementación web/HTTP
-
----
-
-### 2. **Service.php, ServiceClassDefinition.php, ServiceFactoryDefinition.php** ❌ NO es Domain
-**Ubicación actual:** `Domain/Classes/`
-**Recomendación:** `Infrastructure/DependencyInjection/`
-
-**Justificación:**
-- Son parte del sistema de Dependency Injection
-- Configuran cómo se construyen servicios (Factory, Class)
-- Es una preocupación de infraestructura, no lógica de negocio
-- El contenedor DI ya está en `Infrastructure/DependencyInjection/`
+**Justification:**
+- Handles HTTP concepts (GET, POST, PUT, etc.)
+- Is a transport infrastructure concern
+- Works with PSR's `RequestHandlerInterface`
+- Is specific to web/HTTP implementation
 
 ---
 
-### 3. **Log.php** ✅ Puede quedarse en Domain
-**Ubicación actual:** `Domain/Classes/Log.php`
-**Recomendación:** `Domain/Entities/Log.php` o `Domain/ValueObjects/Log.php`
+### 2. **Service.php, ServiceClassDefinition.php, ServiceFactoryDefinition.php** ❌ NOT Domain
+**Current location:** `Domain/Classes/`
+**Recommendation:** `Infrastructure/DependencyInjection/`
 
-**Justificación:**
-- Representa un concepto de dominio (un log entry)
-- NO hace I/O (solo estructura datos)
-- Implementa `LogInterface` del dominio
-- Es un Value Object o Entity según si tiene identidad o no
-
-**Alternativa:** Si se considera que log es infraestructura pura, mover a `Infrastructure/Logging/`
+**Justification:**
+- Part of the Dependency Injection system
+- Configure how services are built (Factory, Class)
+- Is an infrastructure concern, not business logic
+- DI container is already in `Infrastructure/DependencyInjection/`
 
 ---
 
-### 4. **PlainTextMessage.php** ⚠️ Borderline (puede estar en Domain o Application)
-**Ubicación actual:** `Domain/Classes/PlainTextMessage.php`
-**Recomendación:** `Domain/ValueObjects/PlainTextMessage.php` o `Application/DTO/PlainTextMessage.php`
+### 3. **Log.php** ✅ Can stay in Domain
+**Current location:** `Domain/Classes/Log.php`
+**Recommendation:** `Domain/Entities/Log.php` or `Domain/ValueObjects/Log.php`
 
-**Justificación:**
-- Es un Value Object que representa un mensaje de texto
-- Implementa `MessageInterface` del dominio
-- Es inmutable (solo se crea con datos)
-- NO tiene lógica de negocio compleja
-- Es usado como respuesta de los casos de uso
+**Justification:**
+- Represents a domain concept (a log entry)
+- Does NOT do I/O (only structures data)
+- Implements domain's `LogInterface`
+- Is a Value Object or Entity depending on whether it has identity
 
-**Decisión:** Mantener en Domain pero en la carpeta correcta (ValueObjects)
+**Alternative:** If log is considered pure infrastructure, move to `Infrastructure/Logging/`
 
 ---
 
-### 5. **Collection.php, ObjectCollection.php** ✅ Pueden quedarse en Domain
-**Ubicación actual:** `Domain/Classes/`
-**Recomendación:** `Domain/Collections/Collection.php` y `Domain/Collections/ObjectCollection.php`
+### 4. **PlainTextMessage.php** ⚠️ Borderline (can be in Domain or Application)
+**Current location:** `Domain/Classes/PlainTextMessage.php`
+**Recommendation:** `Domain/ValueObjects/PlainTextMessage.php` or `Application/DTO/PlainTextMessage.php`
 
-**Justificación:**
-- Son estructuras de datos reutilizables del dominio
-- No tienen dependencias de I/O o infraestructura
-- Implementan `CollectionInterface` del dominio
-- Son conceptos genéricos que pueden contener entities/value objects
+**Justification:**
+- Is a Value Object representing a text message
+- Implements domain's `MessageInterface`
+- Is immutable (only created with data)
+- Does NOT have complex business logic
+- Is used as use case response
+
+**Decision:** Keep in Domain but in correct folder (ValueObjects)
+
+---
+
+### 5. **Collection.php, ObjectCollection.php** ✅ Can stay in Domain
+**Current location:** `Domain/Classes/`
+**Recommendation:** `Domain/Collections/Collection.php` and `Domain/Collections/ObjectCollection.php`
+
+**Justification:**
+- Are reusable domain data structures
+- Have no I/O or infrastructure dependencies
+- Implement domain's `CollectionInterface`
+- Are generic concepts that can contain entities/value objects
 
 ---
 
 ### 6. **DummySearchCriteria.php** ✅ Domain
-**Ubicación actual:** `Domain/Classes/`
-**Recomendación:** `Domain/Criteria/DummySearchCriteria.php`
+**Current location:** `Domain/Classes/`
+**Recommendation:** `Domain/Criteria/DummySearchCriteria.php`
 
-**Justificación:**
-- Implementa `CriteriaInterface` del dominio
-- Es un patrón de dominio (Specification Pattern)
-- Representa criterios de búsqueda del dominio
+**Justification:**
+- Implements domain's `CriteriaInterface`
+- Is a domain pattern (Specification Pattern)
+- Represents domain search criteria
 
 ---
 
-## Resumen de Movimientos Recomendados
+## Summary of Recommended Movements
 
-### A Mover a Infrastructure:
+### To Move to Infrastructure:
 ```
 Domain/Classes/Route.php → Infrastructure/Http/Route.php
 Domain/Classes/Service.php → Infrastructure/DependencyInjection/Service.php
@@ -88,9 +88,9 @@ Domain/Classes/ServiceClassDefinition.php → Infrastructure/DependencyInjection
 Domain/Classes/ServiceFactoryDefinition.php → Infrastructure/DependencyInjection/ServiceFactoryDefinition.php
 ```
 
-### A Reorganizar dentro de Domain:
+### To Reorganize within Domain:
 ```
-Domain/Classes/Log.php → Domain/Entities/Log.php (o Domain/ValueObjects/)
+Domain/Classes/Log.php → Domain/Entities/Log.php (or Domain/ValueObjects/)
 Domain/Classes/PlainTextMessage.php → Domain/ValueObjects/PlainTextMessage.php
 Domain/Classes/Collection.php → Domain/Collections/Collection.php
 Domain/Classes/ObjectCollection.php → Domain/Collections/ObjectCollection.php
@@ -99,71 +99,73 @@ Domain/Classes/DummySearchCriteria.php → Domain/Criteria/DummySearchCriteria.p
 
 ---
 
-## Nueva Estructura Propuesta
+## Proposed New Structure
 
 ```
 src/
 ├── Domain/
-│   ├── Collections/                # ← NUEVO
+│   ├── Collections/                # ← NEW
 │   │   ├── Collection.php
 │   │   └── ObjectCollection.php
-│   ├── Criteria/                   # ← NUEVO
+│   ├── Criteria/                   # ← NEW
 │   │   └── DummySearchCriteria.php
 │   ├── Entities/
-│   │   └── Log.php                 # ← MOVER (si tiene identidad)
-│   ├── Events/                     # ✓ Ya creado
+│   │   └── Log.php                 # ← MOVE (if has identity)
+│   ├── Events/                     # ✓ Already created
 │   ├── ValueObjects/
-│   │   ├── PlainTextMessage.php    # ← MOVER
-│   │   └── Log.php                 # ← MOVER (si es inmutable)
-│   └── Classes/                    # ← ELIMINAR (vacío después de movimientos)
+│   │   ├── PlainTextMessage.php    # ← MOVE
+│   │   └── Log.php                 # ← MOVE (if immutable)
+│   └── Classes/                    # ← DELETE (empty after movements)
 │
 └── Infrastructure/
     ├── DependencyInjection/
     │   ├── Container.php
-    │   ├── Service.php              # ← MOVER
-    │   ├── ServiceClassDefinition.php  # ← MOVER
-    │   └── ServiceFactoryDefinition.php # ← MOVER
+    │   ├── Service.php              # ← MOVE
+    │   ├── ServiceClassDefinition.php  # ← MOVE
+    │   └── ServiceFactoryDefinition.php # ← MOVE
     └── Http/
-        └── Route.php                # ← MOVER
+        └── Route.php                # ← MOVE
 ```
 
 ---
 
-## Orden de Ejecución Recomendado
+## Recommended Execution Order
 
-1. **Fase 1: Crear nuevas estructuras**
+1. **Phase 1: Create new structures**
    - `Domain/Collections/`
    - `Domain/Criteria/`
 
-2. **Fase 2: Mover clases de Domain a subdirectorios**
+2. **Phase 2: Move Domain classes to subdirectories**
    - Collection → Domain/Collections
    - PlainTextMessage → Domain/ValueObjects
-   - Log → Domain/Entities o Domain/ValueObjects
+   - Log → Domain/Entities or Domain/ValueObjects
    - DummySearchCriteria → Domain/Criteria
 
-3. **Fase 3: Mover clases de Domain a Infrastructure**
+3. **Phase 3: Move Domain classes to Infrastructure**
    - Route → Infrastructure/Http
    - Service* → Infrastructure/DependencyInjection
 
-4. **Fase 4: Actualizar imports**
-   - Buscar y reemplazar todos los imports
-   - Actualizar tests
+4. **Phase 4: Update imports**
+   - Find and replace all imports
+   - Update tests
 
-5. **Fase 5: Ejecutar tests y validar**
+5. **Phase 5: Run tests and validate**
 
-6. **Fase 6: Eliminar archivos antiguos**
+6. **Phase 6: Delete old files**
 
-7. **Fase 7: Eliminar directorio Domain/Classes/ (si está vacío)**
-
----
-
-## Impacto Estimado
-
-- **Archivos a mover:** 9
-- **Tests a actualizar:** ~15-20 aproximadamente
-- **Configuraciones a actualizar:** Posiblemente ninguna (no están en JSON)
-- **Riesgo:** Medio (muchas clases son utilizadas en varios lugares)
+7. **Phase 7: Delete Domain/Classes/ directory (if empty)**
 
 ---
 
-**Recomendación Final:** Proceder con movimientos en fases pequeñas, ejecutando tests después de cada fase.
+## Estimated Impact
+
+- **Files to move:** 9
+- **Tests to update:** ~15-20 approximately
+- **Configurations to update:** Possibly none (not in JSON)
+- **Risk:** Medium (many classes are used in various places)
+
+---
+
+**Final Recommendation:** Proceed with movements in small phases, running tests after each phase.
+
+````

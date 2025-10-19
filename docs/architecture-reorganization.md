@@ -1,86 +1,86 @@
-# Reorganización de Arquitectura - Clean Architecture y CQRS
+# Architecture Reorganization - Clean Architecture and CQRS
 
-## Resumen de Cambios Implementados
+## Summary of Implemented Changes
 
-### 1. Nueva Estructura de Directorios
+### 1. New Directory Structure
 
-Se han creado las siguientes estructuras siguiendo Clean Architecture:
+The following structures have been created following Clean Architecture:
 
 ```
 src/
 ├── Domain/
-│   ├── Events/                    # ← NUEVO: Eventos de dominio
-│   ├── Services/                  # ← NUEVO: Servicios de dominio puros
-│   └── (mantiene Entities, ValueObjects, Interfaces, Exceptions, etc.)
+│   ├── Events/                    # ← NEW: Domain events
+│   ├── Services/                  # ← NEW: Pure domain services
+│   └── (maintains Entities, ValueObjects, Interfaces, Exceptions, etc.)
 │
 ├── Application/
-│   ├── Commands/                  # ← NUEVO: Comandos CQRS
-│   ├── Queries/                   # ← NUEVO: Queries CQRS
-│   ├── DTO/                       # ← NUEVO: DTOs de aplicación
-│   └── (mantiene UseCase, EventListeners)
+│   ├── Commands/                  # ← NEW: CQRS Commands
+│   ├── Queries/                   # ← NEW: CQRS Queries
+│   ├── DTO/                       # ← NEW: Application DTOs
+│   └── (maintains UseCase, EventListeners)
 │
 └── Infrastructure/
-    └── (mantiene Bus, Cache, Controllers, etc.)
+    └── (maintains Bus, Cache, Controllers, etc.)
 ```
 
-### 2. Movimientos de Clases Realizados
+### 2. Class Movements Performed
 
-#### A. DTOs Movidos a Application Layer (CQRS)
+#### A. DTOs Moved to Application Layer (CQRS)
 
-**Comandos:**
+**Commands:**
 - `Domain/DTO/CommandListDTO.php` → `Application/Commands/ListCommandsCommand.php`
 
 **Queries:**
 - `Domain/DTO/QueryListDTO.php` → `Application/Queries/ListQueriesQuery.php`
 - `Domain/DTO/EmptyVersionDTO.php` → `Application/Queries/GetVersionQuery.php`
 
-**Justificación:** Estos DTOs son específicos de casos de uso de aplicación (comandos y queries), no son parte del dominio puro. Siguen el patrón CQRS correctamente.
+**Justification:** These DTOs are specific to application use cases (commands and queries), they are not part of the pure domain. They correctly follow the CQRS pattern.
 
-#### B. Eventos de Dominio Movidos
+#### B. Domain Events Moved
 
-**De `Domain/Classes/` a `Domain/Events/`:**
+**From `Domain/Classes/` to `Domain/Events/`:**
 - `Event.php` → `Domain/Events/Event.php`
 - `EventListener.php` → `Domain/Events/EventListener.php`
 
-**Justificación:** Los eventos son conceptos de dominio pero merecen su propio namespace para claridad y separación de concerns.
+**Justification:** Events are domain concepts but deserve their own namespace for clarity and separation of concerns.
 
-#### C. Template Movido a Infrastructure
+#### C. Template Moved to Infrastructure
 
-**De `Domain/Classes/` a `Infrastructure/Ui/`:**
+**From `Domain/Classes/` to `Infrastructure/Ui/`:**
 - `Template.php` → `Infrastructure/Ui/Template.php`
 
-**Justificación:** Template maneja I/O de archivos (file_exists, pathinfo, etc.), lo cual es una preocupación de infraestructura, no de dominio.
+**Justification:** Template handles file I/O (file_exists, pathinfo, etc.), which is an infrastructure concern, not domain.
 
-### 3. Clases que Permanecen en Domain/DTO
+### 3. Classes Remaining in Domain/DTO
 
-Las siguientes clases se mantienen en `Domain/DTO/` porque son utilidades compartidas:
+The following classes remain in `Domain/DTO/` because they are shared utilities:
 
-- **DummyDTO.php** - DTO base para testing y casos especiales
-- **NotFoundCliCommand.php** - Null Object pattern usado por los buses
+- **DummyDTO.php** - Base DTO for testing and special cases
+- **NotFoundCliCommand.php** - Null Object pattern used by buses
 
-### 4. Actualizaciones de Imports
+### 4. Import Updates
 
-Se actualizaron todos los imports en los siguientes archivos:
+All imports were updated in the following files:
 
 **Application Layer:**
-- `Application/UseCase/ListCommands.php` - Ahora usa `ListCommandsCommand`
-- `Application/UseCase/ListQueries.php` - Ahora usa `ListQueriesQuery`
-- `Application/EventListeners/LoggerEventListener.php` - Ahora usa `Domain\Events\EventListener`
+- `Application/UseCase/ListCommands.php` - Now uses `ListCommandsCommand`
+- `Application/UseCase/ListQueries.php` - Now uses `ListQueriesQuery`
+- `Application/EventListeners/LoggerEventListener.php` - Now uses `Domain\Events\EventListener`
 
 **Infrastructure Layer:**
-- `Infrastructure/Controllers/HealthController.php` - Ahora usa `GetVersionQuery`
-- `Infrastructure/Controllers/NotFoundController.php` - Ahora usa `Infrastructure\Ui\Template`
-- `Infrastructure/Controllers/WebHookController.php` - Ahora usa `Domain\Events\Event`
-- `Infrastructure/Bus/CommandBus.php` - Ahora usa `Domain\Events\Event`
-- `Infrastructure/Bus/QueryBus.php` - Ahora usa `Domain\Events\Event`
-- `Infrastructure/Http/Router.php` - Ahora usa `Domain\Events\Event`
-- `Infrastructure/Ui/HtmlRender.php` - Ahora usa la nueva ubicación de `Template`
-- `Infrastructure/Ui/Cli/EventHandler.php` - Ahora usa `Domain\Events\Event`
+- `Infrastructure/Controllers/HealthController.php` - Now uses `GetVersionQuery`
+- `Infrastructure/Controllers/NotFoundController.php` - Now uses `Infrastructure\Ui\Template`
+- `Infrastructure/Controllers/WebHookController.php` - Now uses `Domain\Events\Event`
+- `Infrastructure/Bus/CommandBus.php` - Now uses `Domain\Events\Event`
+- `Infrastructure/Bus/QueryBus.php` - Now uses `Domain\Events\Event`
+- `Infrastructure/Http/Router.php` - Now uses `Domain\Events\Event`
+- `Infrastructure/Ui/HtmlRender.php` - Now uses the new Template location
+- `Infrastructure/Ui/Cli/EventHandler.php` - Now uses `Domain\Events\Event`
 
 **Domain Interfaces:**
-- `Domain/Interfaces/TemplateEngineInterface.php` - Ahora usa `Infrastructure\Ui\Template`
+- `Domain/Interfaces/TemplateEngineInterface.php` - Now uses `Infrastructure\Ui\Template`
 
-### 5. Archivos de Configuración Actualizados
+### 5. Updated Configuration Files
 
 **src/Config/queries.json:**
 ```json
@@ -105,43 +105,43 @@ Se actualizaron todos los imports en los siguientes archivos:
 }
 ```
 
-### 6. Principios de Clean Architecture Aplicados
+### 6. Applied Clean Architecture Principles
 
-✅ **Regla de Dependencias Respetada:**
-- Domain NO depende de Application ni Infrastructure
-- Application orquesta Domain usando sus interfaces
-- Infrastructure implementa interfaces definidas en Domain
+✅ **Dependency Rule Respected:**
+- Domain does NOT depend on Application or Infrastructure
+- Application orchestrates Domain using its interfaces
+- Infrastructure implements interfaces defined in Domain
 
-✅ **Separación de Concerns:**
-- DTOs de aplicación (Commands/Queries) → Application layer
-- Eventos de dominio → Domain/Events
-- Preocupaciones de I/O (Template) → Infrastructure
+✅ **Separation of Concerns:**
+- Application DTOs (Commands/Queries) → Application layer
+- Domain events → Domain/Events
+- I/O concerns (Template) → Infrastructure
 
-✅ **CQRS Implementado:**
-- Comandos claramente separados en Application/Commands
-- Queries claramente separados en Application/Queries
-- Nomenclatura consistente: *Command para comandos, *Query para queries
+✅ **CQRS Implemented:**
+- Commands clearly separated in Application/Commands
+- Queries clearly separated in Application/Queries
+- Consistent nomenclature: *Command for commands, *Query for queries
 
-### 7. Próximos Pasos Recomendados
+### 7. Recommended Next Steps
 
-Las siguientes clases en `Domain/Classes/` aún necesitan revisión para determinar su ubicación correcta:
+The following classes in `Domain/Classes/` still need review to determine their correct location:
 
 1. **Collection.php, ObjectCollection.php**
-   - Considerar mover a `Domain/Collections/` o evaluar si son realmente Aggregates
+   - Consider moving to `Domain/Collections/` or evaluate if they are truly Aggregates
 
 2. **Route.php**
-   - Considerar mover a `Infrastructure/Http/Route.php` (es una preocupación de HTTP)
+   - Consider moving to `Infrastructure/Http/Route.php` (it's an HTTP concern)
 
 3. **Service.php, ServiceClassDefinition.php, ServiceFactoryDefinition.php**
-   - Considerar mover a `Infrastructure/DependencyInjection/` (son preocupaciones de DI)
+   - Consider moving to `Infrastructure/DependencyInjection/` (these are DI concerns)
 
 4. **Log.php**
-   - Evaluar si debe estar en `Domain/Entities/` o `Domain/Services/`
+   - Evaluate if it should be in `Domain/Entities/` or `Domain/Services/`
 
 5. **PlainTextMessage.php**
-   - Evaluar si debe estar en `Domain/ValueObjects/` o `Infrastructure/`
+   - Evaluate if it should be in `Domain/ValueObjects/` or `Infrastructure/`
 
-### 8. Archivos Nuevos Creados
+### 8. New Files Created
 
 - `src/Application/Commands/ListCommandsCommand.php`
 - `src/Application/Queries/ListQueriesQuery.php`
@@ -150,30 +150,32 @@ Las siguientes clases en `Domain/Classes/` aún necesitan revisión para determi
 - `src/Domain/Events/EventListener.php`
 - `src/Infrastructure/Ui/Template.php`
 
-### 9. Notas Importantes
+### 9. Important Notes
 
-⚠️ **Los archivos originales en Domain/Classes y Domain/DTO aún existen.**
-Se recomienda:
-1. Ejecutar los tests para verificar que todo funciona correctamente
-2. Eliminar los archivos antiguos una vez confirmado que la migración es exitosa
-3. Actualizar los tests que referencien las ubicaciones antiguas
+⚠️ **Original files in Domain/Classes and Domain/DTO still exist.**
+Recommended:
 
-⚠️ **Tests que necesitan actualización:**
+1. Run tests to verify everything works correctly
+2. Delete old files once migration is confirmed successful
+3. Update tests that reference old locations
+
+⚠️ **Tests that need updating:**
+
 - `tests/Domain/Classes/EventTest.php`
 - `tests/Domain/Classes/TemplateTest.php`
 - `tests/Domain/Classes/HtmlRenderTest.php`
 - `tests/Infrastructure/Controllers/WebHookControllerTest.php`
 
-### 10. Beneficios de Esta Reorganización
+### 10. Benefits of This Reorganization
 
-✅ **Claridad arquitectónica**: Cada capa tiene responsabilidades bien definidas
-✅ **CQRS explícito**: Comandos y queries claramente separados
-✅ **Testabilidad mejorada**: Dependencias más claras y separadas
-✅ **Mantenibilidad**: Estructura más fácil de entender y navegar
-✅ **Escalabilidad**: Base sólida para agregar nuevos features
-✅ **Conformidad con principios SOLID y Clean Architecture**
+✅ **Architectural clarity**: Each layer has well-defined responsibilities
+✅ **Explicit CQRS**: Commands and queries clearly separated
+✅ **Improved testability**: Clearer and separated dependencies
+✅ **Maintainability**: Structure easier to understand and navigate
+✅ **Scalability**: Solid foundation for adding new features
+✅ **Compliance with SOLID principles and Clean Architecture**
 
 ---
 
-**Fecha de reorganización:** 15 de octubre de 2025
-**Rama:** architecture-improvements
+**Reorganization date:** October 15, 2025
+**Branch:** architecture-improvements

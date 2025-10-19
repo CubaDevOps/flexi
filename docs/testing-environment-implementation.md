@@ -1,120 +1,120 @@
-# Sistema de Entorno de Testing - Implementación Completada
+# Testing Environment System - Implementation Completed
 
-## Resumen
+## Summary
 
-Se ha implementado exitosamente un sistema completo de entorno de testing que permite a los tests y a la aplicación funcionar con configuraciones específicas sin interferir con los entornos de desarrollo o producción.
+A complete testing environment system has been successfully implemented that allows tests and the application to function with specific configurations without interfering with development or production environments.
 
-## Archivos Creados
+## Created Files
 
-### 1. `.env.testing` (Raíz del proyecto)
-Archivo de configuración específico para el entorno de testing con las siguientes características:
+### 1. `.env.testing` (Project Root)
+Configuration file specific to the testing environment with the following features:
 
-- **debug=true**: Debug siempre habilitado en tests
-- **dispatch_mode=0**: Eventos síncronos para tests predecibles
-- **log_file_path="./var/logs/test.log"**: Logs separados para tests
-- **cache_driver="memory"**: Cache en memoria para tests más rápidos
-- **cache_dir="./var/cache/test"**: Directorio de cache aislado para tests
+- **debug=true**: Debug always enabled in tests
+- **dispatch_mode=0**: Synchronous events for predictable tests
+- **log_file_path="./var/logs/test.log"**: Separate logs for tests
+- **cache_driver="memory"**: In-memory cache for faster tests
+- **cache_dir="./var/cache/test"**: Isolated cache directory for tests
 
-### 2. `.env.testing.example` (Raíz del proyecto)
-Archivo de ejemplo que los desarrolladores pueden copiar y personalizar según sus necesidades.
+### 2. `.env.testing.example` (Project Root)
+Example file that developers can copy and customize according to their needs.
 
 ### 3. `tests/bootstrap.php`
-Bootstrap personalizado de PHPUnit que:
+Custom PHPUnit bootstrap that:
 
-- ✅ Carga el autoloader de Composer correctamente
-- ✅ Define la constante `TESTING_ENVIRONMENT` para detectar contexto de test
-- ✅ Carga variables de entorno desde `.env.testing`
-- ✅ Usa `createUnsafeImmutable()` para mantener compatibilidad con `ConfigurationRepository`
-- ✅ Implementa fallback a `.env` si `.env.testing` no existe
-- ✅ Crea automáticamente directorios necesarios (`var/logs`, `var/cache/test`)
-- ✅ Limpia el cache de test antes de cada ejecución
-- ✅ Maneja excepciones gracefully
+- ✅ Loads Composer autoloader correctly
+- ✅ Defines `TESTING_ENVIRONMENT` constant to detect test context
+- ✅ Loads environment variables from `.env.testing`
+- ✅ Uses `createUnsafeImmutable()` to maintain compatibility with `ConfigurationRepository`
+- ✅ Implements fallback to `.env` if `.env.testing` doesn't exist
+- ✅ Automatically creates necessary directories (`var/logs`, `var/cache/test`)
+- ✅ Cleans test cache before each execution
+- ✅ Handles exceptions gracefully
 
 ### 4. `tests/Infrastructure/TestEnvironmentTest.php`
-Suite de tests que verifica:
+Test suite that verifies:
 
-- ✅ Constante `TESTING_ENVIRONMENT` está definida
-- ✅ Variables de entorno de testing se cargan correctamente
-- ✅ Dispatch mode es síncrono (0) para tests
-- ✅ Cache driver es "memory" para tests
-- ✅ Log path incluye "test.log"
-- ✅ Directorios de test existen y son escribibles
-- ✅ Variables están disponibles en `$_ENV`
+- ✅ `TESTING_ENVIRONMENT` constant is defined
+- ✅ Testing environment variables load correctly
+- ✅ Dispatch mode is synchronous (0) for tests
+- ✅ Cache driver is "memory" for tests
+- ✅ Log path includes "test.log"
+- ✅ Test directories exist and are writable
+- ✅ Variables are available in `$_ENV`
 
-**Resultado**: 4 tests, 20 assertions - ✅ OK
+**Result**: 4 tests, 20 assertions - ✅ OK
 
 ### 5. `tests/README.md`
-Documentación completa del sistema de testing que incluye:
+Complete testing system documentation that includes:
 
-- Overview del sistema
-- Descripción de archivos y configuración
-- Características clave (aislamiento, eventos síncronos, cache en memoria)
-- Comandos para ejecutar tests
-- Guía para crear nuevos tests
-- Guía de personalización
+- System overview
+- Files and configuration description
+- Key features (isolation, synchronous events, in-memory cache)
+- Commands to run tests
+- Guide to create new tests
+- Customization guide
 - Troubleshooting
 - Best practices
 
-### 6. Actualización de `Readme.md`
-Se agregó una sección completa de Testing con:
+### 6. `Readme.md` Update
+Added a complete Testing section with:
 
-- Comandos para ejecutar tests
-- Explicación del entorno de testing
-- Ejemplo de cómo escribir tests
-- Referencia a documentación detallada
+- Commands to run tests
+- Testing environment explanation
+- Example of how to write tests
+- Reference to detailed documentation
 
-### 7. Actualización de `phpunit.xml`
-Modificado para usar el bootstrap personalizado:
+### 7. `phpunit.xml` Update
+Modified to use custom bootstrap:
 
 ```xml
 bootstrap="tests/bootstrap.php"
 ```
 
-## Características Implementadas
+## Implemented Features
 
-### 🔒 Aislamiento de Entorno
-- Tests usan `.env.testing` en lugar de `.env`
-- Variables de test no se sobrescriben gracias a `safeLoad()` en `ConfigurationRepository`
-- Cache y logs separados para tests
-- Constante `TESTING_ENVIRONMENT` disponible en código
+### 🔒 Environment Isolation
+- Tests use `.env.testing` instead of `.env`
+- Test variables don't get overwritten thanks to `safeLoad()` in `ConfigurationRepository`
+- Separate cache and logs for tests
+- `TESTING_ENVIRONMENT` constant available in code
 
-### ⚡ Optimización de Performance
-- Cache en memoria (`cache_driver="memory"`) evita I/O de disco
-- Cache de test se limpia antes de cada ejecución
-- Directorios creados automáticamente si no existen
+### ⚡ Performance Optimization
+- In-memory cache (`cache_driver="memory"`) avoids disk I/O
+- Test cache is cleaned before each execution
+- Directories created automatically if they don't exist
 
-### 🎯 Predictibilidad
-- Eventos síncronos (`dispatch_mode=0`) para assertions predecibles
-- No hay race conditions en tests
-- Comportamiento determinístico
+### 🎯 Predictability
+- Synchronous events (`dispatch_mode=0`) for predictable assertions
+- No race conditions in tests
+- Deterministic behavior
 
-### 📝 Logs Separados
-- Tests escriben a `var/logs/test.log`
-- No contamina logs de desarrollo (`var/logs/app.log`)
-- Facilita debugging de tests
+### 📝 Separate Logs
+- Tests write to `var/logs/test.log`
+- Doesn't contaminate development logs (`var/logs/app.log`)
+- Facilitates test debugging
 
-### 🔧 Flexibilidad
-- Fácil personalizar variables por desarrollador
-- Fallback automático a `.env` si no existe `.env.testing`
-- Compatible con integración en DummyCache
+### 🔧 Flexibility
+- Easy to customize variables per developer
+- Automatic fallback to `.env` if `.env.testing` doesn't exist
+- Compatible with DummyCache integration
 
-## Integración con DummyCache
+## Integration with DummyCache
 
-El sistema se integra perfectamente con `DummyCache` creado anteriormente:
+The system integrates perfectly with previously created `DummyCache`:
 
 ```php
-// En ContainerTest::setUp()
+// In ContainerTest::setUp()
 $this->container->set(CacheInterface::class, new DummyCache());
 ```
 
-Esto permite a los tests decidir si quieren:
-- Usar cache en memoria (configuración por defecto)
-- Usar DummyCache (sin cache real)
-- Usar FileCache (para tests específicos de cache)
+This allows tests to decide if they want to:
+- Use in-memory cache (default configuration)
+- Use DummyCache (no real cache)
+- Use FileCache (for cache-specific tests)
 
-## Resultados
+## Results
 
-### ✅ Suite Completa de Tests
+### ✅ Complete Test Suite
 ```
 PHPUnit 9.6.29 by Sebastian Bergmann and contributors.
 Runtime: PHP 7.4.33
@@ -124,69 +124,70 @@ OK (171 tests, 342 assertions)
 Time: 00:00.191, Memory: 12.00 MB
 ```
 
-**Estado**: ✅ Todos los tests pasando (171/171)
+**Status**: ✅ All tests passing (171/171)
 
-### 📊 Mejoras Medibles
+### 📊 Measurable Improvements
 
-**Antes**:
-- Tests compartían configuración con desarrollo
-- Cache persistente causaba fallos intermitentes
-- Eventos asíncronos dificultaban tests
-- Sin manera de detectar contexto de test
+**Before**:
+- Tests shared configuration with development
+- Persistent cache caused intermittent failures
+- Asynchronous events made tests difficult
+- No way to detect test context
 
-**Después**:
-- Configuración aislada por entorno
-- Cache en memoria, sin persistencia entre tests
-- Eventos síncronos para tests predecibles
-- Constante `TESTING_ENVIRONMENT` disponible
-- 4 tests adicionales verificando configuración
-- Documentación completa del sistema
+**After**:
+- Configuration isolated by environment
+- In-memory cache, no persistence between tests
+- Synchronous events for predictable tests
+- `TESTING_ENVIRONMENT` constant available
+- 4 additional tests verifying configuration
+- Complete system documentation
 
-## Próximos Pasos Sugeridos
+## Suggested Next Steps
 
-1. ✅ **Completado**: Sistema de entorno de testing
-2. ⏭️ **Pendiente**: Corregir tests existentes si es necesario
-3. ⏭️ **Opcional**: Agregar más variables de entorno específicas según necesidades
-4. ⏭️ **Opcional**: Implementar test coverage reporting
-5. ⏭️ **Opcional**: Agregar CI/CD configuration usando `.env.testing`
+1. ✅ **Completed**: Testing environment system
+2. ⏭️ **Pending**: Fix existing tests if necessary
+3. ⏭️ **Optional**: Add more specific environment variables as needed
+4. ⏭️ **Optional**: Implement test coverage reporting
+5. ⏭️ **Optional**: Add CI/CD configuration using `.env.testing`
 
-## Comandos Útiles
+## Useful Commands
 
 ```bash
-# Ejecutar todos los tests
+# Run all tests
 ./vendor/bin/phpunit tests/
 
-# Ejecutar solo test de entorno
+# Run only environment test
 ./vendor/bin/phpunit tests/Infrastructure/TestEnvironmentTest.php
 
-# Ver qué variables están cargadas
+# See what variables are loaded
 ./vendor/bin/phpunit tests/Infrastructure/TestEnvironmentTest.php --testdox
 
-# Ejecutar con coverage
+# Run with coverage
 ./vendor/bin/phpunit tests/ --coverage-html coverage/
 
-# Limpiar cache de test manualmente
+# Manually clean test cache
 rm -rf var/cache/test/*
 ```
 
-## Compatibilidad
+## Compatibility
 
-✅ Compatible con PHP 7.4.33
-✅ Compatible con PHPUnit 9.6.29
-✅ Compatible con Dotenv existente
-✅ Compatible con ConfigurationRepository (usa safeLoad)
-✅ Compatible con arquitectura hexagonal
-✅ No rompe tests existentes (167 → 171 tests)
+✅ Compatible with PHP 7.4.33
+✅ Compatible with PHPUnit 9.6.29
+✅ Compatible with existing Dotenv
+✅ Compatible with ConfigurationRepository (uses safeLoad)
+✅ Compatible with hexagonal architecture
+✅ Doesn't break existing tests (167 → 171 tests)
 
-## Conclusión
+## Conclusion
 
-El sistema de entorno de testing está completamente implementado y funcional. Proporciona:
+The testing environment system is completely implemented and functional. It provides:
 
-- **Aislamiento**: Tests no afectan desarrollo/producción
-- **Performance**: Cache en memoria, más rápido
-- **Predictibilidad**: Eventos síncronos
-- **Mantenibilidad**: Bien documentado
-- **Flexibilidad**: Fácil de personalizar
-- **Robustez**: Fallbacks automáticos
+- **Isolation**: Tests don't affect development/production
+- **Performance**: In-memory cache, faster
+- **Predictability**: Synchronous events
+- **Maintainability**: Well documented
+- **Flexibility**: Easy to customize
+- **Robustness**: Automatic fallbacks
 
-Todos los tests (171) pasan exitosamente con el nuevo sistema. ✅
+All tests (171) pass successfully with the new system. ✅
+

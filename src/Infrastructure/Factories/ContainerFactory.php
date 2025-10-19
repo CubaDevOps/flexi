@@ -39,4 +39,13 @@ class ContainerFactory
 
         return self::$instance;
     }
+
+    /**
+     * Reset the singleton instance.
+     * This method is intended for testing purposes only.
+     */
+    public static function reset(): void
+    {
+        self::$instance = null;
+    }
 }

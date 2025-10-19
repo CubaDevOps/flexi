@@ -34,17 +34,13 @@ class ContainerTest extends TestCase
 
     /**
      * @throws NotFoundExceptionInterface
-     * @throws \ReflectionException
      * @throws ContainerExceptionInterface
      * @throws \JsonException
      */
     public function setUp(): void
     {
         // Reset the singleton to ensure fresh instance with all services
-        $reflection = new \ReflectionClass(ContainerFactory::class);
-        $property = $reflection->getProperty('instance');
-        $property->setAccessible(true);
-        $property->setValue(null, null);
+        ContainerFactory::reset();
 
         $this->container = ContainerFactory::getInstance('./src/Config/services.json');
 

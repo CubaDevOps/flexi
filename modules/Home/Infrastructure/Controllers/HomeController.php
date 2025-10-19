@@ -5,30 +5,31 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Modules\Home\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
+use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
-use GuzzleHttp\Psr7\HttpFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class HomeController
+class HomeController extends HttpHandler
 {
     use FileHandlerTrait;
     private QueryBus $query_bus;
 
     public function __construct(QueryBus $query_bus)
     {
+        parent::__construct();
         $this->query_bus = $query_bus;
     }
 
     /**
      * @throws NotFoundExceptionInterface|\ReflectionException|ContainerExceptionInterface
      */
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    protected function process(ServerRequestInterface $request): ResponseInterface
     {
-        $response = (new HttpFactory())->createResponse();
+        $response = $this->createResponse();
         $template_path = $this->normalize('./modules/Home/Infrastructure/UI/Templates/home.html');
         $dto = new HomePageDTO($template_path);
 

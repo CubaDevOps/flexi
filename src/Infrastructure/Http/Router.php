@@ -10,6 +10,7 @@ use CubaDevOps\Flexi\Domain\Classes\Route;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
+use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 use Psr\Container\ContainerExceptionInterface;
@@ -254,7 +255,7 @@ class Router
         RequestHandlerInterface $handler,
         Route $route
     ): RequestHandlerInterface {
-        if (!$handler instanceof \CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler) {
+        if (!$handler instanceof HttpHandler) {
             return $handler;
         }
 

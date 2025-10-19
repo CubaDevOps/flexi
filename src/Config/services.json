@@ -86,6 +86,15 @@
       "name": "html_render",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\HtmlRender",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\TemplateLocatorInterface"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\TemplateLocatorInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\TemplateLocator",
         "arguments": []
       }
     },

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Infrastructure\Ui\Template;
 use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
 use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
@@ -35,14 +34,15 @@ class NotFoundController extends HttpHandler
 
     protected function process(ServerRequestInterface $request): ResponseInterface
     {
-        $template = new Template($this->normalize('./src/Infrastructure/Ui/Templates/404.html'));
-
         $previous_url = $this->session->has('previous_route')
             ? $this->session->get('previous_route')
             : '';
-        $body = $this->html_render->render($template, [
-            'request' => $previous_url,
-        ]);
+
+        $body = $this->html_render->render(
+            $this->normalize('./src/Infrastructure/Ui/Templates/404.html'),
+            ['request' => $previous_url]
+        );
+
         $this->logger->log(LogLevel::NOTICE, 'Page not found', [
             $previous_url,
             __CLASS__,

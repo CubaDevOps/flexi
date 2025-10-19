@@ -13,7 +13,7 @@ trait JsonFileReader
     /**
      * @throws JsonException
      */
-    public function readJsonFile(string $file_path, bool $try_create_it = false): array
+    public function readJsonFile(string $file_path): array
     {
         $contents = $this->readFromFile($file_path);
         return json_decode($contents, true, 512, JSON_THROW_ON_ERROR);

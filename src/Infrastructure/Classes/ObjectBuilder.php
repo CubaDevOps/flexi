@@ -179,6 +179,10 @@ class ObjectBuilder implements ObjectBuilderInterface
                     if ($this->is_boolean($value)) {
                         return boolval($value);
                     } elseif (is_numeric($value)) {
+                        // Check if value is an integer (including negative numbers)
+                        if (filter_var($value, FILTER_VALIDATE_INT) !== false) {
+                            return (int)$value;
+                        }
                         return (float)$value;
                     }
                     return $value;

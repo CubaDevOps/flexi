@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Application\EventListeners;
 
-use CubaDevOps\Flexi\Domain\Classes\EventListener;
+use CubaDevOps\Flexi\Domain\Events\EventListener;
 use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
 use Psr\Log\LoggerInterface;

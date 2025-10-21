@@ -1,17 +1,17 @@
 {
   "handlers": [
     {
-      "id": "CubaDevOps\\Flexi\\Domain\\DTO\\EmptyVersionDTO",
+      "id": "CubaDevOps\\Flexi\\Application\\Queries\\GetVersionQuery",
       "cli_alias": "version",
       "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\Health"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Domain\\DTO\\QueryListDTO",
+      "id": "CubaDevOps\\Flexi\\Application\\Queries\\ListQueriesQuery",
       "cli_alias": "query:list",
       "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ListQueries"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Domain\\DTO\\CommandListDTO",
+      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ListCommandsCommand",
       "cli_alias": "command:list",
       "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ListCommands"
     },

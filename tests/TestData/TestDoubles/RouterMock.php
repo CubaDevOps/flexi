@@ -3,7 +3,7 @@
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
 use CubaDevOps\Flexi\Domain\Classes\Route;
-use CubaDevOps\Flexi\Domain\Classes\Router;
+use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

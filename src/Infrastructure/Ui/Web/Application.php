@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Web;
 
-use CubaDevOps\Flexi\Domain\Classes\Router;
-use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
-use CubaDevOps\Flexi\Infrastructure\Factories\ConfigurationFactory;
+use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use CubaDevOps\Flexi\Infrastructure\Factories\RouterFactory;
+use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -18,6 +19,13 @@ use Symfony\Component\ErrorHandler\ErrorHandler;
 
 class Application
 {
+    private ContainerInterface $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
     /**
      * @throws ContainerExceptionInterface
      * @throws \ErrorException
@@ -26,14 +34,14 @@ class Application
      * @throws \ReflectionException
      * @throws InvalidArgumentException
      */
-    public static function run(): void
+    public function run(): void
     {
-        $config = ConfigurationFactory::getInstance();
+        $config = $this->container->get(Configuration::class);
         if ('true' === $config->get('DEBUG_MODE')) {
             Debug::enable();
         }
-        echo ErrorHandler::call(static function () {
-            return self::handle();
+        echo ErrorHandler::call( function () {
+            return $this->handle();
         });
     }
 
@@ -44,18 +52,16 @@ class Application
      * @throws \JsonException
      * @throws InvalidArgumentException
      */
-    private static function handle(): StreamInterface
+    private function handle(): StreamInterface
     {
-        $container = ContainerFactory::getInstance('./src/Config/services.json');
-
         /** @var Router $router */
-        $router = $container->get(Router::class);
+        $router = $this->container->get(RouterFactory::class)->getInstance("./src/Config/routes.json");
         $response = $router->dispatch(ServerRequest::fromGlobals());
 
-        return self::sendResponse($response);
+        return $this->sendResponse($response);
     }
 
-    private static function sendResponse(ResponseInterface $response): StreamInterface
+    private function sendResponse(ResponseInterface $response): StreamInterface
     {
         header(
             "HTTP/1.1 {$response->getStatusCode()} {$response->getReasonPhrase()}"

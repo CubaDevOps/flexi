@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Modules\Home\Application;
 
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Domain\Classes\Template;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
@@ -26,9 +25,11 @@ class RenderHome implements HandlerInterface
      */
     public function handle(DTOInterface $dto): MessageInterface
     {
-        $template = new Template($dto->get('template'));
-
-        return new PlainTextMessage($this->html_render->render($template, ['doc_url' => 'https://flexi.cubadevops.com'])
+        return new PlainTextMessage(
+            $this->html_render->render(
+                $dto->get('template'),
+                ['doc_url' => 'https://flexi.cubadevops.com']
+            )
         );
     }
 }

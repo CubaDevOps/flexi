@@ -45,12 +45,19 @@ class ContainerFactory
         return $container;
     }
 
-    public static function createDefault(string $file = ''): Container
-    {
-        $configRepo = new ConfigurationRepository();
-        $configuration = new Configuration($configRepo);
-        $cache = (new CacheFactory($configuration))->getInstance();
-        $objectBuilder = new ObjectBuilder();
+    public static function createDefault(
+        string $file = '',
+        ?ConfigurationRepository $configRepo = null,
+        ?Configuration $configuration = null,
+        ?CacheFactory $cacheFactory = null,
+        ?CacheInterface $cache = null,
+        ?ObjectBuilder $objectBuilder = null
+    ): Container {
+        $configRepo = $configRepo ?? new ConfigurationRepository();
+        $configuration = $configuration ?? new Configuration($configRepo);
+        $cacheFactory = $cacheFactory ?? new CacheFactory($configuration);
+        $cache = $cache ?? $cacheFactory->getInstance();
+        $objectBuilder = $objectBuilder ?? new ObjectBuilder();
 
         return (new self($cache, $objectBuilder))->getInstance($file);
     }

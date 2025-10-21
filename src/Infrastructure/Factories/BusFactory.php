@@ -8,6 +8,8 @@ use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationRepositoryInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -15,42 +17,74 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class BusFactory
 {
-    private static array $instance = []; // Todo replace with an independent cache system
+    private ContainerInterface $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 
     /**
      * @param ContainerInterface $container
      * @param string $type
      * @param string $file
-     * @return BusInterface
+     * @return BusInterface| EventBusInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \JsonException
      * @throws \ReflectionException
      */
-    public static function getInstance(
-        ContainerInterface $container,
+    public function getInstance(
         string $type,
         string $file = ''
     ): BusInterface {
-        if (!isset(self::$instance[$type])) {
-            /** @var ObjectBuilderInterface $class_factory */
-            $class_factory = $container->get(ObjectBuilderInterface::class);
+            $logger = $this->container->get('logger');
+            $class_factory = $this->container->get(ObjectBuilderInterface::class);
+            $configuration = $this->container->get(ConfigurationRepositoryInterface::class);
+            $bus = new EventBus($this->container, $class_factory, $logger, $configuration);
             switch ($type) {
                 case CommandBus::class:
-                    self::$instance[$type] = new CommandBus($container, new EventBus($container, $class_factory), $class_factory);
+                    $bus = new CommandBus($this->container, $bus, $class_factory);
                     break;
                 case QueryBus::class:
-                    self::$instance[$type] = new QueryBus($container, new EventBus($container, $class_factory), $class_factory);
+                    $bus = new QueryBus($this->container, $bus, $class_factory);
                     break;
                 case EventBus::class:
-                    self::$instance[$type] = new EventBus($container, $class_factory);
+                    // event bus is already assigned
                     break;
                 default:
                     throw new \InvalidArgumentException('Invalid bus type');
             }
-            self::$instance[$type]->loadHandlersFromJsonFile($file);
-        }
+            $bus->loadHandlersFromJsonFile($file);
 
-        return self::$instance[$type];
+        return $bus;
     }
+
+    /** @return CommandBus */
+    public static function createCommandBus(
+        ContainerInterface $container,
+        string $file = ''
+    ): BusInterface {
+        $factory = new self($container);
+        return $factory->getInstance(CommandBus::class, $file);
+    }
+
+    /** @return QueryBus */
+    public static function createQueryBus(
+        ContainerInterface $container,
+        string $file = ''
+    ): BusInterface {
+        $factory = new self($container);
+        return $factory->getInstance(QueryBus::class, $file);
+    }
+
+    /** @return EventBus */
+    public static function createEventBus(
+        ContainerInterface $container,
+        string $file = ''
+    ): EventBusInterface {
+        $factory = new self($container);
+        return $factory->getInstance(EventBus::class, $file);
+    }
+
 }

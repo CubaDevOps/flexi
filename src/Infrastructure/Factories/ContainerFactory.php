@@ -4,16 +4,27 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
+use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Domain\Utils\ServicesDefinitionParser;
+use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
 use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
-use CubaDevOps\Flexi\Domain\Utils\ServicesDefinitionParser;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class ContainerFactory
 {
-    private static ?Container $instance = null;
+
+    private CacheInterface $cache;
+    private ObjectBuilder $object_builder;
+
+    public function __construct(CacheInterface $cache, ObjectBuilder $object_builder)
+    {
+        $this->cache = $cache;
+        $this->object_builder = $object_builder;
+    }
 
     /**
      * @throws ContainerExceptionInterface
@@ -21,31 +32,27 @@ class ContainerFactory
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
      */
-    public static function getInstance(string $file = ''): Container
+    public function getInstance(string $file = ''): Container
     {
-        if (!self::$instance) {
-            $cache = CacheFactory::getInstance();
-            $object_builder = new ObjectBuilder();
-            $container = new Container($cache, $object_builder);
-            if ($file) {
-                $services_parser = new ServicesDefinitionParser($cache);
-                $services = $services_parser->parse($file);
-                foreach ($services as $name => $service) {
-                    $container->set($name, $service);
-                }
+        $container = new Container($this->cache, $this->object_builder);
+        if ($file) {
+            $services_parser = new ServicesDefinitionParser($this->cache);
+            $services = $services_parser->parse($file);
+            foreach ($services as $name => $service) {
+                $container->set($name, $service);
             }
-            self::$instance = $container;
         }
-
-        return self::$instance;
+        return $container;
     }
 
-    /**
-     * Reset the singleton instance.
-     * This method is intended for testing purposes only.
-     */
-    public static function reset(): void
+    public static function createDefault(string $file = ''): Container
     {
-        self::$instance = null;
+        $configRepo = new ConfigurationRepository();
+        $configuration = new Configuration($configRepo);
+        $cache = (new CacheFactory($configuration))->getInstance();
+        $objectBuilder = new ObjectBuilder();
+
+        return (new self($cache, $objectBuilder))->getInstance($file);
     }
+
 }

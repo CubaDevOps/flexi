@@ -33,12 +33,12 @@ class EventBus implements EventBusInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __construct(ContainerInterface $container, ObjectBuilderInterface $class_factory)
+    public function __construct(ContainerInterface $container, ObjectBuilderInterface $class_factory, LoggerInterface $logger, ConfigurationRepositoryInterface $configuration_repository)
     {
         $this->container = $container;
         $this->class_factory = $class_factory;
-        $this->logger = $container->get('logger'); //Todo: inject dependency
-        $this->configuration = $container->get(ConfigurationRepositoryInterface::class); //Todo: Maybe inject as a dependency as well?
+        $this->logger = $logger;
+        $this->configuration = $configuration_repository;
     }
 
     /**

@@ -18,8 +18,8 @@ use Psr\Log\LoggerInterface;
 class EventBusTest extends TestCase
 {
     private EventBus $eventBus;
-    private ContainerInterface $container;
-    private ObjectBuilderInterface $class_factory;
+    private $container;
+    private $class_factory;
 
     /**
      * @throws NotFoundExceptionInterface
@@ -35,15 +35,7 @@ class EventBusTest extends TestCase
         $logger = new PsrLogger($this->createMock(InFileLogRepository::class));
         $configuration = $this->createMock(ConfigurationRepositoryInterface::class);
 
-        $this->container
-            ->expects($this->exactly(2))
-            ->method('get')
-            ->willReturnMap([
-                ['logger', $logger],
-                [ConfigurationRepositoryInterface::class, $configuration]
-            ]);
-
-        $this->eventBus = new EventBus($this->container, $this->class_factory);
+        $this->eventBus = new EventBus($this->container, $this->class_factory, $logger, $configuration);
 
         $this->eventBus->loadHandlersFromJsonFile('./src/Config/listeners.json');
     }
@@ -59,6 +51,7 @@ class EventBusTest extends TestCase
         $handlerMock = $this->createMock(LoggerEventListener::class);
 
         $dtoMock->expects($this->once())->method('getName')->willReturn('*');
+        $dtoMock->expects($this->atLeastOnce())->method('isPropagationStopped')->willReturn(false);
 
         $this->class_factory
             ->expects($this->atLeastOnce())

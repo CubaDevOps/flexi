@@ -172,8 +172,8 @@ class ObjectBuilder implements ObjectBuilderInterface
                     }
 
                     // If still no value, throw exception for required env vars
-                    if ($value === false || $value === null || $value === '') {
-                        throw new \RuntimeException(sprintf('Environment variable "%s" is not set or is empty', $key));
+                    if ($value === false || $value === null) {
+                        throw new \RuntimeException(sprintf('Environment variable "%s" is not set', $key));
                     }
 
                     if ($this->is_boolean($value)) {

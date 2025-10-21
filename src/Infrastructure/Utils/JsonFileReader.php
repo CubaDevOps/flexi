@@ -20,6 +20,8 @@ trait JsonFileReader
     }
 
     /**
+     * 
+     * @param int $flags see https://www.php.net/manual/en/function.file-put-contents.php
      * @throws JsonException
      */
     public function writeJsonFileFromArray(

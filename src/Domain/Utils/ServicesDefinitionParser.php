@@ -3,6 +3,9 @@
 namespace CubaDevOps\Flexi\Domain\Utils;
 
 use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
+use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
+use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 
 class ServicesDefinitionParser
 {

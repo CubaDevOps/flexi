@@ -1,38 +1,45 @@
 {
   "services": [
     {
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ConfigurationRepositoryInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ConfigurationRepository",
+        "arguments": []
+      }
+    },
+    {
       "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ConfigurationRepositoryInterface"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Test\\TestData\\TestDoubles\\IsNotInstantiable",
       "factory": {
-        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\ConfigurationFactory",
+        "class": "CubaDevOps\\Flexi\\Test\\TestData\\TestDoubles\\IsNotInstantiable",
         "method": "getInstance",
         "arguments": []
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Test\\TestData\\TestTools\\IsNotInstantiable",
-      "factory": {
-        "class": "CubaDevOps\\Flexi\\Test\\TestData\\TestTools\\IsNotInstantiable",
-        "method": "getInstance",
-        "arguments": []
-      }
-    },
-    {
-      "name": "CubaDevOps\\Flexi\\Test\\TestData\\TestTools\\HasNoConstructor",
-      "factory": {
-        "class": "CubaDevOps\\Flexi\\Test\\TestData\\TestTools\\HasNoConstructor",
-        "method": "getInstance",
+      "name": "CubaDevOps\\Flexi\\Test\\TestData\\TestDoubles\\HasNoConstructor",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Test\\TestData\\TestDoubles\\HasNoConstructor",
         "arguments": []
       }
     },
     {
       "name": "CubaDevOps\\Flexi\\Domain\\Classes\\Router",
       "factory": {
-        "class": "CubaDevOps\\Flexi\\Domain\\Factories\\RouterFactory",
+        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory",
         "method": "getInstance",
         "arguments": [
           "@CubaDevOps\\Flexi\\Domain\\Interfaces\\SessionStorageInterface",
           "@CubaDevOps\\Flexi\\Domain\\Interfaces\\EventBusInterface",
-          "@CubaDevOps\\Flexi\\Domain\\Utils\\ClassFactory",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ObjectBuilderInterface",
           "@Psr\\Http\\Message\\ResponseFactoryInterface"
         ]
       }

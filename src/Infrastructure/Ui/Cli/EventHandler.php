@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Domain\Classes\Event;
+use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 
 class EventHandler

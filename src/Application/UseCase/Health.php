@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Application\UseCase;
 
 use CubaDevOps\Flexi\Domain\Classes\DummySearchCriteria;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Domain\Classes\VersionRepository;
+use CubaDevOps\Flexi\Infrastructure\Persistence\VersionRepository;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;

@@ -4,8 +4,8 @@ namespace CubaDevOps\Flexi\Test\Application\UseCase;
 
 use CubaDevOps\Flexi\Application\UseCase\ListQueries;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Domain\Classes\QueryBus;
-use CubaDevOps\Flexi\Domain\DTO\QueryListDTO;
+use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
+use CubaDevOps\Flexi\Application\Queries\ListQueriesQuery;
 use PHPUnit\Framework\TestCase;
 
 class ListQueriesTest extends TestCase
@@ -22,7 +22,7 @@ class ListQueriesTest extends TestCase
 
     public function testHandleEvent(): void
     {
-        $dto = $this->createMock(QueryListDTO::class);
+        $dto = $this->createMock(ListQueriesQuery::class);
         $queries = ['query1', 'query1'];
 
         $dto->expects($this->once())

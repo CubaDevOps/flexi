@@ -10,12 +10,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class AuthenticatedController extends HttpHandler
 {
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    protected function process(ServerRequestInterface $request): ResponseInterface
     {
-        if (!$this->queue->isEmpty()) {
-            return $this->getNextMiddleware()->process($request, $this);
-        }
-
         $response = $this->createResponse();
         $response->getBody()->write('Authorized');
 

@@ -46,14 +46,14 @@ abstract class HttpHandler implements RequestHandlerInterface
     }
 
     /**
-     * Template Method: Gestiona automáticamente la cadena de middlewares
-     * y delega la lógica específica al método abstracto process()
+    * Template Method: Automatically manages the middleware chain
+    * and delegates specific logic to the abstract process() method
+    *
+    * This method is final to prevent controllers from overriding it
+    * and ensure that the middleware chain is always executed correctly.
      *
-     * Este método es final para evitar que los controladores lo sobrescriban
-     * y garantizar que la cadena de middlewares siempre se ejecute correctamente.
-     *
-     * @param ServerRequestInterface $request La petición HTTP
-     * @return ResponseInterface La respuesta HTTP
+     * @param ServerRequestInterface $request The HTTP request
+     * @return ResponseInterface The HTTP response
      */
     final public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -65,13 +65,13 @@ abstract class HttpHandler implements RequestHandlerInterface
     }
 
     /**
-     * Método abstracto que cada controlador debe implementar con su lógica específica.
-     *
-     * Este método se invoca automáticamente después de que todos los middlewares
-     * hayan sido procesados.
-     *
-     * @param ServerRequestInterface $request La petición HTTP (potencialmente modificada por middlewares)
-     * @return ResponseInterface La respuesta HTTP
+    * Abstract method that each controller must implement with its specific logic.
+    *
+    * This method is automatically invoked after all middlewares
+    * have been processed.
+    *
+    * @param ServerRequestInterface $request The HTTP request (potentially modified by middlewares)
+    * @return ResponseInterface The HTTP response
      */
     abstract protected function process(ServerRequestInterface $request): ResponseInterface;
 

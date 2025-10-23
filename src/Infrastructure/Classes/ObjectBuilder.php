@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
 use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Domain\Utils\CacheKeyGeneratorTrait;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

@@ -33,6 +33,9 @@ class JWTAuthMiddlewareTest extends TestCase
 
         $this->request->method('withAttribute')->willReturnSelf();
 
+        $this->handler->method('handle')
+            ->willReturn($this->responseFactory->createResponse(200, 'OK'));
+
         $middleware = new JWTAuthMiddleware($this->configuration, $this->responseFactory);
         $response = $middleware->process($this->request, $this->handler);
 

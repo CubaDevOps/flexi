@@ -77,7 +77,7 @@ class JWTAuthMiddlewareTest extends TestCase
     {
         $this->configuration = $this->createMock(Configuration::class);
         $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
-        $this->handler = new TestHttpHandler();
+        $this->handler = $this->createMock(TestHttpHandler::class);
         $this->request = $this->createMock(ServerRequestInterface::class);
 
         $callback = function (int $status, string $reason) {

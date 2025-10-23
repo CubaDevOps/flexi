@@ -7,6 +7,8 @@ use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
+use CubaDevOps\Flexi\Infrastructure\Cache\InMemoryCache;
+use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\HasNoConstructor;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\IsNotInstantiable;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +21,8 @@ class ClassFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->classFactory = new ObjectBuilder();
+        $cache = (new CacheFactory(new Configuration(new ConfigurationRepository())))->getInstance();
+        $this->classFactory = new ObjectBuilder($cache);
 
         $this->container = ContainerFactory::createDefault('./tests/TestData/Configurations/container-test.json');
     }

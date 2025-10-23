@@ -33,8 +33,8 @@ class JWTAuthMiddlewareTest extends TestCase
 
         $this->request->method('withAttribute')->willReturnSelf();
 
-        $this->handler->method('handle')
-            ->willReturn($this->responseFactory->createResponse(200, 'OK'));
+        // Set the expected response on TestHttpHandler
+        $this->handler->setMockResponse($this->responseFactory->createResponse(200, 'OK'));
 
         $middleware = new JWTAuthMiddleware($this->configuration, $this->responseFactory);
         $response = $middleware->process($this->request, $this->handler);
@@ -77,7 +77,7 @@ class JWTAuthMiddlewareTest extends TestCase
     {
         $this->configuration = $this->createMock(Configuration::class);
         $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
-        $this->handler = $this->createMock(TestHttpHandler::class);
+        $this->handler = new TestHttpHandler();
         $this->request = $this->createMock(ServerRequestInterface::class);
 
         $callback = function (int $status, string $reason) {

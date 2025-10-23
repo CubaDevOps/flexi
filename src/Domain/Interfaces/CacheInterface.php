@@ -6,6 +6,6 @@ namespace CubaDevOps\Flexi\Domain\Interfaces;
 
 use Psr\SimpleCache\CacheInterface as PsrCacheInterface;
 
-interface CacheInterface extends PsrCacheInterface
+interface CacheInterface extends PsrCacheInterface,DomainCacheInterface
 {
 }

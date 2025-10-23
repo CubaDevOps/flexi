@@ -57,7 +57,7 @@ class ContainerFactory
         $configuration = $configuration ?? new Configuration($configRepo);
         $cacheFactory = $cacheFactory ?? new CacheFactory($configuration);
         $cache = $cache ?? $cacheFactory->getInstance();
-        $objectBuilder = $objectBuilder ?? new ObjectBuilder();
+        $objectBuilder = $objectBuilder ?? new ObjectBuilder($cache);
 
         return (new self($cache, $objectBuilder))->getInstance($file);
     }

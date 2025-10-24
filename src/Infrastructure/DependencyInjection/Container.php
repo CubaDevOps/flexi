@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
 
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
-use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Domain\Utils\CacheKeyGeneratorTrait;
-use CubaDevOps\Flexi\Domain\Utils\ClassFactory;
+use CubaDevOps\Flexi\Domain\Interfaces\DomainCacheInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -15,7 +14,6 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class Container implements ContainerInterface
 {
-    use CacheKeyGeneratorTrait;
 
     private const CONTAINER_CACHE_KEY = 'container';
     private const SERVICE_CACHE_KEY_PREFIX = 'service.';

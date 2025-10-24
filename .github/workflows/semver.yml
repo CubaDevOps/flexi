@@ -26,7 +26,7 @@ jobs:
 
       - name: Configure .env file
         run: |
-          cp env.example .env
+          cp .env.testing.example .env.testing
           mkdir -p var/logs
           touch var/logs/app.log
 
@@ -87,7 +87,7 @@ jobs:
         run: |
           CURRENT_VERSION=$(jq -r '.version' composer.json)
           NEXT_VERSION="${{ steps.version.outputs.version }}"
-          
+
           if [ -z "$NEXT_VERSION" ]; then
             echo "released=false" >> $GITHUB_OUTPUT
           elif [ "$CURRENT_VERSION" == "$NEXT_VERSION" ]; then

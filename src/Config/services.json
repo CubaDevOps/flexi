@@ -11,7 +11,9 @@
       "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ObjectBuilderInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ObjectBuilder",
-        "arguments": []
+        "arguments": [
+          "@cache"
+        ]
       }
     },
     {

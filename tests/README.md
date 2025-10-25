@@ -31,7 +31,7 @@ dispatch_mode=0
 # Logger - Testing
 log_file_path="./var/logs/test.log"
 log_format="[{level} - {time}]: {message} - {context}"
-min_log_level="debug"
+log_level="debug"
 
 # Secret - Testing
 webhook_secret = "test-web-secret-for-testing"

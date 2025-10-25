@@ -76,13 +76,6 @@
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory"
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Persistence\\VersionRepository",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Persistence\\VersionRepository",
-        "arguments": []
-      }
-    },
-    {
       "name": "html_render",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\HtmlRender",

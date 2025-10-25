@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Infrastructure\Controllers\WebHookController;
+use CubaDevOps\Flexi\Modules\WebHooks\Infrastructure\Controllers\WebHookController;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Domain\Events\Event;
 use Exception;

@@ -3,7 +3,12 @@
     {
       "id": "CubaDevOps\\Flexi\\Domain\\DTO\\DummyDTO",
       "cli_alias": "test",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\Health"
+      "handler": "CubaDevOps\\Flexi\\Modules\\HealthCheck\\Application\\UseCase\\Health"
+    },
+    {
+      "id": "CubaDevOps\\Flexi\\Modules\\DevTools\\Application\\Commands\\ListCommandsCommand",
+      "cli_alias": "command:list",
+      "handler": "CubaDevOps\\Flexi\\Modules\\DevTools\\Application\\UseCase\\ListCommands"
     }
   ]
 }

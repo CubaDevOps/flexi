@@ -21,7 +21,7 @@ class TemplateTest extends TestCase
 
     public function setUp(): void
     {
-        $this->path = './src/Infrastructure/Ui/Templates/404.html';
+        $this->path = './modules/ErrorHandling/Infrastructure/Ui/Templates/404.html';
 
         $this->template = new Template($this->path);
     }

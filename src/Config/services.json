@@ -140,7 +140,8 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\PsrLogger",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository"
+          "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"
         ]
       }
     },

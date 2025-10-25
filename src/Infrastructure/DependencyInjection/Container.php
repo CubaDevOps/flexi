@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
 
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
+use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\DomainCacheInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -85,10 +87,10 @@ class Container implements ContainerInterface
         if (in_array($id, $this->selfReference, true)) {
             return $this;
         }
-        if ('cache' === $id || CacheInterface::class === $id) {
+        if ('cache' === $id || $id instanceof CacheInterface) {
             return $this->cache;
         }
-        if (ClassFactory::class === $id) {
+        if ($id === 'factory' || $id instanceof ObjectBuilderInterface) {
             return $this->factory;
         }
 

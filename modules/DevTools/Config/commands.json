@@ -1,0 +1,9 @@
+{
+  "handlers": [
+    {
+      "id": "CubaDevOps\\Flexi\\Modules\\DevTools\\Application\\Commands\\ListCommandsCommand",
+      "cli_alias": "command:list",
+      "handler": "CubaDevOps\\Flexi\\Modules\\DevTools\\Application\\UseCase\\ListCommands"
+    }
+  ]
+}

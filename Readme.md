@@ -284,9 +284,11 @@ $result = $queryBus->execute($query);
 
 ### Controllers and Response
 
-The response is a PSR-7 response object that can be returned from a controller or middleware. Controllers that extend the `CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler` have an easy way to build responses using the `createResponse` method. If you you don't extend the `HttpHandler` you can use a factory that implements `Psr\Http\Message\ResponseFactoryInterface` interface to build the response. Flexi use the `GuzzleHttp\Psr7\HttpFactory` as default factory.
+The response is a PSR-7 response object that can be returned from a controller or middleware. Controllers that extend the `CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler` have an easy way to build responses using the `createResponse` method. If you don't extend the `HttpHandler` you can use a factory that implements `Psr\Http\Message\ResponseFactoryInterface` interface to build the response. Flexi uses the `GuzzleHttp\Psr7\HttpFactory` as default factory.
 
-#### Example
+The `HttpHandler` abstract class implements a Template Method pattern that automatically manages the middleware chain execution. Controllers only need to implement the `process()` method with their specific business logic, while the framework handles middleware orchestration automatically.
+
+#### Basic Controller Example
 
 ```php
 namespace CubaDevOps\Flexi\Modules\Home\Infrastructure\Controllers;
@@ -297,12 +299,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class AuthenticatedController extends HttpHandler
 {
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    protected function process(ServerRequestInterface $request): ResponseInterface
     {
-        if (!$this->queue->isEmpty()) { // This block allows to execute middlewares
-            return $this->getNextMiddleware()->process($request, $this);
-        }
-
+        // This method is called automatically after all middlewares have been processed
         $response = $this->createResponse();
         $response->getBody()->write('Authorized');
 
@@ -311,11 +310,92 @@ class AuthenticatedController extends HttpHandler
 }
 ```
 
+#### Controller with Dependencies and Business Logic
+
+```php
+namespace CubaDevOps\Flexi\Infrastructure\Controllers;
+
+use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
+use CubaDevOps\Flexi\Application\Queries\GetVersionQuery;
+use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+class HealthController extends HttpHandler
+{
+    private QueryBus $query_bus;
+
+    public function __construct(QueryBus $query_bus)
+    {
+        $this->query_bus = $query_bus;
+        parent::__construct(); // Always call parent constructor
+    }
+
+    protected function process(ServerRequestInterface $request): ResponseInterface
+    {
+        // Execute business logic using CQRS pattern
+        $version = $this->query_bus->execute(new GetVersionQuery());
+
+        $response = $this->createResponse();
+        $response->getBody()->write('Version: ' . $version);
+
+        return $response;
+    }
+}
+```
+
+#### Controller with Template Rendering
+
+```php
+namespace CubaDevOps\Flexi\Infrastructure\Controllers;
+
+use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
+use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
+use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+class NotFoundController extends HttpHandler
+{
+    use FileHandlerTrait;
+
+    private TemplateEngineInterface $html_render;
+
+    public function __construct(TemplateEngineInterface $html_render)
+    {
+        $this->html_render = $html_render;
+        parent::__construct();
+    }
+
+    protected function process(ServerRequestInterface $request): ResponseInterface
+    {
+        $body = $this->html_render->render(
+            $this->normalize('./src/Infrastructure/Ui/Templates/404.html'),
+            ['request' => $request->getUri()->getPath()]
+        );
+
+        $response = $this->createResponse(404, 'Not Found');
+        $response->getBody()->write($body);
+
+        return $response;
+    }
+}
+```
+
+#### Key Points
+
+- **No manual middleware handling**: The `handle()` method is `final` and manages the middleware chain automatically
+- **Focus on business logic**: Controllers only implement the `process()` method with their specific logic
+- **Dependency injection**: Use constructor injection to receive dependencies from the DI container
+- **Template Method pattern**: The framework ensures middlewares are executed before your controller logic
+- **PSR-7 compliance**: All controllers work with PSR-7 request/response objects
+- **Error handling**: Return appropriate HTTP status codes using `createResponse($code, $reasonPhrase)`
+
 ### Middlewares
 
 Middlewares are classes that can be executed before the controller. They can modify the request, response or stop the execution chain. Middlewares should implement the `Psr\Http\Server\MiddlewareInterface` interface.
 
-#### Example
+#### Middleware Implementation Example
 
 ```php
 namespace CubaDevOps\Flexi\Infrastructure\Middlewares;

@@ -1,21 +1,6 @@
 {
   "handlers": [
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Queries\\GetVersionQuery",
-      "cli_alias": "version",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\Health"
-    },
-    {
-      "id": "CubaDevOps\\Flexi\\Application\\Queries\\ListQueriesQuery",
-      "cli_alias": "query:list",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ListQueries"
-    },
-    {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ListCommandsCommand",
-      "cli_alias": "command:list",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ListCommands"
-    },
-    {
       "glob": "./modules/*/Config/queries.json"
     }
   ]

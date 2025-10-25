@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Test\Application\Queries;
 
-use CubaDevOps\Flexi\Application\Queries\ListQueriesQuery;
+use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
 use PHPUnit\Framework\TestCase;
 
 class ListQueriesQueryTest extends TestCase

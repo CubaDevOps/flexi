@@ -2,15 +2,15 @@
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Application\UseCase\Health;
-use CubaDevOps\Flexi\Application\UseCase\ListCommands;
-use CubaDevOps\Flexi\Application\UseCase\ListQueries;
+use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
+use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListCommands;
+use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListQueries;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Application\Commands\ListCommandsCommand;
+use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
 use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
-use CubaDevOps\Flexi\Application\Queries\GetVersionQuery;
-use CubaDevOps\Flexi\Application\Queries\ListQueriesQuery;
+use CubaDevOps\Flexi\Modules\HealthCheck\Application\Queries\GetVersionQuery;
+use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
 use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Modules\Home\Application\RenderHome;
@@ -41,7 +41,7 @@ class QueryBusTest extends TestCase
 
         $this->queryBus = new QueryBus($this->container, $this->event_bus, $this->class_factory);
 
-        $this->queryBus->loadHandlersFromJsonFile('./src/Config/queries.json');
+        $this->queryBus->loadHandlersFromJsonFile('./tests/TestData/Configurations/queries-bus-test.json');
     }
 
     /**
@@ -51,7 +51,7 @@ class QueryBusTest extends TestCase
      */
     public function testExecute(): void
     {
-        $handlerMock = $this->createMock(ListCommands::class);
+        $handlerMock = $this->createMock(ListQueries::class);
 
         $this->event_bus
             ->expects($this->exactly(2))
@@ -60,7 +60,7 @@ class QueryBusTest extends TestCase
         $this->class_factory
             ->expects($this->once())
             ->method('build')
-            ->with($this->container, ListCommands::class)
+            ->with($this->container, ListQueries::class)
             ->willReturn($handlerMock);
 
         $handlerMock
@@ -68,7 +68,7 @@ class QueryBusTest extends TestCase
             ->method('handle')
             ->willReturn(new PlainTextMessage('message'));
 
-        $message = $this->queryBus->execute(new ListCommandsCommand());
+        $message = $this->queryBus->execute(new ListQueriesQuery());
 
         $this->assertNotNull($message);
         $this->assertInstanceOf(PlainTextMessage::class, $message);
@@ -79,8 +79,6 @@ class QueryBusTest extends TestCase
     {
         $this->assertEquals(Health::class, $this->queryBus->getHandler(GetVersionQuery::class));
         $this->assertEquals(ListQueries::class, $this->queryBus->getHandler(ListQueriesQuery::class));
-        $this->assertEquals(ListCommands::class, $this->queryBus->getHandler(ListCommandsCommand::class));
-        $this->assertEquals(RenderHome::class, $this->queryBus->getHandler(HomePageDTO::class));
     }
 
     public function testGetHandlerDoesNotExist(): void
@@ -95,7 +93,6 @@ class QueryBusTest extends TestCase
     {
         $this->assertTrue($this->queryBus->hasHandler(GetVersionQuery::class));
         $this->assertTrue($this->queryBus->hasHandler(ListQueriesQuery::class));
-        $this->assertTrue($this->queryBus->hasHandler(ListCommandsCommand::class));
 
         $this->assertFalse($this->queryBus->hasHandler(DummyDTO::class));
     }
@@ -105,11 +102,8 @@ class QueryBusTest extends TestCase
         $expectedDefinitions = [
             'version'                       => Health::class,
             'query:list'                    => ListQueries::class,
-            'command:list'                  => ListCommands::class,
-            HomePageDTO::class              => RenderHome::class,
             GetVersionQuery::class          => Health::class,
-            ListQueriesQuery::class         => ListQueries::class,
-            ListCommandsCommand::class      => ListCommands::class
+            ListQueriesQuery::class         => ListQueries::class
         ];
 
         $definitions = $this->queryBus->getHandlersDefinition();

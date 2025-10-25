@@ -21,14 +21,14 @@ class LogLevel implements ValueObjectInterface
     public const DEBUG = 'debug';
 
     private array $levels = [
-        self::EMERGENCY,
-        self::ALERT,
-        self::CRITICAL,
-        self::ERROR,
-        self::WARNING,
-        self::NOTICE,
-        self::INFO,
-        self::DEBUG,
+        0 => self::DEBUG,
+        1 => self::INFO,
+        2 => self::NOTICE,
+        3 => self::WARNING,
+        4 => self::ERROR,
+        5 => self::ALERT,
+        6 => self::CRITICAL,
+        7 => self::EMERGENCY,
     ];
 
     private string $level;
@@ -49,5 +49,13 @@ class LogLevel implements ValueObjectInterface
     private function isValidLevel(string $level): bool
     {
         return in_array($level, $this->levels, true);
+    }
+
+    public function isBelowThreshold(LogLevel $threshold): bool
+    {
+        $currentLevelIndex = array_search($this->level, $this->levels, true);
+        $thresholdLevelIndex = array_search($threshold->getValue(), $this->levels, true);
+
+        return $currentLevelIndex < $thresholdLevelIndex;
     }
 }

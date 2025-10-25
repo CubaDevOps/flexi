@@ -2,9 +2,9 @@
 
 namespace CubaDevOps\Flexi\Test\Application\UseCase;
 
-use CubaDevOps\Flexi\Application\UseCase\Health;
+use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Infrastructure\Persistence\VersionRepository;
+use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ValueObjectInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\Version;

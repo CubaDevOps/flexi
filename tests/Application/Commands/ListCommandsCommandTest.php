@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Test\Application\Commands;
 
-use CubaDevOps\Flexi\Application\Commands\ListCommandsCommand;
+use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
 use CubaDevOps\Flexi\Domain\Interfaces\CliDTOInterface;
 use PHPUnit\Framework\TestCase;
 

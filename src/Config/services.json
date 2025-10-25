@@ -76,13 +76,6 @@
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory"
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Persistence\\VersionRepository",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Persistence\\VersionRepository",
-        "arguments": []
-      }
-    },
-    {
       "name": "html_render",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\HtmlRender",
@@ -140,7 +133,8 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\PsrLogger",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository"
+          "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"
         ]
       }
     },
@@ -170,9 +164,12 @@
     },
     {
       "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\CacheInterface",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\InMemoryCache",
-        "arguments": []
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\CacheFactory",
+        "method": "createDefault",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"
+        ]
       }
     },
     {

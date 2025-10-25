@@ -2,10 +2,10 @@
 
 namespace CubaDevOps\Flexi\Test\Application\UseCase;
 
-use CubaDevOps\Flexi\Application\UseCase\ListCommands;
+use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListCommands;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Application\Commands\ListCommandsCommand;
+use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
 use PHPUnit\Framework\TestCase;
 
 class ListCommandsTest extends TestCase

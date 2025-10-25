@@ -1,29 +1,6 @@
 {
   "routes": [
     {
-      "name": "health",
-      "path": "/health",
-      "method": "GET",
-      "controller": "CubaDevOps\\Flexi\\Infrastructure\\Controllers\\HealthController",
-      "parameters": []
-    },
-    {
-      "name": "404",
-      "path": "/not-found",
-      "method": "GET",
-      "controller": "CubaDevOps\\Flexi\\Infrastructure\\Controllers\\NotFoundController"
-    },
-    {
-      "name": "trigger-event",
-      "path": "/trigger-event",
-      "method": "POST",
-      "controller": "CubaDevOps\\Flexi\\Infrastructure\\Controllers\\WebHookController",
-      "middlewares": [
-        "CubaDevOps\\Flexi\\Infrastructure\\Middlewares\\JWTAuthMiddleware"
-      ],
-      "parameters": []
-    },
-    {
       "glob": "./modules/*/Config/routes.json"
     }
   ]

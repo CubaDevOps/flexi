@@ -6,8 +6,6 @@ namespace CubaDevOps\Flexi\Domain\Interfaces;
 
 interface TemplateEngineInterface
 {
-    public function header(): string;
-
     /**
      * Render a template with the given variables.
      *
@@ -16,6 +14,4 @@ interface TemplateEngineInterface
      * @return string The rendered content
      */
     public function render($template, $vars = []): string;
-
-    public function footer(): string;
 }

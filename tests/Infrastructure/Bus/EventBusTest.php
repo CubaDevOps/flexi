@@ -8,7 +8,9 @@ use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
 use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationRepositoryInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\LogRepositoryInterface;
 use CubaDevOps\Flexi\Infrastructure\Classes\PsrLogger;
+use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -32,10 +34,15 @@ class EventBusTest extends TestCase
         $this->container = $this->createMock(ContainerInterface::class);
         $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
 
-        $logger = new PsrLogger($this->createMock(InFileLogRepository::class));
-        $configuration = $this->createMock(ConfigurationRepositoryInterface::class);
+        $configRepo = $this->createMock(ConfigurationRepositoryInterface::class);
+        $configuration = new Configuration($configRepo);
 
-        $this->eventBus = new EventBus($this->container, $this->class_factory, $logger, $configuration);
+        $logger = new PsrLogger(
+            $this->createMock(LogRepositoryInterface::class),
+            $configuration
+        );
+
+        $this->eventBus = new EventBus($this->container, $this->class_factory, $logger, $configRepo);
 
         $this->eventBus->loadHandlersFromJsonFile('./src/Config/listeners.json');
     }

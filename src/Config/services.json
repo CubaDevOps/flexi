@@ -171,9 +171,12 @@
     },
     {
       "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\CacheInterface",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\InMemoryCache",
-        "arguments": []
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\CacheFactory",
+        "method": "createDefault",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"
+        ]
       }
     },
     {

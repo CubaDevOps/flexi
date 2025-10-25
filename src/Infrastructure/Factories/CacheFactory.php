@@ -41,4 +41,8 @@ class CacheFactory
                 return new FileCache($cache_dir);
         }
     }
+
+    public static function createDefault(Configuration $configuration){
+        return (new self($configuration))->getInstance();
+    }
 }

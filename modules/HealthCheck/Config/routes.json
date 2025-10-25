@@ -1,0 +1,11 @@
+{
+  "routes": [
+    {
+      "name": "health",
+      "path": "/health",
+      "method": "GET",
+      "controller": "CubaDevOps\\Flexi\\Modules\\HealthCheck\\Infrastructure\\Controllers\\HealthController",
+      "parameters": []
+    }
+  ]
+}

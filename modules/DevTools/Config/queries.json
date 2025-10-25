@@ -1,0 +1,9 @@
+{
+  "handlers": [
+    {
+      "id": "CubaDevOps\\Flexi\\Modules\\DevTools\\Application\\Queries\\ListQueriesQuery",
+      "cli_alias": "query:list",
+      "handler": "CubaDevOps\\Flexi\\Modules\\DevTools\\Application\\UseCase\\ListQueries"
+    }
+  ]
+}

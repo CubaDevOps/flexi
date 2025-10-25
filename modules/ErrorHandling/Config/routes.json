@@ -1,0 +1,10 @@
+{
+  "routes": [
+    {
+      "name": "404",
+      "path": "/not-found",
+      "method": "GET",
+      "controller": "CubaDevOps\\Flexi\\Modules\\ErrorHandling\\Infrastructure\\Controllers\\NotFoundController"
+    }
+  ]
+}

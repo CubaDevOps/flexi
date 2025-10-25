@@ -12,7 +12,7 @@ use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use CubaDevOps\Flexi\Domain\Classes\Service;
 use CubaDevOps\Flexi\Domain\Classes\ServiceClassDefinition;
-use CubaDevOps\Flexi\Infrastructure\Persistence\VersionRepository;
+use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
 use CubaDevOps\Flexi\Domain\Exceptions\ContainerException;
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
 use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
@@ -59,7 +59,6 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(NativeSessionStorage::class, $this->container->get(NativeSessionStorage::class));
         $this->assertInstanceOf(ObjectBuilderInterface::class, $this->container->get(ObjectBuilderInterface::class));
         $this->assertNotNull($this->container->get('router'));
-        $this->assertInstanceOf(VersionRepository::class, $this->container->get(VersionRepository::class));
         $this->assertInstanceOf(HtmlRender::class, $this->container->get('html_render'));
         $this->assertInstanceOf(CommandBus::class, $this->container->get(CommandBus::class));
         $this->assertInstanceOf(QueryBus::class, $this->container->get(QueryBus::class));
@@ -105,7 +104,6 @@ class ContainerTest extends TestCase
         $this->assertTrue($this->container->has(NativeSessionStorage::class), NativeSessionStorage::class . ' not found');
         $this->assertTrue($this->container->has(ObjectBuilderInterface::class), ObjectBuilderInterface::class . ' not found');
         $this->assertTrue($this->container->has('router'), 'router not found');
-        $this->assertTrue($this->container->has(VersionRepository::class), VersionRepository::class . ' not found');
         $this->assertTrue($this->container->has('html_render'), 'html_render not found');
         $this->assertTrue($this->container->has(CommandBus::class), CommandBus::class . ' not found');
         $this->assertTrue($this->container->has(QueryBus::class), QueryBus::class . ' not found');

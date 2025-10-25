@@ -2,9 +2,9 @@
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Application\UseCase\Health;
-use CubaDevOps\Flexi\Application\UseCase\ListCommands;
-use CubaDevOps\Flexi\Application\UseCase\ListQueries;
+use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
+use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListCommands;
+use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListQueries;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Domain\DTO\CommandListDTO;
@@ -99,6 +99,8 @@ class CommandBusTest extends TestCase
         $expectedDefinitions = [
             DummyDTO::class => Health::class,
             'test'          => Health::class,
+            'CubaDevOps\\Flexi\\Modules\\DevTools\\Application\\Commands\\ListCommandsCommand' => ListCommands::class,
+            'command:list'  => ListCommands::class,
         ];
 
         $definitions = $this->commandBus->getHandlersDefinition(true);

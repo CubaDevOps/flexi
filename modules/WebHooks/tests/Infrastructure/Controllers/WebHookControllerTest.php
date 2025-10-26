@@ -1,21 +1,20 @@
 <?php
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Controllers;
+namespace CubaDevOps\Flexi\Modules\WebHooks\Test\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Modules\WebHooks\Infrastructure\Controllers\WebHookController;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Domain\Events\Event;
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 
 class WebHookControllerTest extends TestCase
 {
-    private EventBus $eventBusMock;
-    private ServerRequestInterface $requestMock;
-    private StreamInterface $streamMock;
-    private WebHookController $webHookController;
+    private $eventBusMock;
+    private $requestMock;
+    private $streamMock;
+    private $webHookController;
 
     protected function setUp(): void
     {

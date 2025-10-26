@@ -1,6 +1,6 @@
 <?php
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Persistence;
+namespace CubaDevOps\Flexi\Modules\HealthCheck\Test\Infrastructure\Persistence;
 
 use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
 use CubaDevOps\Flexi\Domain\Entities\DummyEntity;

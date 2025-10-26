@@ -7,16 +7,24 @@
          verbose="true"
          stderr="true">
     <testsuites>
-        <testsuite name="Application Test Suite">
+        <testsuite name="Core Test Suite">
             <directory>./tests</directory>
+        </testsuite>
+        <testsuite name="Modules Test Suite">
+            <directory>./modules/*/tests</directory>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">
         <include>
             <directory>./src</directory>
+            <directory>./modules/*/src</directory>
+            <directory>./modules/*/Application</directory>
+            <directory>./modules/*/Domain</directory>
+            <directory>./modules/*/Infrastructure</directory>
         </include>
         <exclude>
             <directory>./tests</directory>
+            <directory>./modules/*/tests</directory>
             <directory>./vendor</directory>
         </exclude>
     </coverage>

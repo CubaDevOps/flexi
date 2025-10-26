@@ -1,6 +1,6 @@
 <?php
 
-namespace CubaDevOps\Flexi\Test\Application\UseCase;
+namespace CubaDevOps\Flexi\Modules\DevTools\Test\Application\UseCase;
 
 use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListCommands;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
@@ -10,8 +10,8 @@ use PHPUnit\Framework\TestCase;
 
 class ListCommandsTest extends TestCase
 {
-    private CommandBus $commandBus;
-    private ListCommands $listCommands;
+    private $commandBus;
+    private $listCommands;
 
     public function setUp(): void
     {

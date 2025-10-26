@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Entities;
+namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
 use CubaDevOps\Flexi\Contracts\EntityContract;
 use CubaDevOps\Flexi\Contracts\ValueObjects\ID;

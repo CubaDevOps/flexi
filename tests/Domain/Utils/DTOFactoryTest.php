@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Test\Domain\Utils;
 
 use CubaDevOps\Flexi\Contracts\BusContract;
-use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
-use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
-use CubaDevOps\Flexi\Domain\Utils\DTOFactory;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyDTO;
+use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Application\Services\DTOFactory;
 use PHPUnit\Framework\TestCase;
 
 class DTOFactoryTest extends TestCase
@@ -45,6 +45,6 @@ class DTOFactoryTest extends TestCase
 
         $command = DTOFactory::fromArray($bus, $id, $data);
 
-        $this->assertInstanceOf(NotFoundCliCommand::class, $command);
+        $this->assertInstanceOf(NotFoundCommand::class, $command);
     }
 }

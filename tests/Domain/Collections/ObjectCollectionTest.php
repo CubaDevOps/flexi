@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Test\Domain\Collections;
 
 use CubaDevOps\Flexi\Contracts\Classes\ObjectCollection;
-use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
-use CubaDevOps\Flexi\Domain\Entities\DummyEntity;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyDTO;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyEntity;
 use PHPUnit\Framework\TestCase;
 
 class ObjectCollectionTest extends TestCase

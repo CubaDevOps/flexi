@@ -12,7 +12,7 @@ use CubaDevOps\Flexi\Contracts\RepositoryContract;
 use CubaDevOps\Flexi\Contracts\ValueObjectContract;
 use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
 use CubaDevOps\Flexi\Contracts\ValueObjects\Version;
-use CubaDevOps\Flexi\Domain\Entities\DummyEntity;
+use CubaDevOps\Flexi\Modules\HealthCheck\Domain\Entities\VersionEntity;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 
 class VersionRepository implements RepositoryContract
@@ -34,26 +34,14 @@ class VersionRepository implements RepositoryContract
     }
 
     /**
-     * @return DummyEntity
+     * @return VersionEntity
      */
     public function get(ID $id): EntityContract
     {
-        return new DummyEntity();
+        return new VersionEntity();
     }
 
-    public function create(EntityContract $entity): void
-    {
-    }
-
-    /**
-     * @throws \JsonException
-     */
-    public function update(EntityContract $entity): void
-    {
-        $this->writeJsonFileFromArray('composer.json', $entity->toArray());
-    }
-
-    public function delete($entity): void
+    public function delete(EntityContract $entity): void
     {
     }
 
@@ -73,17 +61,12 @@ class VersionRepository implements RepositoryContract
         return new ObjectCollection(__CLASS__);
     }
 
-    public function findByCriteria(array $criteria): array
+    public function findById($id): ?EntityContract
     {
-        return [];
+        return new VersionEntity();
     }
 
-    public function findById($id)
-    {
-        return new DummyEntity();
-    }
-
-    public function save($entity): void
+    public function save(EntityContract $entity): void
     {
     }
 }

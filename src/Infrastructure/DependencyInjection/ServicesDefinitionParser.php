@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Utils;
+namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
 
 use CubaDevOps\Flexi\Contracts\CacheContract;
 use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;

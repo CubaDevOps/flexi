@@ -8,14 +8,14 @@ use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\DTOContract;
 use CubaDevOps\Flexi\Contracts\HandlerContract;
 use CubaDevOps\Flexi\Contracts\MessageContract;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
+use CubaDevOps\Flexi\Contracts\BusContract;
 use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
 
 class ListQueries implements HandlerContract
 {
-    private QueryBus $queryBus;
+    private BusContract $queryBus;
 
-    public function __construct(QueryBus $queryBus)
+    public function __construct(BusContract $queryBus)
     {
         $this->queryBus = $queryBus;
     }

@@ -10,7 +10,7 @@ use CubaDevOps\Flexi\Contracts\EventBusContract;
 use CubaDevOps\Flexi\Contracts\HandlerContract;
 use CubaDevOps\Flexi\Contracts\MessageContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
-use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
+use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
@@ -164,6 +164,6 @@ class QueryBus implements BusContract
         $handler = $this->aliases[$id];
         $dto = array_search($handler, $this->queries, true);
 
-        return $dto ?: NotFoundCliCommand::class;
+        return $dto ?: NotFoundCommand::class;
     }
 }

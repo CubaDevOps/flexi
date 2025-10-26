@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Classes;
+namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
 
 use CubaDevOps\Flexi\Contracts\ServiceDefinitionContract;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;

@@ -10,7 +10,7 @@ use CubaDevOps\Flexi\Contracts\EventBusContract;
 use CubaDevOps\Flexi\Contracts\HandlerContract;
 use CubaDevOps\Flexi\Contracts\MessageContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
-use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
+use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
@@ -155,9 +155,8 @@ class CommandBus implements BusContract
 
     public function getDtoClassFromAlias(string $id): string
     {
-        $handler = $this->aliases[$id];
-        $dto = array_search($handler, $this->commands, true);
+        $dto = $this->handlers_definitions[$id] ?? false;
 
-        return $dto ?: NotFoundCliCommand::class;
+        return $dto ?: NotFoundCommand::class;
     }
 }

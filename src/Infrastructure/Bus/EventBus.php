@@ -10,7 +10,7 @@ use CubaDevOps\Flexi\Contracts\EventBusContract;
 use CubaDevOps\Flexi\Contracts\EventContract;
 use CubaDevOps\Flexi\Contracts\EventListenerContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
-use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
+use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 use Psr\Container\ContainerExceptionInterface;
@@ -155,7 +155,7 @@ class EventBus implements EventBusContract
 
     public function getDtoClassFromAlias(string $id): string
     {
-        return NotFoundCliCommand::class;
+        return NotFoundCommand::class;
     }
 
     /**
@@ -241,5 +241,12 @@ class EventBus implements EventBusContract
     public function asyncMode(): bool
     {
         return PHP_SAPI === 'cli' && ($this->configuration->has('dispatch_mode') && (int) $this->configuration->get('dispatch_mode'));
+    }
+
+    public function getHandlersDefinition(bool $with_aliases = false): array
+    {
+        // EventBus doesn't have traditional handlers like Command/QueryBus
+        // Return event listeners mapping
+        return $this->events;
     }
 }

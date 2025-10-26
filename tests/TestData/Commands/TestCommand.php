@@ -2,15 +2,19 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Modules\HealthCheck\Application\Queries;
+namespace CubaDevOps\Flexi\Test\TestData\Commands;
 
 use CubaDevOps\Flexi\Contracts\DTOContract;
 
-class GetVersionQuery implements DTOContract
+/**
+ * Simple test command for unit testing purposes.
+ * This is a real implementation, not a test double.
+ */
+class TestCommand implements DTOContract
 {
     public function toArray(): array
     {
-        return ['query' => 'get-version'];
+        return ['command' => 'test'];
     }
 
     public static function fromArray(array $data): self
@@ -31,6 +35,6 @@ class GetVersionQuery implements DTOContract
 
     public function __toString(): string
     {
-        return 'get-version';
+        return 'test';
     }
 }

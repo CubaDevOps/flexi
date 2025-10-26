@@ -6,8 +6,8 @@ namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
 
 use CubaDevOps\Flexi\Contracts\CacheContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
-use CubaDevOps\Flexi\Domain\Classes\Service;
-use CubaDevOps\Flexi\Domain\Classes\ServiceClassDefinition;
+use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Service;
+use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServiceClassDefinition;
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;

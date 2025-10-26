@@ -1,13 +1,6 @@
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Contracts\\CacheContract",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\DomainCache",
-        "arguments": []
-      }
-    },
-    {
       "name": "CubaDevOps\\Flexi\\Contracts\\ObjectBuilderContract",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ObjectBuilder",

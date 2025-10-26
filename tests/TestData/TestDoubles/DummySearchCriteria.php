@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Classes;
+namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
 use CubaDevOps\Flexi\Contracts\CriteriaContract;
 

@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Modules\HealthCheck\Test\Infrastructure\Persistence;
 
 use CubaDevOps\Flexi\Contracts\CriteriaContract;
 use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
-use CubaDevOps\Flexi\Domain\Entities\DummyEntity;
+use CubaDevOps\Flexi\Modules\HealthCheck\Domain\Entities\VersionEntity;
 use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -31,9 +31,9 @@ class VersionRepositoryTest extends TestCase
 
     public function testGetID(): void
     {
-        $dummyEntity = $this->versionRepository->get(new ID('uuid'));
+        $versionEntity = $this->versionRepository->get(new ID('uuid'));
 
-        $this->assertNotNull($dummyEntity);
-        $this->assertInstanceOf(DummyEntity::class, $dummyEntity);
+        $this->assertNotNull($versionEntity);
+        $this->assertInstanceOf(VersionEntity::class, $versionEntity);
     }
 }

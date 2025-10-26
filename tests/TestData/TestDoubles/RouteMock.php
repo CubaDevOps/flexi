@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Domain\Classes\Route;
+use CubaDevOps\Flexi\Infrastructure\Http\Route;
 
 class RouteMock extends Route
 {

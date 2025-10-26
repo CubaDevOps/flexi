@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
 use CubaDevOps\Flexi\Contracts\CacheContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
-use CubaDevOps\Flexi\Domain\Utils\CacheKeyGeneratorTrait;
+use CubaDevOps\Flexi\Infrastructure\Utils\CacheKeyGeneratorTrait;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

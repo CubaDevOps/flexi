@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 
 use CubaDevOps\Flexi\Contracts\CliDTOContract;
-use CubaDevOps\Flexi\Domain\Utils\DTOFactory;
+use CubaDevOps\Flexi\Contracts\BusContract;
+use CubaDevOps\Flexi\Contracts\HandlerContract;
+use CubaDevOps\Flexi\Application\Services\DTOFactory;
+use Psr\Container\ContainerInterface;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

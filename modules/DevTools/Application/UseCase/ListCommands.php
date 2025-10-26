@@ -8,14 +8,14 @@ use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\DTOContract;
 use CubaDevOps\Flexi\Contracts\HandlerContract;
 use CubaDevOps\Flexi\Contracts\MessageContract;
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
+use CubaDevOps\Flexi\Contracts\BusContract;
 use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
 
 class ListCommands implements HandlerContract
 {
-    private CommandBus $command_bus;
+    private BusContract $command_bus;
 
-    public function __construct(CommandBus $command_bus)
+    public function __construct(BusContract $command_bus)
     {
         $this->command_bus = $command_bus;
     }

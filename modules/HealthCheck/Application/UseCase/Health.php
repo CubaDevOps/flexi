@@ -8,15 +8,15 @@ use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\DTOContract;
 use CubaDevOps\Flexi\Contracts\HandlerContract;
 use CubaDevOps\Flexi\Contracts\MessageContract;
+use CubaDevOps\Flexi\Contracts\RepositoryContract;
 use CubaDevOps\Flexi\Contracts\ValueObjects\Version;
-use CubaDevOps\Flexi\Domain\Classes\DummySearchCriteria;
-use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
+use CubaDevOps\Flexi\Domain\Criteria\AnyCriteria;
 
 class Health implements HandlerContract
 {
-    private VersionRepository $version_repository;
+    private RepositoryContract $version_repository;
 
-    public function __construct(VersionRepository $version_repository)
+    public function __construct(RepositoryContract $version_repository)
     {
         $this->version_repository = $version_repository;
     }
@@ -30,7 +30,7 @@ class Health implements HandlerContract
     {
         /** @var Version $version */
         $version = $this->version_repository->retrieveValue(
-            new DummySearchCriteria()
+            new AnyCriteria()
         );
 
         return new PlainTextMessage((string) $version);

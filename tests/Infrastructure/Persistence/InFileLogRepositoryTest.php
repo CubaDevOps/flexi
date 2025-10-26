@@ -18,7 +18,7 @@ class InFileLogRepositoryTest extends TestCase
     public function __construct()
     {
         parent::__construct();
-        $this->log_path = './var/logs/app.log';
+        $this->log_path = './var/logs/test.log';
         $file_handler = new FileHandler();
         $file_handler->createFileIfNotExist($this->log_path);
     }

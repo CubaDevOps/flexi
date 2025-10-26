@@ -1,20 +1,19 @@
 <?php
 
-namespace CubaDevOps\Flexi\Test\Application\Commands;
+namespace CubaDevOps\Flexi\Modules\DevTools\Test\Application\Queries;
 
-use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
-use CubaDevOps\Flexi\Domain\Interfaces\CliDTOInterface;
+use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
 use PHPUnit\Framework\TestCase;
 
-class ListCommandsCommandTest extends TestCase
+class ListQueriesQueryTest extends TestCase
 {
     private const DTO_ALIASES = true;
 
-    private ListCommandsCommand $dto;
+    private ListQueriesQuery $dto;
 
     public function setUp(): void
     {
-        $this->dto = new ListCommandsCommand(self::DTO_ALIASES);
+        $this->dto = new ListQueriesQuery(self::DTO_ALIASES);
     }
 
     public function testToArray(): void
@@ -28,15 +27,15 @@ class ListCommandsCommandTest extends TestCase
     {
         $data = ['with_aliases' => self::DTO_ALIASES];
 
-        $newDTO = ListCommandsCommand::fromArray($data);
+        $newDTO = ListQueriesQuery::fromArray($data);
 
         $this->assertEquals($data, $newDTO->toArray());
-        $this->assertInstanceOf(ListCommandsCommand::class, $newDTO);
+        $this->assertInstanceOf(ListQueriesQuery::class, $newDTO);
     }
 
     public function testToString(): void
     {
-        $this->assertEquals(ListCommandsCommand::class, $this->dto->__toString());
+        $this->assertEquals(ListQueriesQuery::class, $this->dto->__toString());
     }
 
     public function testValidate(): void
@@ -56,6 +55,6 @@ class ListCommandsCommandTest extends TestCase
 
     public function testUsage(): void
     {
-        $this->assertEquals('Usage: command:list with_aliases=true|false', $this->dto->usage());
+        $this->assertEquals('Usage: query:list with_aliases=true|false', $this->dto->usage());
     }
 }

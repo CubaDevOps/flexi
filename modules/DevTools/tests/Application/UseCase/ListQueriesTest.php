@@ -1,6 +1,6 @@
 <?php
 
-namespace CubaDevOps\Flexi\Test\Application\UseCase;
+namespace CubaDevOps\Flexi\Modules\DevTools\Test\Application\UseCase;
 
 use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListQueries;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
@@ -10,8 +10,8 @@ use PHPUnit\Framework\TestCase;
 
 class ListQueriesTest extends TestCase
 {
-    private QueryBus $queryBus;
-    private ListQueries $listQueries;
+    private $queryBus;
+    private $listQueries;
 
     public function setUp(): void
     {

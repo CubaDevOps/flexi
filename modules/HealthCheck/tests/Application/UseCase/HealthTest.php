@@ -1,19 +1,18 @@
 <?php
 
-namespace CubaDevOps\Flexi\Test\Application\UseCase;
+namespace CubaDevOps\Flexi\Modules\HealthCheck\Test\Application\UseCase;
 
 use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
 use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ValueObjectInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\Version;
 use PHPUnit\Framework\TestCase;
 
 class HealthTest extends TestCase
 {
-    private VersionRepository $versionRepository;
-    private Health $health;
+    private $versionRepository;
+    private $health;
 
     public function setUp(): void
     {

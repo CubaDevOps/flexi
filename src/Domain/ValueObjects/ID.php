@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ValueObjectInterface;
+use CubaDevOps\Flexi\Contracts\ValueObjectContract;
 
-class ID implements ValueObjectInterface
+class ID implements ValueObjectContract
 {
     private string $id;
 
@@ -16,6 +16,16 @@ class ID implements ValueObjectInterface
     }
 
     public function getValue(): string
+    {
+        return $this->id;
+    }
+
+    public function equals(ValueObjectContract $other): bool
+    {
+        return $other instanceof self && $this->id === $other->getValue();
+    }
+
+    public function __toString(): string
     {
         return $this->id;
     }

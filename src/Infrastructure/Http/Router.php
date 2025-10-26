@@ -7,9 +7,9 @@ namespace CubaDevOps\Flexi\Infrastructure\Http;
 use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Domain\Classes\ObjectCollection;
 use CubaDevOps\Flexi\Domain\Classes\Route;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
+use CubaDevOps\Flexi\Contracts\EventBusContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Contracts\SessionStorageContract;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
@@ -28,16 +28,16 @@ class Router
 
     protected ObjectCollection $routes_indexed_by_name;
     protected ObjectCollection $routes_indexed_by_path;
-    protected SessionStorageInterface $session;
-    protected EventBusInterface $event_bus;
-    protected ObjectBuilderInterface $class_factory;
+    protected SessionStorageContract $session;
+    protected EventBusContract $event_bus;
+    protected ObjectBuilderContract $class_factory;
     protected ResponseFactoryInterface $response_factory;
     protected ContainerInterface $container;
 
     public function __construct(
-        SessionStorageInterface $session,
-        EventBusInterface $event_bus,
-        ObjectBuilderInterface $class_factory,
+        SessionStorageContract $session,
+        EventBusContract $event_bus,
+        ObjectBuilderContract $class_factory,
         ResponseFactoryInterface $response_factory,
         ContainerInterface $container
     ) {

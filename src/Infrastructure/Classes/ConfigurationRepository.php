@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
 use CubaDevOps\Flexi\Domain\Classes\Collection;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationRepositoryInterface;
+use CubaDevOps\Flexi\Contracts\ConfigurationRepositoryContract;
 use CubaDevOps\Flexi\Domain\ValueObjects\CollectionType;
 use Dotenv\Dotenv;
 
-class ConfigurationRepository implements ConfigurationRepositoryInterface
+class ConfigurationRepository implements ConfigurationRepositoryContract
 {
     private Collection $config;
 

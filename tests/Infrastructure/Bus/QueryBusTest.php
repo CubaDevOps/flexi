@@ -11,8 +11,8 @@ use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
 use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
 use CubaDevOps\Flexi\Modules\HealthCheck\Application\Queries\GetVersionQuery;
 use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Contracts\EventBusContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use CubaDevOps\Flexi\Modules\Home\Application\RenderHome;
 use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 use PHPUnit\Framework\TestCase;
@@ -23,9 +23,9 @@ use Psr\Container\NotFoundExceptionInterface;
 class QueryBusTest extends TestCase
 {
     private QueryBus $queryBus;
-    private ContainerInterface $container;
-    private EventBusInterface $event_bus;
-    private ObjectBuilderInterface $class_factory;
+    private $container;
+    private $event_bus;
+    private $class_factory;
 
     /**
      * @throws NotFoundExceptionInterface
@@ -36,8 +36,8 @@ class QueryBusTest extends TestCase
     public function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->event_bus = $this->createMock(EventBusInterface::class);
-        $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
+        $this->event_bus = $this->createMock(EventBusContract::class);
+        $this->class_factory = $this->createMock(ObjectBuilderContract::class);
 
         $this->queryBus = new QueryBus($this->container, $this->event_bus, $this->class_factory);
 

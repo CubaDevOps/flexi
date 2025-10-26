@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationRepositoryInterface;
+use CubaDevOps\Flexi\Contracts\ConfigurationRepositoryContract;
 use Psr\Container\ContainerInterface;
 
 class Configuration implements ContainerInterface
 {
-    private ConfigurationRepositoryInterface $configurationRepository;
+    private ConfigurationRepositoryContract $configurationRepository;
 
-    public function __construct(ConfigurationRepositoryInterface $configurationRepository)
+    public function __construct(ConfigurationRepositoryContract $configurationRepository)
     {
         $this->configurationRepository = $configurationRepository;
     }

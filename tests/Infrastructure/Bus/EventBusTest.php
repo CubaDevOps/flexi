@@ -5,10 +5,10 @@ namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 use CubaDevOps\Flexi\Application\EventListeners\LoggerEventListener;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
-use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationRepositoryInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\LogRepositoryInterface;
+use CubaDevOps\Flexi\Contracts\EventContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Contracts\ConfigurationRepositoryContract;
+use CubaDevOps\Flexi\Contracts\LogRepositoryContract;
 use CubaDevOps\Flexi\Infrastructure\Classes\PsrLogger;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use PHPUnit\Framework\TestCase;
@@ -32,15 +32,13 @@ class EventBusTest extends TestCase
     public function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
+        $this->class_factory = $this->createMock(ObjectBuilderContract::class);
 
-        $configRepo = $this->createMock(ConfigurationRepositoryInterface::class);
-        $configuration = new Configuration($configRepo);
+        $configRepo = $this->createMock(ConfigurationRepositoryContract::class);
+        $logRepository = $this->createMock(LogRepositoryContract::class);
 
-        $logger = new PsrLogger(
-            $this->createMock(LogRepositoryInterface::class),
-            $configuration
-        );
+        // Create a simpler logger for testing
+        $logger = $this->createMock(LoggerInterface::class);
 
         $this->eventBus = new EventBus($this->container, $this->class_factory, $logger, $configRepo);
 
@@ -54,7 +52,7 @@ class EventBusTest extends TestCase
      */
     public function testExecute(): void
     {
-        $dtoMock = $this->createMock(EventInterface::class);
+        $dtoMock = $this->createMock(EventContract::class);
         $handlerMock = $this->createMock(LoggerEventListener::class);
 
         $dtoMock->expects($this->once())->method('getName')->willReturn('*');

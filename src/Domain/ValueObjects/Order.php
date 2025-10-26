@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ValueObjectInterface;
+use CubaDevOps\Flexi\Contracts\ValueObjectContract;
 
-class Order implements ValueObjectInterface
+class Order implements ValueObjectContract
 {
     public const ASC = 'ASC';
     public const DESC = 'DESC';
@@ -19,7 +19,17 @@ class Order implements ValueObjectInterface
         $this->order = $order;
     }
 
-    public function getValue()
+    public function getValue(): string
+    {
+        return $this->order;
+    }
+
+    public function equals(ValueObjectContract $other): bool
+    {
+        return $other instanceof self && $this->order === $other->getValue();
+    }
+
+    public function __toString(): string
     {
         return $this->order;
     }

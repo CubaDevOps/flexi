@@ -6,19 +6,19 @@ namespace CubaDevOps\Flexi\Infrastructure\Bus;
 
 use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
-use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Contracts\BusContract;
+use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\EventBusContract;
+use CubaDevOps\Flexi\Contracts\HandlerContract;
+use CubaDevOps\Flexi\Contracts\MessageContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class CommandBus implements BusInterface
+class CommandBus implements BusContract
 {
     use JsonFileReader;
     use GlobFileReader;
@@ -26,13 +26,13 @@ class CommandBus implements BusInterface
     private array $commands = [];
     private array $aliases = [];
     private ContainerInterface $container;
-    private EventBusInterface $event_bus;
-    private ObjectBuilderInterface $class_factory;
+    private EventBusContract $event_bus;
+    private ObjectBuilderContract $class_factory;
 
     /**
      * @param EventBus $event_bus
      */
-    public function __construct(ContainerInterface $container, EventBusInterface $event_bus, ObjectBuilderInterface $class_factory)
+    public function __construct(ContainerInterface $container, EventBusContract $event_bus, ObjectBuilderContract $class_factory)
     {
         $this->container = $container;
         $this->event_bus = $event_bus;
@@ -102,13 +102,13 @@ class CommandBus implements BusInterface
      * @throws ContainerExceptionInterface
      * @throws \ReflectionException
      */
-    public function execute(DTOInterface $dto): MessageInterface
+    public function execute(DTOContract $dto): MessageContract
     {
         $identifier = get_class($dto);
 
         $handler = $this->getHandler($identifier);
 
-        /** @var HandlerInterface $handler_obj */
+        /** @var HandlerContract $handler_obj */
         $handler_obj = $this->class_factory->build($this->container, $handler);
 
         $event_before = new Event('core.command.before_execute', __CLASS__, [

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Interfaces;
+namespace CubaDevOps\Flexi\Contracts;
 
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
 
-interface LogInterface
+interface LogContract
 {
     public function getLogLevel(): LogLevel;
 
-    public function getMessage(): MessageInterface;
+    public function getMessage(): MessageContract;
 
     public function getContext(): array;
 

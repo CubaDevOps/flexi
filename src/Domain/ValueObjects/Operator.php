@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ValueObjectInterface;
+use CubaDevOps\Flexi\Contracts\ValueObjectContract;
 
-class Operator implements ValueObjectInterface
+class Operator implements ValueObjectContract
 {
     public const OPERATORS = [
         '=',
@@ -33,7 +33,17 @@ class Operator implements ValueObjectInterface
         $this->operator = $operator;
     }
 
-    public function getValue()
+    public function getValue(): string
+    {
+        return $this->operator;
+    }
+
+    public function equals(ValueObjectContract $other): bool
+    {
+        return $other instanceof self && $this->operator === $other->getValue();
+    }
+
+    public function __toString(): string
     {
         return $this->operator;
     }

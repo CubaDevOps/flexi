@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
+use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\MessageContract;
 use DateTimeImmutable;
 
-class PlainTextMessage implements MessageInterface
+class PlainTextMessage implements MessageContract
 {
     private string $body;
     private \DateTimeImmutable $created_at;
@@ -48,7 +48,7 @@ class PlainTextMessage implements MessageInterface
     /**
      * @return self
      */
-    public static function fromArray(array $data): DTOInterface
+    public static function fromArray(array $data): self
     {
         if (!self::validate($data)) {
             throw new \InvalidArgumentException('Invalid data provided for '.self::class);

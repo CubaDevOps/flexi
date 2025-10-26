@@ -4,7 +4,7 @@ namespace CubaDevOps\Flexi\Test\Domain\Utils;
 
 use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
 use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
-use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
+use CubaDevOps\Flexi\Contracts\BusContract;
 use CubaDevOps\Flexi\Domain\Utils\DTOFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -12,8 +12,8 @@ class DTOFactoryTest extends TestCase
 {
     public function testFromArray(): void
     {
-        $bus = $this->createMock(BusInterface::class);
-        $id   = BusInterface::class;
+        $bus = $this->createMock(BusContract::class);
+        $id   = BusContract::class;
         $data = ['test'];
 
         $dto = new DummyDTO();
@@ -34,8 +34,8 @@ class DTOFactoryTest extends TestCase
 
     public function testFromArrayNotFoundCliCommand(): void
     {
-        $bus = $this->createMock(BusInterface::class);
-        $id   = BusInterface::class;
+        $bus = $this->createMock(BusContract::class);
+        $id   = BusContract::class;
         $data = ['test'];
 
         $bus->expects($this->once())

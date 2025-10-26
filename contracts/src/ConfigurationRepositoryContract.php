@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Interfaces;
+namespace CubaDevOps\Flexi\Contracts;
 
-interface ConfigurationRepositoryInterface
+interface ConfigurationRepositoryContract
 {
     public function get(string $key);
 

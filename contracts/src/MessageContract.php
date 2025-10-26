@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Interfaces;
+namespace CubaDevOps\Flexi\Contracts;
 
-interface MessageInterface extends DTOInterface
+interface MessageContract extends DTOContract
 {
     public function createdAt(): \DateTimeImmutable;
 

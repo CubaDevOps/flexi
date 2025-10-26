@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Contracts\CacheContract;
 use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 use CubaDevOps\Flexi\Infrastructure\Cache\FileCache;
 use CubaDevOps\Flexi\Infrastructure\Cache\InMemoryCache;
@@ -25,7 +25,7 @@ class CacheFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getInstance($driver = null): CacheInterface
+    public function getInstance($driver = null): CacheContract
     {
 
         $cache_driver = $driver ?? $this->configuration->get('cache_driver');

@@ -4,7 +4,7 @@ namespace CubaDevOps\Flexi\Modules\HealthCheck\Test\Infrastructure\Persistence;
 
 use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
 use CubaDevOps\Flexi\Domain\Entities\DummyEntity;
-use CubaDevOps\Flexi\Domain\Interfaces\CriteriaInterface;
+use CubaDevOps\Flexi\Contracts\CriteriaContract;
 use CubaDevOps\Flexi\Domain\ValueObjects\ID;
 use PHPUnit\Framework\TestCase;
 
@@ -19,12 +19,12 @@ class VersionRepositoryTest extends TestCase
 
     public function testRetrieveValue(): void
     {
-        $criteria = $this->createMock(CriteriaInterface::class);
+        $criteria = $this->createMock(CriteriaContract::class);
 
         $version = $this->versionRepository->retrieveValue($criteria);
 
         $this->assertNotNull($version);
-        $this->assertIsInt($version->getValue());
+        $this->assertIsString($version->getValue());
     }
 
     public function testGetID(): void

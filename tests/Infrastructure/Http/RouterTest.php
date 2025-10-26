@@ -4,9 +4,9 @@ namespace CubaDevOps\Flexi\Test\Infrastructure\Http;
 
 use CubaDevOps\Flexi\Domain\Classes\Route;
 use CubaDevOps\Flexi\Infrastructure\Http\Router;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
+use CubaDevOps\Flexi\Contracts\EventBusContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Contracts\SessionStorageContract;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouterMock;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\TestHttpHandler;
 use PHPUnit\Framework\TestCase;
@@ -23,9 +23,9 @@ class RouterTest extends TestCase
     private const ROUTE_PATH = '/health';
     private const ROUTE_CTRL = 'TestingControllerFactory';
 
-    private SessionStorageInterface $session;
-    private EventBusInterface $event_bus;
-    private ObjectBuilderInterface $class_factory;
+    private $session;
+    private $event_bus;
+    private $class_factory;
     private ResponseFactoryInterface $response_factory;
     private \Psr\Container\ContainerInterface $container;
 
@@ -36,9 +36,9 @@ class RouterTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->session = $this->createMock(SessionStorageInterface::class);
-        $this->event_bus = $this->createMock(EventBusInterface::class);
-        $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
+        $this->session = $this->createMock(SessionStorageContract::class);
+        $this->event_bus = $this->createMock(EventBusContract::class);
+        $this->class_factory = $this->createMock(ObjectBuilderContract::class);
         $this->response_factory = $this->createMock(ResponseFactoryInterface::class);
         $this->container = $this->createMock(\Psr\Container\ContainerInterface::class);
 

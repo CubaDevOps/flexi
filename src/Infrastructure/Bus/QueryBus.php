@@ -6,19 +6,19 @@ namespace CubaDevOps\Flexi\Infrastructure\Bus;
 
 use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
-use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Contracts\BusContract;
+use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\EventBusContract;
+use CubaDevOps\Flexi\Contracts\HandlerContract;
+use CubaDevOps\Flexi\Contracts\MessageContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class QueryBus implements BusInterface
+class QueryBus implements BusContract
 {
     use JsonFileReader;
     use GlobFileReader;
@@ -28,13 +28,13 @@ class QueryBus implements BusInterface
 
     private ContainerInterface $container;
 
-    private EventBusInterface $event_bus;
-    private ObjectBuilderInterface $class_factory;
+    private EventBusContract $event_bus;
+    private ObjectBuilderContract $class_factory;
 
     public function __construct(
         ContainerInterface $container,
-        EventBusInterface $event_bus,
-        ObjectBuilderInterface $class_factory
+        EventBusContract $event_bus,
+        ObjectBuilderContract $class_factory
     ) {
         $this->container = $container;
         $this->event_bus = $event_bus;
@@ -103,13 +103,13 @@ class QueryBus implements BusInterface
      * @throws \ReflectionException
      * @throws ContainerExceptionInterface
      */
-    public function execute(DTOInterface $dto): MessageInterface
+    public function execute(DTOContract $dto): MessageContract
     {
         $identifier = get_class($dto);
 
         $handler = $this->getHandler($identifier);
 
-        /** @var HandlerInterface $handler_obj */
+        /** @var HandlerContract $handler_obj */
         $handler_obj = $this->class_factory->build(
             $this->container,
             $handler

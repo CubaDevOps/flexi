@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Domain\Classes;
 
 use ArrayObject;
-use CubaDevOps\Flexi\Domain\Interfaces\CollectionInterface;
+use CubaDevOps\Flexi\Contracts\CollectionContract;
 use CubaDevOps\Flexi\Domain\ValueObjects\CollectionType;
 
 /**
  * @template TKey
  * @template TValue
  *
- * @implements CollectionInterface<TValue>
+ * @implements CollectionContract<TValue>
  *
  * @extends ArrayObject<TKey,TValue>
  */
-class Collection extends ArrayObject implements CollectionInterface
+class Collection extends ArrayObject implements CollectionContract
 {
     private CollectionType $type;
 

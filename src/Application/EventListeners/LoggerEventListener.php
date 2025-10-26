@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Application\EventListeners;
 
 use CubaDevOps\Flexi\Domain\Events\EventListener;
-use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
+use CubaDevOps\Flexi\Contracts\EventContract;
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
 use Psr\Log\LoggerInterface;
 
@@ -18,7 +18,7 @@ class LoggerEventListener extends EventListener
         $this->logger = $logger;
     }
 
-    public function handleEvent(EventInterface $event): void
+    public function handleEvent(EventContract $event): void
     {
         $message = sprintf(
             'Event %s was triggered at %s from %s',

@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\Interfaces\LogInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
+use CubaDevOps\Flexi\Contracts\LogContract;
+use CubaDevOps\Flexi\Contracts\MessageContract;
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
 
-class Log implements LogInterface
+class Log implements LogContract
 {
     private LogLevel $log_level;
-    private MessageInterface $message;
+    private MessageContract $message;
     private array $context;
 
     public function __construct(
         LogLevel $log_level,
-        MessageInterface $message,
+        MessageContract $message,
         array $context = []
     ) {
         $this->log_level = $log_level;
@@ -29,7 +29,7 @@ class Log implements LogInterface
         return $this->log_level;
     }
 
-    public function getMessage(): MessageInterface
+    public function getMessage(): MessageContract
     {
         return $this->message;
     }

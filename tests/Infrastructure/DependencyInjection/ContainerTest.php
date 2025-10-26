@@ -15,8 +15,8 @@ use CubaDevOps\Flexi\Domain\Classes\ServiceClassDefinition;
 use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
 use CubaDevOps\Flexi\Domain\Exceptions\ContainerException;
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
-use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Contracts\CacheContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
@@ -43,7 +43,7 @@ class ContainerTest extends TestCase
         $this->container = ContainerFactory::createDefault('./src/Config/services.json');
 
         // Replace the cache with DummyCache to avoid cache interference in tests
-        $this->container->set(CacheInterface::class, new DummyCache());
+        $this->container->set(CacheContract::class, new DummyCache());
     }
 
     /**
@@ -57,7 +57,7 @@ class ContainerTest extends TestCase
     {
         $this->assertInstanceOf(Configuration::class, $this->container->get(Configuration::class));
         $this->assertInstanceOf(NativeSessionStorage::class, $this->container->get(NativeSessionStorage::class));
-        $this->assertInstanceOf(ObjectBuilderInterface::class, $this->container->get(ObjectBuilderInterface::class));
+        $this->assertInstanceOf(ObjectBuilderContract::class, $this->container->get(ObjectBuilderContract::class));
         $this->assertNotNull($this->container->get('router'));
         $this->assertInstanceOf(HtmlRender::class, $this->container->get('html_render'));
         $this->assertInstanceOf(CommandBus::class, $this->container->get(CommandBus::class));
@@ -102,7 +102,7 @@ class ContainerTest extends TestCase
     {
         $this->assertTrue($this->container->has(Configuration::class), Configuration::class . ' not found');
         $this->assertTrue($this->container->has(NativeSessionStorage::class), NativeSessionStorage::class . ' not found');
-        $this->assertTrue($this->container->has(ObjectBuilderInterface::class), ObjectBuilderInterface::class . ' not found');
+        $this->assertTrue($this->container->has(ObjectBuilderContract::class), ObjectBuilderContract::class . ' not found');
         $this->assertTrue($this->container->has('router'), 'router not found');
         $this->assertTrue($this->container->has('html_render'), 'html_render not found');
         $this->assertTrue($this->container->has(CommandBus::class), CommandBus::class . ' not found');

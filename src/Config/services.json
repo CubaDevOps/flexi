@@ -1,14 +1,14 @@
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\DomainCacheInterface",
+      "name": "CubaDevOps\\Flexi\\Contracts\\CacheContract",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\DomainCache",
         "arguments": []
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ObjectBuilderInterface",
+      "name": "CubaDevOps\\Flexi\\Contracts\\ObjectBuilderContract",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ObjectBuilder",
         "arguments": [
@@ -17,7 +17,7 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ConfigurationRepositoryInterface",
+      "name": "CubaDevOps\\Flexi\\Contracts\\ConfigurationRepositoryContract",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ConfigurationRepository",
         "arguments": []
@@ -28,7 +28,7 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ConfigurationRepositoryInterface"
+          "@CubaDevOps\\Flexi\\Contracts\\ConfigurationRepositoryContract"
         ]
       }
     },
@@ -65,7 +65,7 @@
         "arguments": [
           "@session",
           "@CubaDevOps\\Flexi\\Infrastructure\\Bus\\EventBus",
-          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ObjectBuilderInterface",
+          "@CubaDevOps\\Flexi\\Contracts\\ObjectBuilderContract",
           "@Psr\\Http\\Message\\ResponseFactoryInterface",
           "@container"
         ]
@@ -80,12 +80,12 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\HtmlRender",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\TemplateLocatorInterface"
+          "@CubaDevOps\\Flexi\\Contracts\\TemplateLocatorContract"
         ]
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\TemplateLocatorInterface",
+      "name": "CubaDevOps\\Flexi\\Contracts\\TemplateLocatorContract",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\TemplateLocator",
         "arguments": []
@@ -125,7 +125,7 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\EventBusInterface",
+      "name": "CubaDevOps\\Flexi\\Contracts\\EventBusContract",
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\EventBus"
     },
     {
@@ -163,7 +163,7 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\CacheInterface",
+      "name": "CubaDevOps\\Flexi\\Contracts\\CacheContract",
       "factory": {
         "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\CacheFactory",
         "method": "createDefault",
@@ -174,7 +174,7 @@
     },
     {
       "name": "cache",
-      "alias": "CubaDevOps\\Flexi\\Domain\\Interfaces\\CacheInterface"
+      "alias": "CubaDevOps\\Flexi\\Contracts\\CacheContract"
     },
     {
       "glob": "./modules/*/Config/services.json"

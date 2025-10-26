@@ -7,13 +7,13 @@ namespace CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase;
 use CubaDevOps\Flexi\Domain\Classes\DummySearchCriteria;
 use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
+use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\HandlerContract;
+use CubaDevOps\Flexi\Contracts\MessageContract;
 use CubaDevOps\Flexi\Domain\ValueObjects\Version;
 use JsonException;
 
-class Health implements HandlerInterface
+class Health implements HandlerContract
 {
     private VersionRepository $version_repository;
 
@@ -26,7 +26,7 @@ class Health implements HandlerInterface
      * @return PlainTextMessage
      * @throws JsonException
      */
-    public function handle(DTOInterface $dto): MessageInterface
+    public function handle(DTOContract $dto): MessageContract
     {
         /** @var Version $version */
         $version = $this->version_repository->retrieveValue(

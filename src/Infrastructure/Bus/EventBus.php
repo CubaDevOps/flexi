@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\Bus;
 
 use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventListenerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationRepositoryInterface;
+use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\EventBusContract;
+use CubaDevOps\Flexi\Contracts\EventContract;
+use CubaDevOps\Flexi\Contracts\EventListenerContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Contracts\ConfigurationRepositoryContract;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 use Psr\Container\ContainerExceptionInterface;
@@ -18,22 +18,22 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 
-class EventBus implements EventBusInterface
+class EventBus implements EventBusContract
 {
     use JsonFileReader;
     use GlobFileReader;
 
     private array $events = [];
     private ContainerInterface $container;
-    private ObjectBuilderInterface $class_factory;
+    private ObjectBuilderContract $class_factory;
     private LoggerInterface $logger;
-    private ConfigurationRepositoryInterface $configuration;
+    private ConfigurationRepositoryContract $configuration;
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __construct(ContainerInterface $container, ObjectBuilderInterface $class_factory, LoggerInterface $logger, ConfigurationRepositoryInterface $configuration_repository)
+    public function __construct(ContainerInterface $container, ObjectBuilderContract $class_factory, LoggerInterface $logger, ConfigurationRepositoryContract $configuration_repository)
     {
         $this->container = $container;
         $this->class_factory = $class_factory;
@@ -99,9 +99,9 @@ class EventBus implements EventBusInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function execute(DTOInterface $dto): void
+    public function execute(DTOContract $dto): void
     {
-        if ($dto instanceof EventInterface) {
+        if ($dto instanceof EventContract) {
             $this->dispatch($dto);
         }
     }
@@ -117,7 +117,7 @@ class EventBus implements EventBusInterface
      */
     public function dispatch(object $event): object
     {
-        $identifier = $event instanceof EventInterface ? $event->getName() : get_class($event);
+        $identifier = $event instanceof EventContract ? $event->getName() : get_class($event);
 
         $listeners = array_merge($this->getListeners($identifier), $this->getListeners('*'));
 
@@ -178,11 +178,11 @@ class EventBus implements EventBusInterface
      */
     private function handleListener(string $listener, object $event): void
     {
-        if (!($event instanceof EventInterface) || $event->isPropagationStopped()) {
+        if (!($event instanceof EventContract) || $event->isPropagationStopped()) {
             return;
         }
 
-        /** @var EventListenerInterface $listener_obj */
+        /** @var EventListenerContract $listener_obj */
         $listener_obj = $this->class_factory->build($this->container, $listener);
         $listener_obj->handle($event);
     }

@@ -2,7 +2,7 @@
 
 namespace CubaDevOps\Flexi\Infrastructure\Cache;
 
-use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Contracts\CacheContract;
 use DateInterval;
 use DateTime;
 use FilesystemIterator;
@@ -10,7 +10,7 @@ use Psr\Cache\InvalidArgumentException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class FileCache implements CacheInterface
+class FileCache implements CacheContract
 {
     /**
      * @var string The cache directory where files will be stored

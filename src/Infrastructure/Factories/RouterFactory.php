@@ -5,25 +5,25 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
 use CubaDevOps\Flexi\Infrastructure\Http\Router;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
+use CubaDevOps\Flexi\Contracts\EventBusContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Contracts\SessionStorageContract;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
 class RouterFactory
 {
 
-    private SessionStorageInterface $session;
-    private EventBusInterface $event_bus;
-    private ObjectBuilderInterface $class_factory;
+    private SessionStorageContract $session;
+    private EventBusContract $event_bus;
+    private ObjectBuilderContract $class_factory;
     private ResponseFactoryInterface $response_factory;
     private ContainerInterface $container;
 
     public function __construct(
-        SessionStorageInterface $session,
-        EventBusInterface $event_bus,
-        ObjectBuilderInterface $class_factory,
+        SessionStorageContract $session,
+        EventBusContract $event_bus,
+        ObjectBuilderContract $class_factory,
         ResponseFactoryInterface $response_factory,
         ContainerInterface $container
     ) {

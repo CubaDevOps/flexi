@@ -3,13 +3,13 @@
 namespace CubaDevOps\Flexi\Test\Infrastructure\Cache;
 
 use CubaDevOps\Flexi\Domain\Exceptions\InvalidArgumentCacheException;
-use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Contracts\CacheContract;
 use CubaDevOps\Flexi\Infrastructure\Cache\InMemoryCache;
 use PHPUnit\Framework\TestCase;
 
 class InMemoryCacheTest extends TestCase
 {
-    private CacheInterface $cache;
+    private CacheContract $cache;
 
     public function testDeleteMultiple()
     {

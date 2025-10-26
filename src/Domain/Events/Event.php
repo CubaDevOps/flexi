@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Events;
 
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
+use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\EventContract;
 
-class Event implements EventInterface
+class Event implements EventContract
 {
     private string $name;
     private array $data;
@@ -27,7 +27,7 @@ class Event implements EventInterface
     /**
      * @return self
      */
-    public static function fromArray(array $data): DTOInterface
+    public static function fromArray(array $data): self
     {
         self::assertRequiredFields($data);
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\DTO;
 
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
+use CubaDevOps\Flexi\Contracts\DTOContract;
 
-class DummyDTO implements DTOInterface
+class DummyDTO implements DTOContract
 {
     /**
      * @return string[]
@@ -26,7 +26,7 @@ class DummyDTO implements DTOInterface
     /**
      * @return static
      */
-    public static function fromArray(array $data): DTOInterface
+    public static function fromArray(array $data): self
     {
         return new static();
     }

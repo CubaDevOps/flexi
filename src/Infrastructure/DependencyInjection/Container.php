@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
 
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
-use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\DomainCacheInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Contracts\CacheContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
@@ -26,10 +25,10 @@ class Container implements ContainerInterface
     private array $serviceDefinitions;
     private array $selfReference = ['container', ContainerInterface::class];
 
-    private ObjectBuilderInterface $factory;
-    private DomainCacheInterface $cache;
+    private ObjectBuilderContract $factory;
+    private CacheContract $cache;
 
-    public function __construct(DomainCacheInterface $cache, ObjectBuilderInterface $factory)
+    public function __construct(CacheContract $cache, ObjectBuilderContract $factory)
     {
         $this->cache = $cache;
         $this->factory = $factory;
@@ -87,10 +86,10 @@ class Container implements ContainerInterface
         if (in_array($id, $this->selfReference, true)) {
             return $this;
         }
-        if ('cache' === $id || $id instanceof CacheInterface) {
+        if ('cache' === $id || $id instanceof CacheContract) {
             return $this->cache;
         }
-        if ($id === 'factory' || $id instanceof ObjectBuilderInterface) {
+        if ($id === 'factory' || $id instanceof ObjectBuilderContract) {
             return $this->factory;
         }
 

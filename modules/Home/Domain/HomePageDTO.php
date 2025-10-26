@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\Home\Domain;
 
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
+use CubaDevOps\Flexi\Contracts\DTOContract;
 
-class HomePageDTO implements DTOInterface
+class HomePageDTO implements DTOContract
 {
     private string $template;
 
@@ -15,7 +15,7 @@ class HomePageDTO implements DTOInterface
         $this->template = $template;
     }
 
-    public static function fromArray(array $data): DTOInterface
+    public static function fromArray(array $data): self
     {
         if (!self::validate($data)) {
             throw new \InvalidArgumentException('Invalid data provided for '.self::class);

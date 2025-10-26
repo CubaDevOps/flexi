@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Entities;
 
-use CubaDevOps\Flexi\Domain\Interfaces\EntityInterface;
+use CubaDevOps\Flexi\Contracts\EntityContract;
 use CubaDevOps\Flexi\Domain\ValueObjects\ID;
 
-class DummyEntity implements EntityInterface
+class DummyEntity implements EntityContract
 {
     public function getId(): ID
     {

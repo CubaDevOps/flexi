@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Interfaces;
+namespace CubaDevOps\Flexi\Contracts;
 
-interface TemplateEngineInterface
+interface TemplateEngineContract
 {
     /**
      * Render a template with the given variables.
      *
-     * @param TemplateInterface|string $template The template object or path to template file
+     * @param TemplateContract|string $template The template object or path to template file
      * @param array $vars Variables to replace in the template
      * @return string The rendered content
      */

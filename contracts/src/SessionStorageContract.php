@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Interfaces;
+namespace CubaDevOps\Flexi\Contracts;
 
 use ArrayAccess;
 
@@ -12,7 +12,7 @@ use ArrayAccess;
  *
  * @extends ArrayAccess<TKey,TValue>
  */
-interface SessionStorageInterface extends \ArrayAccess
+interface SessionStorageContract extends ArrayAccess
 {
     public function set(string $key, $value): void;
 

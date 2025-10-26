@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui;
 
-use CubaDevOps\Flexi\Domain\Interfaces\TemplateInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\TemplateLocatorInterface;
+use CubaDevOps\Flexi\Contracts\TemplateContract;
+use CubaDevOps\Flexi\Contracts\TemplateLocatorContract;
 
-class TemplateLocator implements TemplateLocatorInterface
+class TemplateLocator implements TemplateLocatorContract
 {
     /**
      * {@inheritDoc}
      */
-    public function locate(string $templatePath): TemplateInterface
+    public function locate(string $templatePath): TemplateContract
     {
         return new Template($templatePath);
     }

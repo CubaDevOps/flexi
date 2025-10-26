@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ValueObjectInterface;
+use CubaDevOps\Flexi\Contracts\ValueObjectContract;
 
-class CollectionType implements ValueObjectInterface
+class CollectionType implements ValueObjectContract
 {
     public const TYPE_ENUMS = [
         'array' => true,
@@ -32,7 +32,7 @@ class CollectionType implements ValueObjectInterface
     public function __construct(string $type)
     {
         if (!$this->isAcceptedType($type)) {
-            throw new \RuntimeException("{$type} is not a valid type for collections, valid types are (".implode(',', self::TYPE_ENUMS).')');
+            throw new \RuntimeException("{$type} is not a valid type for collections, valid types are (".implode(',', array_keys(self::TYPE_ENUMS)).')');
         }
         $this->type = $type;
     }
@@ -43,6 +43,16 @@ class CollectionType implements ValueObjectInterface
     }
 
     public function getValue(): string
+    {
+        return $this->type;
+    }
+
+    public function equals(ValueObjectContract $other): bool
+    {
+        return $other instanceof self && $this->type === $other->getValue();
+    }
+
+    public function __toString(): string
     {
         return $this->type;
     }

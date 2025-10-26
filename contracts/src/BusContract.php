@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Interfaces;
+namespace CubaDevOps\Flexi\Contracts;
 
-interface BusInterface
+interface BusContract
 {
     public function register(
         string $identifier,
         string $handler
     ): void;
 
-    public function execute(DTOInterface $dto);
+    public function execute(DTOContract $dto);
 
     public function hasHandler(string $identifier): bool;
 

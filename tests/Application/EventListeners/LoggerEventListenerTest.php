@@ -3,7 +3,7 @@
 namespace CubaDevOps\Flexi\Test\Application\EventListeners;
 
 use CubaDevOps\Flexi\Application\EventListeners\LoggerEventListener;
-use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
+use CubaDevOps\Flexi\Contracts\EventContract;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -21,7 +21,7 @@ class LoggerEventListenerTest extends TestCase
 
     public function testHandleEvent(): void
     {
-        $event = $this->createMock(EventInterface::class);
+        $event = $this->createMock(EventContract::class);
         $datetime = $this->createMock(\DateTimeImmutable::class);
 
         $event->expects($this->once())

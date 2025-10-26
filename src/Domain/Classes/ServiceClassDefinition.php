@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Classes;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ServiceDefinitionInterface;
+use CubaDevOps\Flexi\Contracts\ServiceDefinitionContract;
 
-class ServiceClassDefinition implements ServiceDefinitionInterface
+class ServiceClassDefinition implements ServiceDefinitionContract
 {
     private string $class;
     private array $arguments;

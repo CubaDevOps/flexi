@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Interfaces;
+namespace CubaDevOps\Flexi\Contracts;
 
 use Psr\EventDispatcher\StoppableEventInterface;
 
-interface EventInterface extends DTOInterface, StoppableEventInterface
+interface EventContract extends DTOContract, StoppableEventInterface
 {
     public function getName(): string;
 

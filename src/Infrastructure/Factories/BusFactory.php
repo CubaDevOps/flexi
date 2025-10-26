@@ -7,10 +7,10 @@ namespace CubaDevOps\Flexi\Infrastructure\Factories;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationRepositoryInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Contracts\BusContract;
+use CubaDevOps\Flexi\Contracts\ConfigurationRepositoryContract;
+use CubaDevOps\Flexi\Contracts\EventBusContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -28,7 +28,7 @@ class BusFactory
      * @param ContainerInterface $container
      * @param string $type
      * @param string $file
-     * @return BusInterface| EventBusInterface
+     * @return BusContract| EventBusContract
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \JsonException
@@ -37,10 +37,10 @@ class BusFactory
     public function getInstance(
         string $type,
         string $file = ''
-    ): BusInterface {
+    ): BusContract {
             $logger = $this->container->get('logger');
-            $class_factory = $this->container->get(ObjectBuilderInterface::class);
-            $configuration = $this->container->get(ConfigurationRepositoryInterface::class);
+            $class_factory = $this->container->get(ObjectBuilderContract::class);
+            $configuration = $this->container->get(ConfigurationRepositoryContract::class);
             $bus = new EventBus($this->container, $class_factory, $logger, $configuration);
             switch ($type) {
                 case CommandBus::class:
@@ -64,7 +64,7 @@ class BusFactory
     public static function createCommandBus(
         ContainerInterface $container,
         string $file = ''
-    ): BusInterface {
+    ): BusContract {
         $factory = new self($container);
         return $factory->getInstance(CommandBus::class, $file);
     }
@@ -73,7 +73,7 @@ class BusFactory
     public static function createQueryBus(
         ContainerInterface $container,
         string $file = ''
-    ): BusInterface {
+    ): BusContract {
         $factory = new self($container);
         return $factory->getInstance(QueryBus::class, $file);
     }
@@ -82,7 +82,7 @@ class BusFactory
     public static function createEventBus(
         ContainerInterface $container,
         string $file = ''
-    ): EventBusInterface {
+    ): EventBusContract {
         $factory = new self($container);
         return $factory->getInstance(EventBus::class, $file);
     }

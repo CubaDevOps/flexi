@@ -40,7 +40,7 @@ class Application
         if ('true' === $config->get('DEBUG_MODE')) {
             Debug::enable();
         }
-        echo ErrorHandler::call( function () {
+        echo ErrorHandler::call(function () {
             return $this->handle();
         });
     }
@@ -55,7 +55,7 @@ class Application
     private function handle(): StreamInterface
     {
         /** @var Router $router */
-        $router = $this->container->get(RouterFactory::class)->getInstance("./src/Config/routes.json");
+        $router = $this->container->get(RouterFactory::class)->getInstance('./src/Config/routes.json');
         $response = $router->dispatch(ServerRequest::fromGlobals());
 
         return $this->sendResponse($response);

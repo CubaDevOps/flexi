@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
 use CubaDevOps\Flexi\Application\EventListeners\LoggerEventListener;
-use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
-use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
-use CubaDevOps\Flexi\Contracts\EventContract;
-use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use CubaDevOps\Flexi\Contracts\ConfigurationRepositoryContract;
+use CubaDevOps\Flexi\Contracts\EventContract;
 use CubaDevOps\Flexi\Contracts\LogRepositoryContract;
-use CubaDevOps\Flexi\Infrastructure\Classes\PsrLogger;
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

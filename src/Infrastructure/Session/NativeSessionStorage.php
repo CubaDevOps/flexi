@@ -22,7 +22,7 @@ class NativeSessionStorage implements SessionStorageContract
     {
         $this->logger = $logger;
 
-        if (session_status() === PHP_SESSION_NONE && !$this->headersSent() && !session_start($options)) {
+        if (PHP_SESSION_NONE === session_status() && !$this->headersSent() && !session_start($options)) {
             $message = 'Failed to start the session.';
             $this->logger->error($message, [__CLASS__]);
             throw new \RuntimeException($message);
@@ -38,8 +38,10 @@ class NativeSessionStorage implements SessionStorageContract
                 sprintf('Headers already sent in %s on line %s', $file, $line),
                 [__CLASS__]
             );
+
             return true;
         }
+
         return false;
     }
 

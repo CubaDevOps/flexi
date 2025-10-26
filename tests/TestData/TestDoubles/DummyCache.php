@@ -43,6 +43,7 @@ class DummyCache implements CacheContract
         foreach ($keys as $key) {
             $result[$key] = $default;
         }
+
         return $result;
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Domain\Events;
 
 use CubaDevOps\Flexi\Domain\Events\Event;
@@ -11,7 +13,7 @@ class EventTest extends TestCase
     private const EVENT_TRIGGER = 'eventTrigger';
     private const EVENT_DATA = [
         '1-tst-data' => [1, 2, 3],
-        '2-tst-data' => 'event-data'
+        '2-tst-data' => 'event-data',
     ];
 
     private \DateTimeImmutable $now;
@@ -52,9 +54,9 @@ class EventTest extends TestCase
     public function testGetEventData(): void
     {
         $expected = [
-            'event'       => self::EVENT_NAME,
-            'data'        => self::EVENT_DATA,
-            'fired_by'    => self::EVENT_TRIGGER,
+            'event' => self::EVENT_NAME,
+            'data' => self::EVENT_DATA,
+            'fired_by' => self::EVENT_TRIGGER,
             'occurred_on' => $this->now->format(DATE_ATOM),
         ];
 
@@ -64,9 +66,9 @@ class EventTest extends TestCase
     public function testCreateEventFromArray(): void
     {
         $data = [
-            'event'    => self::EVENT_NAME,
-            'data'     => self::EVENT_DATA,
-            'fired_by' => self::EVENT_TRIGGER
+            'event' => self::EVENT_NAME,
+            'data' => self::EVENT_DATA,
+            'fired_by' => self::EVENT_TRIGGER,
         ];
 
         $newEvent = Event::fromArray($data);
@@ -81,11 +83,11 @@ class EventTest extends TestCase
     public function testCreateEventFromArrayInvalidData(): void
     {
         $data = [
-            'event' => self::EVENT_NAME
+            'event' => self::EVENT_NAME,
         ];
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid parameters provided for '. Event::class);
+        $this->expectExceptionMessage('Invalid parameters provided for '.Event::class);
 
         Event::fromArray($data);
     }
@@ -96,10 +98,10 @@ class EventTest extends TestCase
     public function testSerialize(): void
     {
         $expected =
-            '{"event":"'. self::EVENT_NAME .
-            '","data":'. json_encode(self::EVENT_DATA, JSON_THROW_ON_ERROR) .
-            ',"fired_by":"'. self::EVENT_TRIGGER .
-            '","occurred_on":"'. $this->now->format(DATE_ATOM) .'"}';
+            '{"event":"'.self::EVENT_NAME.
+            '","data":'.json_encode(self::EVENT_DATA, JSON_THROW_ON_ERROR).
+            ',"fired_by":"'.self::EVENT_TRIGGER.
+            '","occurred_on":"'.$this->now->format(DATE_ATOM).'"}';
 
         $serialized = $this->event->serialize();
 

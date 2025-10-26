@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase;
 
-use CubaDevOps\Flexi\Domain\Classes\DummySearchCriteria;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\DTOContract;
 use CubaDevOps\Flexi\Contracts\HandlerContract;
 use CubaDevOps\Flexi\Contracts\MessageContract;
-use CubaDevOps\Flexi\Domain\ValueObjects\Version;
-use JsonException;
+use CubaDevOps\Flexi\Contracts\ValueObjects\Version;
+use CubaDevOps\Flexi\Domain\Classes\DummySearchCriteria;
+use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
 
 class Health implements HandlerContract
 {
@@ -24,7 +23,8 @@ class Health implements HandlerContract
 
     /**
      * @return PlainTextMessage
-     * @throws JsonException
+     *
+     * @throws \JsonException
      */
     public function handle(DTOContract $dto): MessageContract
     {
@@ -33,6 +33,6 @@ class Health implements HandlerContract
             new DummySearchCriteria()
         );
 
-        return new PlainTextMessage((string)$version);
+        return new PlainTextMessage((string) $version);
     }
 }

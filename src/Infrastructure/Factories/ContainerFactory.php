@@ -9,14 +9,12 @@ use CubaDevOps\Flexi\Domain\Utils\ServicesDefinitionParser;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
 use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
-use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class ContainerFactory
 {
-
     private CacheContract $cache;
     private ObjectBuilder $object_builder;
 
@@ -42,6 +40,7 @@ class ContainerFactory
                 $container->set($name, $service);
             }
         }
+
         return $container;
     }
 
@@ -61,5 +60,4 @@ class ContainerFactory
 
         return (new self($cache, $objectBuilder))->getInstance($file);
     }
-
 }

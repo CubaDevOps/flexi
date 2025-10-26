@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Infrastructure\Middlewares;
 
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use LogicException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -13,7 +14,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use UnexpectedValueException;
 
 class JWTAuthMiddleware implements MiddlewareInterface
 {
@@ -50,7 +50,7 @@ class JWTAuthMiddleware implements MiddlewareInterface
             $payload = JWT::decode($jwt, new Key($key, 'HS256'));
             // attach payload to the request
             $request = $request->withAttribute('payload', $payload);
-        } catch (LogicException|UnexpectedValueException $e) {
+        } catch (\LogicException|\UnexpectedValueException $e) {
             return $this->response_factory->createResponse(401, $e->getMessage());
         }
 

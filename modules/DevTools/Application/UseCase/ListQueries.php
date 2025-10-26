@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\DevTools\Application\UseCase;
 
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\DTOContract;
 use CubaDevOps\Flexi\Contracts\HandlerContract;
 use CubaDevOps\Flexi\Contracts\MessageContract;
+use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
+use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
 
 class ListQueries implements HandlerContract
 {
@@ -22,8 +22,6 @@ class ListQueries implements HandlerContract
 
     /**
      * @param ListQueriesQuery $dto
-     *
-     * @return MessageContract
      *
      * @throws \JsonException
      */

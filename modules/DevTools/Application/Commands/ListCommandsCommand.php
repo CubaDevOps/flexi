@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Modules\DevTools\Application\Commands;
 
 use CubaDevOps\Flexi\Contracts\CliDTOContract;
-use CubaDevOps\Flexi\Contracts\DTOContract;
 
 class ListCommandsCommand implements CliDTOContract
 {
@@ -28,9 +27,6 @@ class ListCommandsCommand implements CliDTOContract
         return __CLASS__;
     }
 
-    /**
-     * @return self
-     */
     public static function fromArray(array $data): self
     {
         $with_aliases = isset($data['with_aliases']) && ('true' === $data['with_aliases'] || true === $data['with_aliases']);

@@ -6,9 +6,9 @@ namespace CubaDevOps\Flexi\Modules\ErrorHandling\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Contracts\SessionStorageContract;
 use CubaDevOps\Flexi\Contracts\TemplateEngineContract;
-use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
+use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;

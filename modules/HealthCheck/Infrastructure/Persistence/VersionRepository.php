@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence;
 
-use CubaDevOps\Flexi\Domain\Classes\ObjectCollection;
-use CubaDevOps\Flexi\Domain\Entities\DummyEntity;
+use CubaDevOps\Flexi\Contracts\Classes\ObjectCollection;
 use CubaDevOps\Flexi\Contracts\CollectionContract;
 use CubaDevOps\Flexi\Contracts\CriteriaContract;
 use CubaDevOps\Flexi\Contracts\EntityContract;
 use CubaDevOps\Flexi\Contracts\RepositoryContract;
 use CubaDevOps\Flexi\Contracts\ValueObjectContract;
-use CubaDevOps\Flexi\Domain\ValueObjects\ID;
-use CubaDevOps\Flexi\Domain\ValueObjects\Version;
+use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
+use CubaDevOps\Flexi\Contracts\ValueObjects\Version;
+use CubaDevOps\Flexi\Domain\Entities\DummyEntity;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
-use JsonException;
 
 class VersionRepository implements RepositoryContract
 {
@@ -22,14 +21,16 @@ class VersionRepository implements RepositoryContract
 
     /**
      * @return mixed
-     * @throws JsonException
+     *
+     * @throws \JsonException
      */
     public function retrieveValue(
         CriteriaContract $criteria
     ): ValueObjectContract {
         $version_string = $this->readJsonFile('composer.json')['version'];
         [$major, $minor, $patch] = array_map('intval', explode('.', $version_string));
-        return new Version($major,$minor,$patch);
+
+        return new Version($major, $minor, $patch);
     }
 
     /**
@@ -45,9 +46,7 @@ class VersionRepository implements RepositoryContract
     }
 
     /**
-     * @param EntityContract $entity
-     * @return void
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function update(EntityContract $entity): void
     {

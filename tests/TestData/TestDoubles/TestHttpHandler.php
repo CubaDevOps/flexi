@@ -19,7 +19,7 @@ class TestHttpHandler extends HttpHandler
 
     protected function process(ServerRequestInterface $request): ResponseInterface
     {
-        if ($this->mockResponse !== null) {
+        if (null !== $this->mockResponse) {
             return $this->mockResponse;
         }
 

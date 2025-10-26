@@ -15,9 +15,6 @@ class ListQueriesQuery implements CliDTOContract
         $this->with_aliases = $with_aliases;
     }
 
-    /**
-     * @return self
-     */
     public static function fromArray(array $data): self
     {
         $with_aliases = isset($data['with_aliases']) && ('true' === $data['with_aliases'] || true === $data['with_aliases']);

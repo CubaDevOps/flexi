@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Domain\Classes\Service;
 use CubaDevOps\Flexi\Contracts\ServiceDefinitionContract;
+use CubaDevOps\Flexi\Domain\Classes\Service;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
 use PHPUnit\Framework\TestCase;
 
@@ -37,13 +39,13 @@ class ServiceTest extends TestCase
         $this->assertEquals(self::SERVICE_NAME, $this->service->getName());
     }
 
-      //TODO: this is not working as expected
-//    public function testToString(): void
-//    {
-//        $expected = '?';
-//
-//        $result = $this->service->__toString();
-//
-//        $this->assertEquals($expected, $result);
-//    }
+    // TODO: this is not working as expected
+    //    public function testToString(): void
+    //    {
+    //        $expected = '?';
+    //
+    //        $result = $this->service->__toString();
+    //
+    //        $this->assertEquals($expected, $result);
+    //    }
 }

@@ -1,20 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
-use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListCommands;
-use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListQueries;
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Domain\DTO\CommandListDTO;
-use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
-use CubaDevOps\Flexi\Domain\DTO\EmptyVersionDTO;
-use CubaDevOps\Flexi\Domain\DTO\QueryListDTO;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\EventBusContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
-use CubaDevOps\Flexi\Modules\Home\Application\RenderHome;
-use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
+use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
+use CubaDevOps\Flexi\Domain\DTO\EmptyVersionDTO;
+use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
+use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListCommands;
+use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -98,9 +95,9 @@ class CommandBusTest extends TestCase
     {
         $expectedDefinitions = [
             DummyDTO::class => Health::class,
-            'test'          => Health::class,
+            'test' => Health::class,
             'CubaDevOps\\Flexi\\Modules\\DevTools\\Application\\Commands\\ListCommandsCommand' => ListCommands::class,
-            'command:list'  => ListCommands::class,
+            'command:list' => ListCommands::class,
         ];
 
         $definitions = $this->commandBus->getHandlersDefinition(true);

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Persistence;
 
-use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
 use CubaDevOps\Flexi\Contracts\LogContract;
 use CubaDevOps\Flexi\Contracts\MessageContract;
-use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
+use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
+use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\FileHandler;
 use PHPUnit\Framework\TestCase;
 
@@ -41,7 +43,7 @@ class InFileLogRepositoryTest extends TestCase
         $this->log->expects($this->exactly(2))
             ->method('getLogLevel')->willReturn($logLevel);
 
-        $message   = $this->createMock(MessageContract::class);
+        $message = $this->createMock(MessageContract::class);
         $createdAt = $this->createMock(\DateTimeImmutable::class);
 
         $this->log->expects($this->exactly(2))
@@ -63,7 +65,7 @@ class InFileLogRepositoryTest extends TestCase
         // Running the test alone fails but running the collection is does not
         $this->assertFileExists($this->log_path);
         $this->assertStringContainsString(
-            '[' . $level . ' - 2005-08-15T15:52:01+00:00]: message info - line 23',
+            '['.$level.' - 2005-08-15T15:52:01+00:00]: message info - line 23',
             file_get_contents($this->log_path)
         );
         $this->assertEquals(LogLevel::INFO, $this->log->getLogLevel()->getValue());

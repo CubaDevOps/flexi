@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
 use CubaDevOps\Flexi\Domain\Classes\Route;
@@ -18,13 +20,15 @@ class RouterMock extends Router
     ): ResponseInterface {
         $response = $this->response_factory->createResponse(404);
         $this->redirect_to_not_found_spy = true;
+
         return $response;
     }
 
     public function addRoute(Route $route): Router
     {
         parent::addRoute($route);
-        $this->route_counter++;
+        ++$this->route_counter;
+
         return $this;
     }
 }

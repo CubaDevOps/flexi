@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use CubaDevOps\Flexi\Contracts\CacheContract;
+use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use CubaDevOps\Flexi\Domain\Utils\CacheKeyGeneratorTrait;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -30,10 +30,6 @@ class ObjectBuilder implements ObjectBuilderContract
     /**
      * Builds an instance of the given class name.
      *
-     * @param ContainerInterface $container
-     * @param string $className
-     * @return object
-     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
@@ -55,7 +51,7 @@ class ObjectBuilder implements ObjectBuilderContract
         $constructor = $reflectionClass->getConstructor();
 
         if (null === $constructor || empty($constructor->getParameters())) {
-            return new $className;
+            return new $className();
         }
 
         $dependencies = $this->resolveConstructorDependencies($constructor->getParameters(), $container);
@@ -68,10 +64,6 @@ class ObjectBuilder implements ObjectBuilderContract
 
     /**
      * Builds an instance from a service definition.
-     *
-     * @param ContainerInterface $container
-     * @param array $serviceDefinition
-     * @return object
      */
     public function buildFromDefinition(ContainerInterface $container, array $serviceDefinition): object
     {
@@ -90,8 +82,6 @@ class ObjectBuilder implements ObjectBuilderContract
      * Resolves constructor dependencies.
      *
      * @param \ReflectionParameter[] $parameters
-     * @param ContainerInterface $container
-     * @return array
      */
     private function resolveConstructorDependencies(array $parameters, ContainerInterface $container): array
     {
@@ -117,11 +107,6 @@ class ObjectBuilder implements ObjectBuilderContract
 
     /**
      * Resolves a single dependency from the container.
-     *
-     * @param ContainerInterface $container
-     * @param string $typeName
-     * @param string $parameterName
-     * @return mixed
      */
     private function resolveDependency(ContainerInterface $container, string $typeName, string $parameterName)
     {
@@ -138,10 +123,6 @@ class ObjectBuilder implements ObjectBuilderContract
 
     /**
      * Builds an instance using a factory definition.
-     *
-     * @param ContainerInterface $container
-     * @param array $factoryDefinition
-     * @return mixed
      */
     private function buildFromFactory(ContainerInterface $container, array $factoryDefinition)
     {
@@ -154,10 +135,6 @@ class ObjectBuilder implements ObjectBuilderContract
 
     /**
      * Builds an instance using a class definition.
-     *
-     * @param ContainerInterface $container
-     * @param array $classDefinition
-     * @return object
      */
     private function buildFromClass(ContainerInterface $container, array $classDefinition): object
     {
@@ -169,10 +146,6 @@ class ObjectBuilder implements ObjectBuilderContract
 
     /**
      * Resolves arguments for a service definition.
-     *
-     * @param array $args
-     * @param ContainerInterface $container
-     * @return array
      */
     private function resolveArguments(array $args, ContainerInterface $container): array
     {
@@ -187,12 +160,12 @@ class ObjectBuilder implements ObjectBuilderContract
                     $value = getenv($key);
 
                     // Fallback to $_ENV if getenv returns false
-                    if ($value === false && isset($_ENV[$key])) {
+                    if (false === $value && isset($_ENV[$key])) {
                         $value = $_ENV[$key];
                     }
 
                     // If still no value, throw exception for required env vars
-                    if ($value === false || $value === null) {
+                    if (false === $value || null === $value) {
                         throw new \RuntimeException(sprintf('Environment variable "%s" is not set', $key));
                     }
 
@@ -200,11 +173,13 @@ class ObjectBuilder implements ObjectBuilderContract
                         return boolval($value);
                     } elseif (is_numeric($value)) {
                         // Check if value is an integer (including negative numbers)
-                        if (filter_var($value, FILTER_VALIDATE_INT) !== false) {
-                            return (int)$value;
+                        if (false !== filter_var($value, FILTER_VALIDATE_INT)) {
+                            return (int) $value;
                         }
-                        return (float)$value;
+
+                        return (float) $value;
                     }
+
                     return $value;
                 }
             }
@@ -215,9 +190,6 @@ class ObjectBuilder implements ObjectBuilderContract
 
     /**
      * Checks if the argument is an environment variable.
-     *
-     * @param string $id
-     * @return bool
      */
     private function isEnvArg(string $id): bool
     {
@@ -226,9 +198,6 @@ class ObjectBuilder implements ObjectBuilderContract
 
     /**
      * Checks if the argument is a service reference.
-     *
-     * @param string $id
-     * @return bool
      */
     private function isServiceArg(string $id): bool
     {
@@ -237,6 +206,6 @@ class ObjectBuilder implements ObjectBuilderContract
 
     private function is_boolean($variable): bool
     {
-        return filter_var($variable, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== null;
+        return null !== filter_var($variable, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
 }

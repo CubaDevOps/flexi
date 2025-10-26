@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Domain\Entities;
 
 use CubaDevOps\Flexi\Contracts\EntityContract;
-use CubaDevOps\Flexi\Domain\ValueObjects\ID;
+use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
 
 class DummyEntity implements EntityContract
 {
@@ -29,9 +29,6 @@ class DummyEntity implements EntityContract
         // dummy implementation
     }
 
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return [];

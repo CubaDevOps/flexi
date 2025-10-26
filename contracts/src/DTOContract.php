@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Contracts;
 
 /**
  * Contract for DTOs (Data Transfer Objects)
- * Pure contract without dependencies
+ * Pure contract without dependencies.
  */
 interface DTOContract
 {

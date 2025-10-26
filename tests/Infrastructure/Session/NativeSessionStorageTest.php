@@ -1,37 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Session;
 
 use CubaDevOps\Flexi\Infrastructure\Session\NativeSessionStorage;
-use CubaDevOps\Flexi\Contracts\SessionStorageContract;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use ReflectionClass;
 
 class NativeSessionStorageTest extends TestCase
 {
     private const SESSION_OPTIONS = [
-        'name'                   => 'PHPSESSID',
-        'cookie_lifetime'        => 0,
-        'cookie_path'            => '/',
-        'cookie_domain'          => 'texi.local',
-        'cookie_secure'          => false,
-        'cookie_httponly'        => true,
-        'use_cookies'            => true,
-        'use_only_cookies'       => true,
-        'use_strict_mode'        => true,
-        'sid_length'             => 32,
-        'sid_bits_per_character' => 5
+        'name' => 'PHPSESSID',
+        'cookie_lifetime' => 0,
+        'cookie_path' => '/',
+        'cookie_domain' => 'texi.local',
+        'cookie_secure' => false,
+        'cookie_httponly' => true,
+        'use_cookies' => true,
+        'use_only_cookies' => true,
+        'use_strict_mode' => true,
+        'sid_length' => 32,
+        'sid_bits_per_character' => 5,
     ];
 
     private const STORAGE_VAR_USER = [
-        'key'   => 'username',
-        'value' => 'John Doe'
+        'key' => 'username',
+        'value' => 'John Doe',
     ];
 
     private const STORAGE_VAR_ROLE = [
-        'key'   => 'role',
-        'value' => 'Moderator'
+        'key' => 'role',
+        'value' => 'Moderator',
     ];
 
     private NativeSessionStorage $nativeSessionStorage;

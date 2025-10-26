@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Ui;
 
 use CubaDevOps\Flexi\Contracts\TemplateContract;
@@ -12,7 +14,7 @@ class HtmlRenderTest extends TestCase
     private const TEMPLATE_CONTENT = '<test>{{1-template-data}}{{2-template-data}}</test>';
     private const RENDER_VARS = [
         '1-template-data' => 1,
-        '2-template-data' => '2 $'
+        '2-template-data' => '2 $',
     ];
 
     private $template;

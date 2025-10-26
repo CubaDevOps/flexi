@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Utils;
 
-use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
 use CubaDevOps\Flexi\Contracts\BusContract;
 use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
 
 class DTOFactory
 {

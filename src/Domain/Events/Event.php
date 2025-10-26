@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Events;
 
-use CubaDevOps\Flexi\Contracts\DTOContract;
 use CubaDevOps\Flexi\Contracts\EventContract;
 
 class Event implements EventContract
@@ -24,9 +23,6 @@ class Event implements EventContract
         $this->occurredOn = new \DateTimeImmutable();
     }
 
-    /**
-     * @return self
-     */
     public static function fromArray(array $data): self
     {
         self::assertRequiredFields($data);
@@ -39,14 +35,10 @@ class Event implements EventContract
         return !empty($data['event']) && !empty($data['fired_by']);
     }
 
-    /**
-     * @param array $data
-     * @return void
-     */
     private static function assertRequiredFields(array $data): void
     {
         if (!self::validate($data)) {
-            throw new \InvalidArgumentException('Invalid parameters provided for ' . self::class);
+            throw new \InvalidArgumentException('Invalid parameters provided for '.self::class);
         }
     }
 
@@ -65,7 +57,7 @@ class Event implements EventContract
      */
     public function serialize(): string
     {
-        //Todo refactor to use JsonHandler Trait, implement serialize and deserialize methods for json
+        // Todo refactor to use JsonHandler Trait, implement serialize and deserialize methods for json
         return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
     }
 
@@ -99,9 +91,6 @@ class Event implements EventContract
         return $this->toArray()[$name] ?? null;
     }
 
-    /**
-     * @return bool
-     */
     public function isPropagationStopped(): bool
     {
         return $this->is_stopped;

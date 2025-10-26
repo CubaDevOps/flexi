@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Domain\Utils;
 
 use CubaDevOps\Flexi\Contracts\CacheContract;
 use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
-use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
+use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 
 class ServicesDefinitionParser
 {
@@ -30,9 +32,6 @@ class ServicesDefinitionParser
 
     /**
      * Parses a service definition file and returns the services.
-     *
-     * @param string $filename
-     * @return array
      */
     public function parse(string $filename): array
     {
@@ -55,7 +54,6 @@ class ServicesDefinitionParser
     /**
      * Ensures the file exists, otherwise throws an exception.
      *
-     * @param string $filename
      * @throws \RuntimeException
      */
     private function ensureFileExists(string $filename): void
@@ -67,9 +65,6 @@ class ServicesDefinitionParser
 
     /**
      * Checks if a file has already been processed.
-     *
-     * @param string $filename
-     * @return bool
      */
     private function isFileProcessed(string $filename): bool
     {
@@ -78,22 +73,16 @@ class ServicesDefinitionParser
 
     /**
      * Retrieves cached services for a processed file.
-     *
-     * @param string $filename
-     * @return array
      */
     private function getCachedServices(string $filename): array
     {
         $fileCacheKey = $this->getFileCacheKey($filename);
+
         return $this->cache->get($fileCacheKey, []);
     }
 
     /**
      * Processes the service definitions from the file.
-     *
-     * @param array $definitions
-     * @param string $filename
-     * @return array
      */
     private function processDefinitions(array $definitions, string $filename): array
     {
@@ -114,10 +103,6 @@ class ServicesDefinitionParser
 
     /**
      * Processes services defined by a glob pattern.
-     *
-     * @param string $glob
-     * @param array $services
-     * @param string $filename
      */
     private function processGlobServices(string $glob, array &$services, string $filename): void
     {
@@ -137,9 +122,6 @@ class ServicesDefinitionParser
 
     /**
      * Marks a file as processed and caches its services.
-     *
-     * @param string $filename
-     * @param array $services
      */
     private function markFileAsProcessed(string $filename, array $services): void
     {
@@ -159,12 +141,9 @@ class ServicesDefinitionParser
 
     /**
      * Generates a cache key for a given file.
-     *
-     * @param string $filename
-     * @return string
      */
     private function getFileCacheKey(string $filename): string
     {
-        return self::SERVICES_CACHE_KEY_PREFIX . md5($filename);
+        return self::SERVICES_CACHE_KEY_PREFIX.md5($filename);
     }
 }

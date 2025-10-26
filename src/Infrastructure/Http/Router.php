@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Http;
 
-use CubaDevOps\Flexi\Domain\Events\Event;
-use CubaDevOps\Flexi\Domain\Classes\ObjectCollection;
-use CubaDevOps\Flexi\Domain\Classes\Route;
+use CubaDevOps\Flexi\Contracts\Classes\ObjectCollection;
 use CubaDevOps\Flexi\Contracts\EventBusContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use CubaDevOps\Flexi\Contracts\SessionStorageContract;
+use CubaDevOps\Flexi\Domain\Classes\Route;
+use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
@@ -245,7 +245,7 @@ class Router
     }
 
     /**
-     * Configures middlewares in the handler if it's an HttpHandler instance
+     * Configures middlewares in the handler if it's an HttpHandler instance.
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

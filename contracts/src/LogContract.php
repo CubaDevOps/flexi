@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Contracts;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
+use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
 
 interface LogContract
 {

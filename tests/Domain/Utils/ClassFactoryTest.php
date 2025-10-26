@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Domain\Utils;
 
-use CubaDevOps\Flexi\Infrastructure\Factories\RouterFactory;
-use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
-use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
-use CubaDevOps\Flexi\Infrastructure\Cache\InMemoryCache;
+use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
+use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\HasNoConstructor;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\IsNotInstantiable;
 use PHPUnit\Framework\TestCase;
@@ -45,7 +45,7 @@ class ClassFactoryTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
 
-        $this->expectExceptionMessage('Class is not instantiable: ' . $notIstantiable);
+        $this->expectExceptionMessage('Class is not instantiable: '.$notIstantiable);
 
         $this->classFactory->build($this->container, $notIstantiable);
     }
@@ -63,8 +63,8 @@ class ClassFactoryTest extends TestCase
             'factory' => [
                 'class' => ContainerFactory::class,
                 'method' => 'createDefault',
-                'arguments' => []
-            ]
+                'arguments' => [],
+            ],
         ];
         $container = $this->classFactory->buildFromDefinition($this->container, $factory_definition);
         $this->assertInstanceOf(ContainerInterface::class, $container);
@@ -75,8 +75,8 @@ class ClassFactoryTest extends TestCase
         $classDefinition = [
             'class' => [
                 'name' => HasNoConstructor::class,
-                'arguments' => []
-            ]
+                'arguments' => [],
+            ],
         ];
 
         $instance = $this->classFactory->buildFromDefinition($this->container, $classDefinition);

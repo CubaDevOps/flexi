@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Contracts;
 
-use ArrayAccess;
-
 /**
  * @template TValue
  * @template TKey
  *
- * @extends ArrayAccess<TKey,TValue>
+ * @extends \ArrayAccess<TKey,TValue>
  */
-interface SessionStorageContract extends ArrayAccess
+interface SessionStorageContract extends \ArrayAccess
 {
     public function set(string $key, $value): void;
 

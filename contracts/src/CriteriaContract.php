@@ -8,9 +8,5 @@ interface CriteriaContract
 {
     public function __toString(): string;
 
-    /**
-     * @param mixed $request
-     * @return mixed
-     */
     public function apply($request);
 }

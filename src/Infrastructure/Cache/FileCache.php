@@ -1,14 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Infrastructure\Cache;
 
 use CubaDevOps\Flexi\Contracts\CacheContract;
 use DateInterval;
-use DateTime;
-use FilesystemIterator;
 use Psr\Cache\InvalidArgumentException;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 class FileCache implements CacheContract
 {
@@ -39,9 +37,9 @@ class FileCache implements CacheContract
      */
     public function clear(): bool
     {
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($this->directory, FilesystemIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::CHILD_FIRST
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($this->directory, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
         );
 
         foreach ($iterator as $path) {
@@ -58,8 +56,9 @@ class FileCache implements CacheContract
     /**
      * Get multiple cache items.
      *
-     * @param iterable $keys The array of keys
-     * @param mixed $default Default value for keys that do not exist
+     * @param iterable $keys    The array of keys
+     * @param mixed    $default Default value for keys that do not exist
+     *
      * @return iterable A list of key => value pairs
      */
     public function getMultiple($keys, $default = null): iterable
@@ -76,8 +75,9 @@ class FileCache implements CacheContract
     /**
      * Get an item from the cache.
      *
-     * @param string $key The cache item key
-     * @param mixed $default Default value if key doesn't exist
+     * @param string $key     The cache item key
+     * @param mixed  $default Default value if key doesn't exist
+     *
      * @return mixed The cached value or $default
      */
     public function get($key, $default = null)
@@ -90,7 +90,7 @@ class FileCache implements CacheContract
         }
 
         $content = file_get_contents($filepath);
-        if ($content === false) {
+        if (false === $content) {
             return $default;
         }
 
@@ -100,8 +100,9 @@ class FileCache implements CacheContract
         }
 
         // Check expiration
-        if ($data['expiry'] !== 0 && time() >= $data['expiry']) {
+        if (0 !== $data['expiry'] && time() >= $data['expiry']) {
             $this->delete($key);
+
             return $default;
         }
 
@@ -115,7 +116,7 @@ class FileCache implements CacheContract
      */
     private function validateKey(string $key): void
     {
-        if ($key === '') {
+        if ('' === $key) {
             throw new class extends \InvalidArgumentException implements InvalidArgumentException {
             };
         }
@@ -137,6 +138,7 @@ class FileCache implements CacheContract
      * Get the cache file path for a key.
      *
      * @param string $key The cache key
+     *
      * @return string The file path
      */
     private function getFilePath(string $key): string
@@ -146,15 +148,16 @@ class FileCache implements CacheContract
 
         // Create a directory structure based on the first two characters of the hash
         // This helps to avoid too many files in a single directory
-        $directory = $this->directory . substr($hash, 0, 2) . DIRECTORY_SEPARATOR;
+        $directory = $this->directory.substr($hash, 0, 2).DIRECTORY_SEPARATOR;
 
-        return $directory . $hash . $this->extension;
+        return $directory.$hash.$this->extension;
     }
 
     /**
      * Unserialize data from storage.
      *
      * @param string $data The data to unserialize
+     *
      * @return mixed The unserialized data
      */
     private function unserialize(string $data)
@@ -170,6 +173,7 @@ class FileCache implements CacheContract
      * Delete an item from the cache.
      *
      * @param string $key The cache item key
+     *
      * @return bool True if the item was successfully removed, false otherwise
      */
     public function delete($key): bool
@@ -188,11 +192,12 @@ class FileCache implements CacheContract
      * FileCache constructor.
      *
      * @param string $directory The directory where cache files will be stored
+     *
      * @throws \RuntimeException If the directory cannot be created or is not writable
      */
     public function __construct(string $directory)
     {
-        $this->directory = rtrim($directory, '/\\') . DIRECTORY_SEPARATOR;
+        $this->directory = rtrim($directory, '/\\').DIRECTORY_SEPARATOR;
 
         if (!is_dir($this->directory)) {
             $this->createDirectory($this->directory);
@@ -207,6 +212,7 @@ class FileCache implements CacheContract
      * Create a directory with proper permissions.
      *
      * @param string $directory The directory path
+     *
      * @throws \RuntimeException If the directory cannot be created
      */
     private function createDirectory(string $directory): void
@@ -221,8 +227,9 @@ class FileCache implements CacheContract
     /**
      * Set multiple cache items.
      *
-     * @param iterable $values A list of key => value pairs to cache
-     * @param null|int|DateInterval $ttl Optional. The TTL value of this item
+     * @param iterable               $values A list of key => value pairs to cache
+     * @param int|\DateInterval|null $ttl    Optional. The TTL value of this item
+     *
      * @return bool True on success, false on failure
      */
     public function setMultiple($values, $ttl = null): bool
@@ -239,19 +246,20 @@ class FileCache implements CacheContract
     /**
      * Set an item in the cache.
      *
-     * @param string $key The cache item key
-     * @param mixed $value The value to store
-     * @param null|int|DateInterval $ttl Optional. The TTL value of this item
+     * @param string                 $key   The cache item key
+     * @param mixed                  $value The value to store
+     * @param int|\DateInterval|null $ttl   Optional. The TTL value of this item
+     *
      * @return bool True on success, false on failure
      */
-    public function set($key,$value, $ttl = null): bool
+    public function set($key, $value, $ttl = null): bool
     {
         $this->validateKey($key);
 
         $expiry = $this->convertTtlToTimestamp($ttl);
         $data = [
             'expiry' => $expiry,
-            'data' => $value
+            'data' => $value,
         ];
 
         $filepath = $this->getFilePath($key);
@@ -267,8 +275,9 @@ class FileCache implements CacheContract
             LOCK_EX
         );
 
-        if ($result !== false) {
+        if (false !== $result) {
             chmod($filepath, $this->filePermission);
+
             return true;
         }
 
@@ -278,20 +287,22 @@ class FileCache implements CacheContract
     /**
      * Convert a TTL value to a timestamp.
      *
-     * @param null|int|DateInterval $ttl The TTL value
+     * @param int|\DateInterval|null $ttl The TTL value
+     *
      * @return int The timestamp when the cache will expire, or 0 for unlimited
      */
     private function convertTtlToTimestamp($ttl = null): int
     {
         // Null TTL means no expiration
-        if ($ttl === null) {
+        if (null === $ttl) {
             return 0;
         }
 
         // Handles DateInterval objects
         if ($ttl instanceof \DateInterval) {
-            $dateTime = new DateTime();
+            $dateTime = new \DateTime();
             $dateTime->add($ttl);
+
             return $dateTime->getTimestamp();
         }
 
@@ -313,6 +324,7 @@ class FileCache implements CacheContract
      * Serialize data for storage.
      *
      * @param mixed $data The data to serialize
+     *
      * @return string The serialized data
      */
     private function serialize($data): string
@@ -324,6 +336,7 @@ class FileCache implements CacheContract
      * Delete multiple cache items.
      *
      * @param iterable $keys The array of keys to delete
+     *
      * @return bool True on success, false on failure
      */
     public function deleteMultiple($keys): bool
@@ -341,6 +354,7 @@ class FileCache implements CacheContract
      * Check if item exists in the cache.
      *
      * @param string $key The cache item key
+     *
      * @return bool True if the key exists, false otherwise
      */
     public function has($key): bool
@@ -353,7 +367,7 @@ class FileCache implements CacheContract
         }
 
         $content = file_get_contents($filepath);
-        if ($content === false) {
+        if (false === $content) {
             return false;
         }
 
@@ -363,8 +377,9 @@ class FileCache implements CacheContract
         }
 
         // Check expiration
-        if ($data['expiry'] !== 0 && time() >= $data['expiry']) {
+        if (0 !== $data['expiry'] && time() >= $data['expiry']) {
             $this->delete($key);
+
             return false;
         }
 

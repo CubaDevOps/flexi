@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\Home\Application;
 
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\DTOContract;
 use CubaDevOps\Flexi\Contracts\HandlerContract;
 use CubaDevOps\Flexi\Contracts\MessageContract;

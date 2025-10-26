@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Http;
 
-use CubaDevOps\Flexi\Domain\Classes\Route;
-use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use CubaDevOps\Flexi\Contracts\EventBusContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use CubaDevOps\Flexi\Contracts\SessionStorageContract;
+use CubaDevOps\Flexi\Domain\Classes\Route;
+use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouterMock;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\TestHttpHandler;
 use PHPUnit\Framework\TestCase;
@@ -69,8 +71,8 @@ class RouterTest extends TestCase
 
     public function testDispatch(): void
     {
-        $_SERVER['HTTP_HOST']       = 'flexi';
-        $_SERVER['REQUEST_SCHEME']  = 'https';
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
 
         $route = new Route(
             self::ROUTE_NAME,
@@ -118,8 +120,8 @@ class RouterTest extends TestCase
      */
     public function testDispatchNoRoutes(): void
     {
-        $_SERVER['HTTP_HOST']       = 'flexi';
-        $_SERVER['REQUEST_SCHEME']  = 'https';
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
 
         $emptyRouter = new Router(
             $this->session, $this->event_bus, $this->class_factory, $this->response_factory, $this->container
@@ -149,8 +151,8 @@ class RouterTest extends TestCase
      */
     public function testDispatchParameterRequired(): void
     {
-        $_SERVER['HTTP_HOST']       = 'flexi';
-        $_SERVER['REQUEST_SCHEME']  = 'https';
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
 
         $requiredParam = 'user';
         $route = new Route(
@@ -161,8 +163,8 @@ class RouterTest extends TestCase
             [
                 0 => [
                     'required' => true,
-                    'name'     => $requiredParam
-                ]
+                    'name' => $requiredParam,
+                ],
             ]
         );
         $this->router->addRoute($route);
@@ -194,8 +196,8 @@ class RouterTest extends TestCase
      */
     public function testDispatchInvalidMethod(): void
     {
-        $_SERVER['HTTP_HOST']       = 'flexi';
-        $_SERVER['REQUEST_SCHEME']  = 'https';
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
         $invalidMethod = 'POST';
 
         $uriInterfaceMock = $this->createMock(UriInterface::class);
@@ -225,8 +227,8 @@ class RouterTest extends TestCase
      */
     public function testDispatchDirectToNotFound(): void
     {
-        $_SERVER['HTTP_HOST']       = 'flexi';
-        $_SERVER['REQUEST_SCHEME']  = 'https';
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
 
         $uriInterfaceMock = $this->createMock(UriInterface::class);
         $serverRequestMock = $this->createMock(ServerRequestInterface::class);

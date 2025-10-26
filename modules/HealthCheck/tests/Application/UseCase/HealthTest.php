@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Modules\HealthCheck\Test\Application\UseCase;
 
-use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\DTOContract;
-use CubaDevOps\Flexi\Domain\ValueObjects\Version;
+use CubaDevOps\Flexi\Contracts\ValueObjects\Version;
+use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
+use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
 use PHPUnit\Framework\TestCase;
 
 class HealthTest extends TestCase

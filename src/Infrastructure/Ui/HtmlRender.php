@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\Ui;
 
 use CubaDevOps\Flexi\Contracts\TemplateEngineContract;
-use CubaDevOps\Flexi\Contracts\TemplateContract;
 use CubaDevOps\Flexi\Contracts\TemplateLocatorContract;
 
 class HtmlRender implements TemplateEngineContract
@@ -17,9 +16,6 @@ class HtmlRender implements TemplateEngineContract
         $this->template_locator = $template_locator;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function render($template, $vars = []): string
     {
         // If a string is provided, locate the template first

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Domain\DTO;
 
 use CubaDevOps\Flexi\Domain\DTO\DummyDTO;

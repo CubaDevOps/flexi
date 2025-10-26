@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use CubaDevOps\Flexi\Contracts\EventBusContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
 use CubaDevOps\Flexi\Contracts\SessionStorageContract;
+use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
 class RouterFactory
 {
-
     private SessionStorageContract $session;
     private EventBusContract $event_bus;
     private ObjectBuilderContract $class_factory;
@@ -40,7 +39,6 @@ class RouterFactory
     public function getInstance(
         string $routesFilePath
     ): Router {
-
         $router = new Router($this->session, $this->event_bus, $this->class_factory, $this->response_factory, $this->container);
         $router->loadRoutesFile($routesFilePath);
 

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Modules\DevTools\Test\Application\UseCase;
 
-use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListCommands;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
+use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListCommands;
 use PHPUnit\Framework\TestCase;
 
 class ListCommandsTest extends TestCase
@@ -37,7 +39,7 @@ class ListCommandsTest extends TestCase
         $this->assertInstanceOf(PlainTextMessage::class, $message);
 
         $this->assertEquals(
-            $commands, json_decode((string)$message, true, 512, JSON_THROW_ON_ERROR)
+            $commands, json_decode((string) $message, true, 512, JSON_THROW_ON_ERROR)
         );
 
         $this->assertInstanceOf(\DateTimeImmutable::class, $message->get('created_at'));

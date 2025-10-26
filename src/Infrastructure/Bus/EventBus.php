@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
+use CubaDevOps\Flexi\Contracts\ConfigurationRepositoryContract;
 use CubaDevOps\Flexi\Contracts\DTOContract;
 use CubaDevOps\Flexi\Contracts\EventBusContract;
 use CubaDevOps\Flexi\Contracts\EventContract;
 use CubaDevOps\Flexi\Contracts\EventListenerContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
-use CubaDevOps\Flexi\Contracts\ConfigurationRepositoryContract;
+use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 use Psr\Container\ContainerExceptionInterface;
@@ -93,7 +93,6 @@ class EventBus implements EventBusContract
         $this->events[$identifier][] = $handler;
     }
 
-
     /**
      * @throws \ReflectionException
      * @throws ContainerExceptionInterface
@@ -109,8 +108,10 @@ class EventBus implements EventBusContract
     /**
      * Dispatches an event to all relevant listeners.
      *
-     * @param object $event The event object to dispatch.
-     * @return object The event after processing by listeners.
+     * @param object $event the event object to dispatch
+     *
+     * @return object the event after processing by listeners
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
@@ -133,7 +134,6 @@ class EventBus implements EventBusContract
 
         return $event;
     }
-
 
     public function hasHandler(string $identifier): bool
     {
@@ -168,7 +168,6 @@ class EventBus implements EventBusContract
         foreach ($listeners as $listener) {
             $this->handleListener($listener, $event);
         }
-
     }
 
     /**
@@ -187,9 +186,6 @@ class EventBus implements EventBusContract
         $listener_obj->handle($event);
     }
 
-    /**
-     * @return void
-     */
     private function closeBuffers(): void
     {
         if (function_exists('fastcgi_finish_request')) {
@@ -210,14 +206,11 @@ class EventBus implements EventBusContract
                 fclose(STDERR);
             }
         } catch (\Exception $e) {
-            $this->logger->warning("Error closing file descriptors: " . $e->getMessage(),[__CLASS__]);
+            $this->logger->warning('Error closing file descriptors: '.$e->getMessage(), [__CLASS__]);
         }
     }
 
     /**
-     * @param array $listeners
-     * @param object $event
-     * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
@@ -226,12 +219,12 @@ class EventBus implements EventBusContract
     {
         $pid = pcntl_fork();
 
-        if ($pid === -1) {
-            $this->logger->error("Could not fork process");
-            throw new \RuntimeException("Could not fork process");
+        if (-1 === $pid) {
+            $this->logger->error('Could not fork process');
+            throw new \RuntimeException('Could not fork process');
         }
 
-        if ($pid === 0) {
+        if (0 === $pid) {
             $this->notifyListeners($listeners, $event);
 
             $this->closeBuffers(); // Close the standard file descriptors to prevent blank output on parent process
@@ -242,12 +235,11 @@ class EventBus implements EventBusContract
     }
 
     /**
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function asyncMode(): bool
     {
-        return PHP_SAPI === 'cli' && ($this->configuration->has('dispatch_mode') && (int)$this->configuration->get('dispatch_mode'));
+        return PHP_SAPI === 'cli' && ($this->configuration->has('dispatch_mode') && (int) $this->configuration->get('dispatch_mode'));
     }
 }

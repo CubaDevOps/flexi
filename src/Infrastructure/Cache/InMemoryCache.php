@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Cache;
 
-use CubaDevOps\Flexi\Domain\Exceptions\InvalidArgumentCacheException;
 use CubaDevOps\Flexi\Contracts\CacheContract;
+use CubaDevOps\Flexi\Domain\Exceptions\InvalidArgumentCacheException;
 
 class InMemoryCache implements CacheContract
 {
@@ -43,7 +43,6 @@ class InMemoryCache implements CacheContract
     }
 
     /**
-     * @return mixed
      * @throws InvalidArgumentCacheException
      */
     public function get($key, $default = null)
@@ -72,7 +71,7 @@ class InMemoryCache implements CacheContract
             $result &= $this->set($key, $value, $ttl);
         }
 
-        return (bool)$result;
+        return (bool) $result;
     }
 
     public function set($key, $value, $ttl = null): bool
@@ -92,7 +91,7 @@ class InMemoryCache implements CacheContract
             $result &= $this->delete($key);
         }
 
-        return (bool)$result;
+        return (bool) $result;
     }
 
     public function delete($key): bool

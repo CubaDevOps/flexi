@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
 use CubaDevOps\Flexi\Contracts\CacheContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
-use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
-use InvalidArgumentException;
+use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class Container implements ContainerInterface
 {
-
     private const CONTAINER_CACHE_KEY = 'container';
     private const SERVICE_CACHE_KEY_PREFIX = 'service.';
     private const SERVICE_DEFINITIONS_KEY = 'service_definitions';
@@ -43,7 +40,7 @@ class Container implements ContainerInterface
     /**
      * Register a service definition.
      *
-     * @param string $id The service ID
+     * @param string              $id                The service ID
      * @param string|array|object $serviceDefinition The service definition
      */
     public function set(string $id, $serviceDefinition): void
@@ -56,6 +53,7 @@ class Container implements ContainerInterface
 
         if (is_object($serviceDefinition) && !is_callable($serviceDefinition)) {
             $this->cacheServiceInstance($id, $serviceDefinition);
+
             return;
         }
 
@@ -79,7 +77,7 @@ class Container implements ContainerInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function get(string $id): object
     {
@@ -89,7 +87,7 @@ class Container implements ContainerInterface
         if ('cache' === $id || $id instanceof CacheContract) {
             return $this->cache;
         }
-        if ($id === 'factory' || $id instanceof ObjectBuilderContract) {
+        if ('factory' === $id || $id instanceof ObjectBuilderContract) {
             return $this->factory;
         }
 
@@ -112,12 +110,10 @@ class Container implements ContainerInterface
     /**
      * Resolves a service instance from its definition or builds it.
      *
-     * @param string $id
-     * @return object
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
      * @throws ContainerExceptionInterface
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private function resolveServiceInstance(string $id): object
     {
@@ -138,9 +134,6 @@ class Container implements ContainerInterface
 
     /**
      * Resolves an alias to another service.
-     *
-     * @param string $alias
-     * @return object
      */
     private function resolveAlias(string $alias): object
     {
@@ -148,31 +141,25 @@ class Container implements ContainerInterface
             return $this->get($alias);
         }
 
-        throw new InvalidArgumentException(sprintf('Service alias "%s" cannot be resolved.', $alias));
+        throw new \InvalidArgumentException(sprintf('Service alias "%s" cannot be resolved.', $alias));
     }
 
     /**
      * Validates a service definition.
-     *
-     * @param string $id
-     * @param mixed $serviceDefinition
      */
     private function validateServiceDefinition(string $id, $serviceDefinition): void
     {
         if (in_array($id, $this->selfReference, true)) {
-            throw new InvalidArgumentException(sprintf(self::ERROR_SELF_REFERENCE, $id));
+            throw new \InvalidArgumentException(sprintf(self::ERROR_SELF_REFERENCE, $id));
         }
 
         if (!is_object($serviceDefinition) && !is_array($serviceDefinition) && !is_string($serviceDefinition)) {
-            throw new InvalidArgumentException(self::ERROR_INVALID_DEFINITION);
+            throw new \InvalidArgumentException(self::ERROR_INVALID_DEFINITION);
         }
     }
 
     /**
      * Caches a service instance.
-     *
-     * @param string $id
-     * @param object $serviceInstance
      */
     private function cacheServiceInstance(string $id, object $serviceInstance): void
     {
@@ -184,6 +171,6 @@ class Container implements ContainerInterface
      */
     private function generateServiceCacheKey(string $id): string
     {
-        return self::SERVICE_CACHE_KEY_PREFIX . md5($id);
+        return self::SERVICE_CACHE_KEY_PREFIX.md5($id);
     }
 }

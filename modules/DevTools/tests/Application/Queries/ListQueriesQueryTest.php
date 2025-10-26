@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Modules\DevTools\Test\Application\Queries;
 
 use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;

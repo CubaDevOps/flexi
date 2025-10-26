@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Domain\Collections;
 
-use CubaDevOps\Flexi\Domain\Classes\Collection;
+use CubaDevOps\Flexi\Contracts\Classes\Collection;
+use CubaDevOps\Flexi\Contracts\ValueObjects\CollectionType;
 use CubaDevOps\Flexi\Domain\Entities\DummyEntity;
-use CubaDevOps\Flexi\Domain\ValueObjects\CollectionType;
 use PHPUnit\Framework\TestCase;
 
 class CollectionTest extends TestCase
@@ -14,6 +14,7 @@ class CollectionTest extends TestCase
     private const EXPECTED_COUNT = 2;
     private Collection $collection;
     private array $items;
+
     protected function setUp(): void
     {
         $type = new CollectionType('object');

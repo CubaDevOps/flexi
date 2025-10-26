@@ -1,20 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
-use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListCommands;
-use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListQueries;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
-use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
-use CubaDevOps\Flexi\Modules\HealthCheck\Application\Queries\GetVersionQuery;
-use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\EventBusContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
-use CubaDevOps\Flexi\Modules\Home\Application\RenderHome;
-use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
+use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
+use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
+use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
+use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListQueries;
+use CubaDevOps\Flexi\Modules\HealthCheck\Application\Queries\GetVersionQuery;
+use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -100,10 +98,10 @@ class QueryBusTest extends TestCase
     public function testGetHandlersDefinitions(): void
     {
         $expectedDefinitions = [
-            'version'                       => Health::class,
-            'query:list'                    => ListQueries::class,
-            GetVersionQuery::class          => Health::class,
-            ListQueriesQuery::class         => ListQueries::class
+            'version' => Health::class,
+            'query:list' => ListQueries::class,
+            GetVersionQuery::class => Health::class,
+            ListQueriesQuery::class => ListQueries::class,
         ];
 
         $definitions = $this->queryBus->getHandlersDefinition();

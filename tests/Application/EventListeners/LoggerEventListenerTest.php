@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Application\EventListeners;
 
 use CubaDevOps\Flexi\Application\EventListeners\LoggerEventListener;

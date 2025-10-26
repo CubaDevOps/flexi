@@ -1,27 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
-use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
-use CubaDevOps\Flexi\Infrastructure\Ui\HtmlRender;
-use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
-use CubaDevOps\Flexi\Infrastructure\Session\NativeSessionStorage;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Infrastructure\Http\Router;
-use CubaDevOps\Flexi\Domain\Classes\Service;
-use CubaDevOps\Flexi\Domain\Classes\ServiceClassDefinition;
-use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
-use CubaDevOps\Flexi\Domain\Exceptions\ContainerException;
-use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
 use CubaDevOps\Flexi\Contracts\CacheContract;
 use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Domain\Classes\Service;
+use CubaDevOps\Flexi\Domain\Classes\ServiceClassDefinition;
+use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
+use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
+use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
+use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
+use CubaDevOps\Flexi\Infrastructure\Session\NativeSessionStorage;
+use CubaDevOps\Flexi\Infrastructure\Ui\HtmlRender;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyCache;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -100,18 +98,18 @@ class ContainerTest extends TestCase
      */
     public function testHasService(): void
     {
-        $this->assertTrue($this->container->has(Configuration::class), Configuration::class . ' not found');
-        $this->assertTrue($this->container->has(NativeSessionStorage::class), NativeSessionStorage::class . ' not found');
-        $this->assertTrue($this->container->has(ObjectBuilderContract::class), ObjectBuilderContract::class . ' not found');
+        $this->assertTrue($this->container->has(Configuration::class), Configuration::class.' not found');
+        $this->assertTrue($this->container->has(NativeSessionStorage::class), NativeSessionStorage::class.' not found');
+        $this->assertTrue($this->container->has(ObjectBuilderContract::class), ObjectBuilderContract::class.' not found');
         $this->assertTrue($this->container->has('router'), 'router not found');
         $this->assertTrue($this->container->has('html_render'), 'html_render not found');
-        $this->assertTrue($this->container->has(CommandBus::class), CommandBus::class . ' not found');
-        $this->assertTrue($this->container->has(QueryBus::class), QueryBus::class . ' not found');
-        $this->assertTrue($this->container->has(EventBus::class), EventBus::class . ' not found');
+        $this->assertTrue($this->container->has(CommandBus::class), CommandBus::class.' not found');
+        $this->assertTrue($this->container->has(QueryBus::class), QueryBus::class.' not found');
+        $this->assertTrue($this->container->has(EventBus::class), EventBus::class.' not found');
         $this->assertTrue($this->container->has('logger'), 'logger not found');
-        $this->assertTrue($this->container->has(InFileLogRepository::class), InFileLogRepository::class . ' not found');
-        $this->assertTrue($this->container->has(ResponseFactoryInterface::class), ResponseFactoryInterface::class . ' not found');
-        $this->assertTrue($this->container->has(ServerRequestFactoryInterface::class), ServerRequestFactoryInterface::class . ' not found');
+        $this->assertTrue($this->container->has(InFileLogRepository::class), InFileLogRepository::class.' not found');
+        $this->assertTrue($this->container->has(ResponseFactoryInterface::class), ResponseFactoryInterface::class.' not found');
+        $this->assertTrue($this->container->has(ServerRequestFactoryInterface::class), ServerRequestFactoryInterface::class.' not found');
     }
 
     /**
@@ -144,7 +142,7 @@ class ContainerTest extends TestCase
      */
     public function testInvalidServiceDefinition(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Service definition must be an object, an array, or a string class name.');
         $this->container->set('invalid_service', 12345);
     }

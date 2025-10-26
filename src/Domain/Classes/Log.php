@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Domain\Classes;
 
 use CubaDevOps\Flexi\Contracts\LogContract;
 use CubaDevOps\Flexi\Contracts\MessageContract;
-use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
+use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
 
 class Log implements LogContract
 {

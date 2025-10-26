@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Domain\Classes\Log;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
+use CubaDevOps\Flexi\Contracts\Classes\Log;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\LogRepositoryContract;
-use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
+use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
 use Psr\Log\AbstractLogger;
 
 class PsrLogger extends AbstractLogger

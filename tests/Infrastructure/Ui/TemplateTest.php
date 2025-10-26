@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Ui;
 
 use CubaDevOps\Flexi\Infrastructure\Ui\Template;
@@ -8,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class TemplateTest extends TestCase
 {
-
     private Template $template;
     private string $path;
     private FileHandler $file_handler;
@@ -30,7 +31,7 @@ class TemplateTest extends TestCase
     {
         $path = './tests/invalid/path/test/file.html';
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Template file not found: ' . $this->file_handler->normalize($path));
+        $this->expectExceptionMessage('Template file not found: '.$this->file_handler->normalize($path));
 
         new Template($path);
     }

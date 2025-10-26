@@ -9,9 +9,6 @@ use CubaDevOps\Flexi\Contracts\TemplateLocatorContract;
 
 class TemplateLocator implements TemplateLocatorContract
 {
-    /**
-     * {@inheritDoc}
-     */
     public function locate(string $templatePath): TemplateContract
     {
         return new Template($templatePath);

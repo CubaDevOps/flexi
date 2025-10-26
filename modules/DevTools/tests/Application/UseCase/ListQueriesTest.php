@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Modules\DevTools\Test\Application\UseCase;
 
-use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListQueries;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
+use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListQueries;
 use PHPUnit\Framework\TestCase;
 
 class ListQueriesTest extends TestCase
@@ -35,7 +37,7 @@ class ListQueriesTest extends TestCase
         $message = $this->listQueries->handle($dto);
 
         $this->assertEquals(
-            $queries, json_decode((string)$message, true, 512, JSON_THROW_ON_ERROR)
+            $queries, json_decode((string) $message, true, 512, JSON_THROW_ON_ERROR)
         );
 
         $this->assertInstanceOf(PlainTextMessage::class, $message);

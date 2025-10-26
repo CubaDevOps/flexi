@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Domain\Entities;
 
+use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
 use CubaDevOps\Flexi\Domain\Entities\DummyEntity;
-use CubaDevOps\Flexi\Domain\ValueObjects\ID;
 use PHPUnit\Framework\TestCase;
 
 class DummyEntityTest extends TestCase
 {
     public function testDummyEntity(): void
     {
-        //TODO: DummyEntity is not fully implemented
+        // TODO: DummyEntity is not fully implemented
         $newDummyEntity = new DummyEntity();
         $this->assertEquals([], $newDummyEntity->toArray());
         $this->assertInstanceOf(ID::class, $newDummyEntity->getId());

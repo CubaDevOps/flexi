@@ -43,7 +43,7 @@ class Service
      */
     public function __toString(): string
     {
-        //TODO: better implementation maybe using serialization
+        // TODO: better implementation maybe using serialization
         return json_encode($this, JSON_THROW_ON_ERROR);
     }
 }

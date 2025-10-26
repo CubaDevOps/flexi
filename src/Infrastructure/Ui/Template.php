@@ -43,19 +43,16 @@ class Template implements TemplateContract
 
     /**
      * Get the absolute path to the template file.
-     * @return string
      */
     public function getTemplatePath(): string
     {
         return $this->template_path;
     }
 
-
     public function getTemplateName(): string
     {
         return $this->template_name;
     }
-
 
     public function getTemplateExtension(): string
     {

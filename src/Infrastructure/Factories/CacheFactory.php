@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
 use CubaDevOps\Flexi\Contracts\CacheContract;
-use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 use CubaDevOps\Flexi\Infrastructure\Cache\FileCache;
 use CubaDevOps\Flexi\Infrastructure\Cache\InMemoryCache;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -27,22 +29,23 @@ class CacheFactory
      */
     public function getInstance($driver = null): CacheContract
     {
-
         $cache_driver = $driver ?? $this->configuration->get('cache_driver');
 
-        //Todo: implement other cache drivers
+        // Todo: implement other cache drivers
         switch ($cache_driver) {
             case 'array':
             case 'memory':
                 return new InMemoryCache();
             case 'file':
             default:
-                $cache_dir = $this->normalize($this->configuration->get('cache_dir') ?? $this->configuration->get('ROOT_DIR') . '/var/cache');
+                $cache_dir = $this->normalize($this->configuration->get('cache_dir') ?? $this->configuration->get('ROOT_DIR').'/var/cache');
+
                 return new FileCache($cache_dir);
         }
     }
 
-    public static function createDefault(Configuration $configuration){
+    public static function createDefault(Configuration $configuration)
+    {
         return (new self($configuration))->getInstance();
     }
 }

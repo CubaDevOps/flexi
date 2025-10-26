@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Cache;
 
-use CubaDevOps\Flexi\Domain\Exceptions\InvalidArgumentCacheException;
 use CubaDevOps\Flexi\Contracts\CacheContract;
+use CubaDevOps\Flexi\Domain\Exceptions\InvalidArgumentCacheException;
 use CubaDevOps\Flexi\Infrastructure\Cache\InMemoryCache;
 use PHPUnit\Framework\TestCase;
 

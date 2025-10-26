@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Modules\WebHooks\Test\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Modules\WebHooks\Infrastructure\Controllers\WebHookController;
-use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Domain\Events\Event;
+use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
+use CubaDevOps\Flexi\Modules\WebHooks\Infrastructure\Controllers\WebHookController;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -30,7 +32,7 @@ class WebHookControllerTest extends TestCase
         $data = [
             'event' => 'test_event',
             'fired_by' => 'tester',
-            'data' => ['key' => 'value']
+            'data' => ['key' => 'value'],
         ];
 
         $this->mockRequestPayload($data);
@@ -50,7 +52,7 @@ class WebHookControllerTest extends TestCase
         $data = [
             'event' => '',
             'fired_by' => '',
-            'data' => ['key' => 'value']
+            'data' => ['key' => 'value'],
         ];
 
         $this->mockRequestPayload($data);
@@ -65,7 +67,7 @@ class WebHookControllerTest extends TestCase
         $data = [
             'event' => 'test_event',
             'fired_by' => 'tester',
-            'data' => ['key' => 'value']
+            'data' => ['key' => 'value'],
         ];
 
         $this->mockRequestPayload($data);
@@ -84,6 +86,6 @@ class WebHookControllerTest extends TestCase
         $this->requestMock
             ->method('getAttribute')
             ->with('payload')
-            ->willReturn((object)$payload);
+            ->willReturn((object) $payload);
     }
 }

@@ -4,19 +4,14 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Utils;
 
-use RuntimeException;
-
 trait FileHandlerTrait
 {
     use OSDetector;
 
     /**
-     * @param string $file_path
-     * @param string $content
      * @param int $flags see https://www.php.net/manual/en/function.file-put-contents.php
-     * @param bool $try_create_it
-     * @return void
-     * @throws RuntimeException
+     *
+     * @throws \RuntimeException
      */
     public function writeToFile(string $file_path, string $content, int $flags = 0, bool $try_create_it = false): void
     {
@@ -25,7 +20,7 @@ trait FileHandlerTrait
             $this->createFile($file_path);
         }
         if (!$this->canWriteToFile($file_path) || false === file_put_contents($file_path, $content, $flags)) {
-            throw new RuntimeException("Could not write to file: $file_path");
+            throw new \RuntimeException("Could not write to file: $file_path");
         }
     }
 
@@ -36,7 +31,7 @@ trait FileHandlerTrait
         }
 
         $rootDir = dirname(__DIR__, 3);
-        $fullPath = $rootDir . DIRECTORY_SEPARATOR . $relative_path;
+        $fullPath = $rootDir.DIRECTORY_SEPARATOR.$relative_path;
         $segments = preg_split('/[\/\\\\]+/', $fullPath);
         $normalizedSegments = [];
 
@@ -45,7 +40,7 @@ trait FileHandlerTrait
                 continue;
             }
 
-            if ($segment === '..') {
+            if ('..' === $segment) {
                 array_pop($normalizedSegments);
             } else {
                 $normalizedSegments[] = $segment;
@@ -54,7 +49,7 @@ trait FileHandlerTrait
 
         $normalizedPath = implode(DIRECTORY_SEPARATOR, $normalizedSegments);
 
-        return $this->isWindows() ? $normalizedPath : DIRECTORY_SEPARATOR . $normalizedPath;
+        return $this->isWindows() ? $normalizedPath : DIRECTORY_SEPARATOR.$normalizedPath;
     }
 
     private function isAbsolutePath(string $path): bool
@@ -72,19 +67,13 @@ trait FileHandlerTrait
         return false;
     }
 
-    /**
-     * @param string $file_path
-     * @return bool
-     */
     protected function fileExists(string $file_path): bool
     {
         return file_exists($file_path);
     }
 
     /**
-     * @param string $file_path
-     * @return void
-     * @throws RuntimeException
+     * @throws \RuntimeException
      */
     protected function createFile(string $file_path): void
     {
@@ -95,14 +84,10 @@ trait FileHandlerTrait
         try {
             touch($file_path);
         } catch (\Exception $e) {
-            throw new RuntimeException("Could not create file: $file_path");
+            throw new \RuntimeException("Could not create file: $file_path");
         }
     }
 
-    /**
-     * @param string $dir_path
-     * @return bool
-     */
     protected function directoryExists(string $dir_path): bool
     {
         return is_dir($dir_path);
@@ -115,9 +100,7 @@ trait FileHandlerTrait
         }
     }
 
-
     /**
-     * @param string $file_path
      * @return void
      */
     private function canWriteToFile(string $file_path): bool
@@ -131,22 +114,18 @@ trait FileHandlerTrait
         $contents = file_get_contents($file_path);
 
         if (false === $contents) {
-            throw new RuntimeException("Could not read from file: $file_path");
+            throw new \RuntimeException("Could not read from file: $file_path");
         }
 
         return $contents;
     }
 
-    /**
-     * @param string $file_path
-     * @return void
-     */
     public function ensureFileExists(string &$file_path): void
     {
         $file_path = $this->normalize($file_path);
 
         if (!$this->fileExists($file_path)) {
-            throw new RuntimeException('File ' . $file_path . ' does not exist');
+            throw new \RuntimeException('File '.$file_path.' does not exist');
         }
     }
 }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\DevTools\Application\UseCase;
 
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\DTOContract;
 use CubaDevOps\Flexi\Contracts\HandlerContract;
 use CubaDevOps\Flexi\Contracts\MessageContract;
+use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
+use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
 
 class ListCommands implements HandlerContract
 {
@@ -22,8 +22,6 @@ class ListCommands implements HandlerContract
 
     /**
      * @param ListCommandsCommand $dto
-     *
-     * @return MessageContract
      *
      * @throws \JsonException
      */

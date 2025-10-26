@@ -6,32 +6,32 @@ namespace CubaDevOps\Flexi\Contracts;
 
 /**
  * Contract for Domain Entities
- * Objects with identity that can change over time
+ * Objects with identity that can change over time.
  */
 interface EntityContract
 {
     /**
-     * Get the unique identifier
+     * Get the unique identifier.
      */
     public function getId();
 
     /**
-     * Get creation timestamp
+     * Get creation timestamp.
      */
     public function getCreatedAt(): \DateTimeImmutable;
 
     /**
-     * Get last update timestamp
+     * Get last update timestamp.
      */
     public function getUpdatedAt(): \DateTimeImmutable;
 
     /**
-     * Update the timestamp
+     * Update the timestamp.
      */
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): void;
 
     /**
-     * Convert to array representation
+     * Convert to array representation.
      */
     public function toArray(): array;
 }

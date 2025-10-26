@@ -21,14 +21,14 @@ class TemplateTest extends TestCase
 
     public function setUp(): void
     {
-        $this->path = './modules/ErrorHandling/Infrastructure/Ui/Templates/404.html';
+        $this->path = './tests/TestData/Assets/test.html';
 
         $this->template = new Template($this->path);
     }
 
     public function testInvalidPath(): void
     {
-        $path = './var/invalid/path/test/file.html';
+        $path = './tests/invalid/path/test/file.html';
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Template file not found: ' . $this->file_handler->normalize($path));
 
@@ -48,7 +48,7 @@ class TemplateTest extends TestCase
 
     public function testGetTemplateName(): void
     {
-        $this->assertEquals('404.html', $this->template->getTemplateName());
+        $this->assertEquals('test.html', $this->template->getTemplateName());
     }
 
     public function testGetTemplateExtension(): void

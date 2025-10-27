@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\Home\Infrastructure\Controllers;
 
+use CubaDevOps\Flexi\Contracts\Classes\HttpHandler;
 use CubaDevOps\Flexi\Contracts\Classes\Traits\FileHandlerTrait;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -33,7 +33,7 @@ class HomeController extends HttpHandler
         $template_path = $this->normalize('./modules/Home/Infrastructure/UI/Templates/home.html');
         $dto = new HomePageDTO($template_path);
 
-        $response->getBody()->write((string) $this->query_bus->execute($dto));
+        $response->getBody()->write($this->query_bus->execute($dto)->__toString());
 
         return $response;
     }

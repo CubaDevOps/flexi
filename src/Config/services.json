@@ -25,32 +25,7 @@
         ]
       }
     },
-    {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Session\\NativeSessionStorage",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Session\\NativeSessionStorage",
-        "arguments": [
-          "@logger",
-          {
-            "name": "PHPSESSID",
-            "cookie_lifetime": 0,
-            "cookie_path": "/",
-            "cookie_domain": "flexi.local",
-            "cookie_secure": false,
-            "cookie_httponly": true,
-            "use_cookies": true,
-            "use_only_cookies": true,
-            "use_strict_mode": true,
-            "sid_length": 32,
-            "sid_bits_per_character": 5
-          }
-        ]
-      }
-    },
-    {
-      "name": "session",
-      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Session\\NativeSessionStorage"
-    },
+
     {
       "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory",
       "class": {
@@ -110,18 +85,8 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Contracts\\Classes\\PsrLogger",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
           "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"
-        ]
-      }
-    },
-    {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
-        "arguments": [
-          "ENV.log_file_path",
-          "ENV.log_format"
         ]
       }
     },

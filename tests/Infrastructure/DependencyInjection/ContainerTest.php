@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
 
 use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\LogRepositoryInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Service;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServiceClassDefinition;
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
@@ -16,8 +18,6 @@ use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
-use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
-use CubaDevOps\Flexi\Infrastructure\Session\NativeSessionStorage;
 use CubaDevOps\Flexi\Modules\Ui\Infrastructure\Ui\HtmlRender;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyCache;
 use PHPUnit\Framework\TestCase;
@@ -54,14 +54,14 @@ class ContainerTest extends TestCase
     public function testGetService(): void
     {
         $this->assertInstanceOf(Configuration::class, $this->container->get(Configuration::class));
-        $this->assertInstanceOf(NativeSessionStorage::class, $this->container->get(NativeSessionStorage::class));
+        $this->assertInstanceOf(SessionStorageInterface::class, $this->container->get(SessionStorageInterface::class));
         $this->assertInstanceOf(ObjectBuilderInterface::class, $this->container->get(ObjectBuilderInterface::class));
         $this->assertNotNull($this->container->get('router'));
         $this->assertInstanceOf(HtmlRender::class, $this->container->get('html_render'));
         $this->assertInstanceOf(CommandBus::class, $this->container->get(CommandBus::class));
         $this->assertInstanceOf(QueryBus::class, $this->container->get(QueryBus::class));
         $this->assertInstanceOf(EventBus::class, $this->container->get(EventBus::class));
-        $this->assertInstanceOf(InFileLogRepository::class, $this->container->get(InFileLogRepository::class));
+        $this->assertInstanceOf(LogRepositoryInterface::class, $this->container->get(LogRepositoryInterface::class));
         $this->assertInstanceOf(ResponseFactoryInterface::class, $this->container->get(ResponseFactoryInterface::class));
         $this->assertInstanceOf(ServerRequestFactoryInterface::class, $this->container->get(ServerRequestFactoryInterface::class));
     }
@@ -99,7 +99,7 @@ class ContainerTest extends TestCase
     public function testHasService(): void
     {
         $this->assertTrue($this->container->has(Configuration::class), Configuration::class.' not found');
-        $this->assertTrue($this->container->has(NativeSessionStorage::class), NativeSessionStorage::class.' not found');
+        $this->assertTrue($this->container->has(SessionStorageInterface::class), SessionStorageInterface::class.' not found');
         $this->assertTrue($this->container->has(ObjectBuilderInterface::class), ObjectBuilderInterface::class.' not found');
         $this->assertTrue($this->container->has('router'), 'router not found');
         $this->assertTrue($this->container->has('html_render'), 'html_render not found');
@@ -107,7 +107,7 @@ class ContainerTest extends TestCase
         $this->assertTrue($this->container->has(QueryBus::class), QueryBus::class.' not found');
         $this->assertTrue($this->container->has(EventBus::class), EventBus::class.' not found');
         $this->assertTrue($this->container->has('logger'), 'logger not found');
-        $this->assertTrue($this->container->has(InFileLogRepository::class), InFileLogRepository::class.' not found');
+        $this->assertTrue($this->container->has(LogRepositoryInterface::class), LogRepositoryInterface::class.' not found');
         $this->assertTrue($this->container->has(ResponseFactoryInterface::class), ResponseFactoryInterface::class.' not found');
         $this->assertTrue($this->container->has(ServerRequestFactoryInterface::class), ServerRequestFactoryInterface::class.' not found');
     }

@@ -10,7 +10,7 @@ use CubaDevOps\Flexi\Contracts\Interfaces\HandlerInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\RepositoryInterface;
 use CubaDevOps\Flexi\Contracts\ValueObjects\Version;
-use CubaDevOps\Flexi\Domain\Criteria\AnyCriteria;
+use CubaDevOps\Flexi\Contracts\Classes\Criteria\AnyCriteria;
 
 class Health implements HandlerInterface
 {

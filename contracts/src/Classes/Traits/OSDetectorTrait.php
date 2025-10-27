@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Contracts\Classes\Utils;
+namespace CubaDevOps\Flexi\Contracts\Classes\Traits;
 
-trait OSDetector
+trait OSDetectorTrait
 {
     public function isWindows(): bool
     {

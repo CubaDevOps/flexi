@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Contracts\Classes\Traits;
 
-use CubaDevOps\Flexi\Contracts\Classes\Utils\OSDetector;
+use CubaDevOps\Flexi\Contracts\Classes\Traits\OSDetectorTrait;
 
 trait FileHandlerTrait
 {
-    use OSDetector;
+    use OSDetectorTrait;
 
     /**
      * @param int $flags see https://www.php.net/manual/en/function.file-put-contents.php

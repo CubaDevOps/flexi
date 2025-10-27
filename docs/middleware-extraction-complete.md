@@ -269,7 +269,7 @@ class OAuth2Middleware implements MiddlewareInterface { ... }
 class VaultSecretProvider implements SecretProviderInterface { ... }
 
 // 2. Registrar en modules/Auth/Config/services.json
-{ "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\SecretProviderInterface", 
+{ "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\SecretProviderInterface",
   "class": { "name": "MyApp\\VaultSecretProvider", ... } }
 
 // 3. JWTAuthMiddleware automáticamente usa VaultSecretProvider

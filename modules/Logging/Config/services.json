@@ -1,0 +1,14 @@
+{
+  "services": [
+    {
+      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Modules\\Logging\\Infrastructure\\Persistence\\InFileLogRepository",
+        "arguments": [
+          "ENV.log_file_path",
+          "ENV.log_format"
+        ]
+      }
+    }
+  ]
+}

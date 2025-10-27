@@ -1,0 +1,30 @@
+{
+  "services": [
+    {
+      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\SessionStorageInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Modules\\Session\\Infrastructure\\Session\\NativeSessionStorage",
+        "arguments": [
+          "@logger",
+          {
+            "name": "PHPSESSID",
+            "cookie_lifetime": 0,
+            "cookie_path": "/",
+            "cookie_domain": "texi.local",
+            "cookie_secure": false,
+            "cookie_httponly": true,
+            "use_cookies": true,
+            "use_only_cookies": true,
+            "use_strict_mode": true,
+            "sid_length": 32,
+            "sid_bits_per_character": 5
+          }
+        ]
+      }
+    },
+    {
+      "name": "session",
+      "alias": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\SessionStorageInterface"
+    }
+  ]
+}

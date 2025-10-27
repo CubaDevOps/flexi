@@ -1,0 +1,33 @@
+{
+  "services": [
+    {
+      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\SecretProviderInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Adapters\\ConfigurationSecretProvider",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"
+        ]
+      }
+    },
+    {
+      "name": "auth_check_middleware",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\AuthCheckMiddleware",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\SessionStorageInterface",
+          "@Psr\\Http\\Message\\ResponseFactoryInterface"
+        ]
+      }
+    },
+    {
+      "name": "jwt_auth_middleware",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\JWTAuthMiddleware",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\SecretProviderInterface",
+          "@Psr\\Http\\Message\\ResponseFactoryInterface"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "routes": [
+    {
+      "name": "auth-example",
+      "path": "/auth-example",
+      "method": "GET",
+      "controller": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Controllers\\AuthenticatedController",
+      "parameters": [],
+      "middlewares": [
+        "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\AuthCheckMiddleware"
+      ]
+    }
+  ]
+}

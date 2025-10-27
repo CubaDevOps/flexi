@@ -14,7 +14,7 @@ use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Domain\Events\Event;
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
+use CubaDevOps\Flexi\Contracts\Classes\HttpHandler;
 use CubaDevOps\Flexi\Infrastructure\Http\Route;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Classes;
+namespace CubaDevOps\Flexi\Contracts\Classes;
 
 use GuzzleHttp\Psr7\HttpFactory;
 use Psr\Http\Message\RequestFactoryInterface;

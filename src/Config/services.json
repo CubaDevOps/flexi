@@ -124,7 +124,7 @@
     {
       "name": "logger",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\PsrLogger",
+        "name": "CubaDevOps\\Flexi\\Contracts\\Classes\\PsrLogger",
         "arguments": [
           "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
           "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Classes;
+namespace CubaDevOps\Flexi\Contracts\Classes;
 
 use CubaDevOps\Flexi\Contracts\Classes\Log;
 use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
@@ -10,12 +10,20 @@ use CubaDevOps\Flexi\Contracts\Interfaces\LogRepositoryInterface;
 use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
 use Psr\Log\AbstractLogger;
 
+/**
+ * PSR-3 Logger Implementation
+ * Generic logging adapter that can be reused by any module or package.
+ * Implements PSR-3 standard logging interface with level-based filtering.
+ *
+ * Note: Configuration class must be injected from Infrastructure layer.
+ * This maintains clean dependency: Contracts → Infrastructure (one-way)
+ */
 class PsrLogger extends AbstractLogger
 {
     private LogRepositoryInterface $log_repository;
-    private Configuration $configuration;
+    private object $configuration; // Injected Configuration from Infrastructure
 
-    public function __construct(LogRepositoryInterface $log_repository, Configuration $configuration)
+    public function __construct(LogRepositoryInterface $log_repository, object $configuration)
     {
         $this->log_repository = $log_repository;
         $this->configuration = $configuration;

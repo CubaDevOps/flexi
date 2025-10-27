@@ -1,7 +1,7 @@
 # AnyCriteria Migration to Contracts
 
-**Date:** October 27, 2025  
-**Branch:** refactor-complete-psr-compatibility  
+**Date:** October 27, 2025
+**Branch:** refactor-complete-psr-compatibility
 **Status:** ✅ COMPLETED
 
 ## Overview

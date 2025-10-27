@@ -89,7 +89,7 @@ should be instantiated, either directly or via factory methods.
     {
       "name": "logger",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\PsrLogger",
+        "name": "CubaDevOps\\Flexi\\Contracts\\Classes\\PsrLogger",
         "arguments": [
           "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository"
         ]

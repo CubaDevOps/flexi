@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
 use CubaDevOps\Flexi\Contracts\Classes\HttpHandler;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class TestHttpHandler extends HttpHandler
 {
     private ?ResponseInterface $mockResponse = null;
+
+    public function __construct(?ResponseFactoryInterface $response_factory = null)
+    {
+        parent::__construct($response_factory ?? new DummyResponseFactory());
+    }
 
     public function setMockResponse(ResponseInterface $response): void
     {

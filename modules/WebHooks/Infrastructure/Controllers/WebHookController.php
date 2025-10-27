@@ -7,6 +7,7 @@ namespace CubaDevOps\Flexi\Modules\WebHooks\Infrastructure\Controllers;
 use CubaDevOps\Flexi\Contracts\Classes\HttpHandler;
 use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Events\Event;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -14,9 +15,9 @@ class WebHookController extends HttpHandler
 {
     private EventBusInterface $event_bus;
 
-    public function __construct(EventBusInterface $event_bus)
+    public function __construct(ResponseFactoryInterface $response_factory, EventBusInterface $event_bus)
     {
-        parent::__construct();
+        parent::__construct($response_factory);
         $this->event_bus = $event_bus;
     }
 

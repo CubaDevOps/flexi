@@ -7,6 +7,7 @@ namespace CubaDevOps\Flexi\Modules\WebHooks\Test\Infrastructure\Controllers;
 use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Modules\WebHooks\Infrastructure\Controllers\WebHookController;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyResponseFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -14,17 +15,19 @@ use Psr\Http\Message\StreamInterface;
 class WebHookControllerTest extends TestCase
 {
     private $eventBusMock;
+    private $responseFactory;
     private $requestMock;
     private $streamMock;
     private $webHookController;
 
     protected function setUp(): void
     {
+        $this->responseFactory = new DummyResponseFactory();
         $this->eventBusMock = $this->createMock(EventBus::class);
         $this->requestMock = $this->createMock(ServerRequestInterface::class);
         $this->streamMock = $this->createMock(StreamInterface::class);
 
-        $this->webHookController = new WebHookController($this->eventBusMock);
+        $this->webHookController = new WebHookController($this->responseFactory, $this->eventBusMock);
     }
 
     public function testHandleSuccess(): void

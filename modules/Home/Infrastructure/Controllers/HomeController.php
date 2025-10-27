@@ -10,6 +10,7 @@ use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -18,9 +19,9 @@ class HomeController extends HttpHandler
     use FileHandlerTrait;
     private QueryBus $query_bus;
 
-    public function __construct(QueryBus $query_bus)
+    public function __construct(ResponseFactoryInterface $response_factory, QueryBus $query_bus)
     {
-        parent::__construct();
+        parent::__construct($response_factory);
         $this->query_bus = $query_bus;
     }
 

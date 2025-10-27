@@ -4,31 +4,27 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Contracts\Classes;
 
-use GuzzleHttp\Psr7\HttpFactory;
-use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\UploadedFileFactoryInterface;
-use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 abstract class HttpHandler implements RequestHandlerInterface
 {
-    /**
-     * @var RequestFactoryInterface|ResponseFactoryInterface|ServerRequestFactoryInterface|StreamFactoryInterface|UploadedFileFactoryInterface|UriFactoryInterface
-     */
-    protected $response_factory;
+    protected ResponseFactoryInterface $response_factory;
 
     protected \SplQueue $queue;
 
-    public function __construct()
+    /**
+     * HttpHandler constructor.
+     *
+     * @param ResponseFactoryInterface $response_factory Factory for creating PSR-7 responses
+     */
+    public function __construct(ResponseFactoryInterface $response_factory)
     {
         $this->queue = new \SplQueue();
-        $this->response_factory = new HttpFactory();
+        $this->response_factory = $response_factory;
     }
 
     public function setMiddlewares(array $middlewares): void

@@ -6,18 +6,17 @@ namespace CubaDevOps\Flexi\Test\Modules\Auth\Infrastructure\Middlewares;
 
 use CubaDevOps\Flexi\Contracts\Interfaces\SecretProviderInterface;
 use CubaDevOps\Flexi\Modules\Auth\Infrastructure\Middlewares\JWTAuthMiddleware;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyResponseFactory;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\TestHttpHandler;
 use Firebase\JWT\JWT;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class JWTAuthMiddlewareTest extends TestCase
 {
     private SecretProviderInterface $secret_provider;
-    private ResponseFactoryInterface $responseFactory;
+    private DummyResponseFactory $responseFactory;
     private RequestHandlerInterface $handler;
     private ServerRequestInterface $request;
 
@@ -78,15 +77,8 @@ class JWTAuthMiddlewareTest extends TestCase
     protected function setUp(): void
     {
         $this->secret_provider = $this->createMock(SecretProviderInterface::class);
-        $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
-        $this->handler = new TestHttpHandler();
+        $this->responseFactory = new DummyResponseFactory();
         $this->request = $this->createMock(ServerRequestInterface::class);
-
-        $callback = function (int $status, string $reason) {
-            return new Response($status, [], null, '1.1', $reason);
-        };
-        $this->responseFactory
-            ->method('createResponse')
-            ->willReturnCallback($callback);
+        $this->handler = new TestHttpHandler($this->responseFactory);
     }
 }

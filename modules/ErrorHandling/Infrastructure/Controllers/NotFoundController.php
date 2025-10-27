@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\ErrorHandling\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Contracts\SessionStorageContract;
-use CubaDevOps\Flexi\Contracts\TemplateEngineContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\SessionStorageInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\TemplateEngineInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
@@ -17,13 +17,13 @@ class NotFoundController extends HttpHandler
 {
     use FileHandlerTrait;
 
-    private TemplateEngineContract $html_render;
-    private SessionStorageContract $session;
+    private TemplateEngineInterface $html_render;
+    private SessionStorageInterface $session;
     private LoggerInterface $logger;
 
     public function __construct(
-        TemplateEngineContract $html_render,
-        SessionStorageContract $session,
+        TemplateEngineInterface $html_render,
+        SessionStorageInterface $session,
         LoggerInterface $logger
     ) {
         $this->html_render = $html_render;

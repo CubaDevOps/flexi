@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Persistence;
 
-use CubaDevOps\Flexi\Contracts\LogContract;
-use CubaDevOps\Flexi\Contracts\LogRepositoryContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\LogInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\LogRepositoryInterface;
 use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 
-class InFileLogRepository implements LogRepositoryContract
+class InFileLogRepository implements LogRepositoryInterface
 {
     use FileHandlerTrait;
 
@@ -27,7 +27,7 @@ class InFileLogRepository implements LogRepositoryContract
         $this->format = $format;
     }
 
-    public function save(LogContract $log): void
+    public function save(LogInterface $log): void
     {
         $this->writeToFile(
             $this->path,
@@ -36,7 +36,7 @@ class InFileLogRepository implements LogRepositoryContract
         );
     }
 
-    private function formatMessage(LogContract $log): string
+    private function formatMessage(LogInterface $log): string
     {
         $values = [
             '{level}' => $log->getLogLevel()->getValue(),

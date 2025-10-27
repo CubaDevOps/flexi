@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Contracts\ServiceDefinitionContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\ServiceDefinitionInterface;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Service;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class ServiceTest extends TestCase
     public function setUp(): void
     {
         $this->type = $this->createMock(ServiceType::class);
-        $this->definition = $this->createMock(ServiceDefinitionContract::class);
+        $this->definition = $this->createMock(ServiceDefinitionInterface::class);
 
         $this->service = new Service(self::SERVICE_NAME, $this->type, $this->definition);
     }

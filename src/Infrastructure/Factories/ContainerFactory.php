@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Contracts\CacheContract;
-use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServicesDefinitionParser;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
@@ -16,10 +16,10 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class ContainerFactory
 {
-    private CacheContract $cache;
-    private ObjectBuilderContract $object_builder;
+    private CacheInterface $cache;
+    private ObjectBuilderInterface $object_builder;
 
-    public function __construct(CacheContract $cache, ObjectBuilderContract $object_builder)
+    public function __construct(CacheInterface $cache, ObjectBuilderInterface $object_builder)
     {
         $this->cache = $cache;
         $this->object_builder = $object_builder;

@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Application\Services;
 
-use CubaDevOps\Flexi\Contracts\BusContract;
-use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\BusInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 
 class DTOFactory
 {
-    public static function fromArray(BusContract $bus, string $id, array $data): DTOContract
+    public static function fromArray(BusInterface $bus, string $id, array $data): DTOInterface
     {
         if (!$bus->hasHandler($id)) {
             return new NotFoundCommand();
         }
 
-        /** @var DTOContract $dto */
+        /** @var DTOInterface $dto */
         $dto = class_exists($id) ? $id : $bus->getDtoClassFromAlias($id);
 
         return $dto::fromArray($data);

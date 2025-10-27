@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\HealthCheck\Application\Queries;
 
-use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
 
-class GetVersionQuery implements DTOContract
+class GetVersionQuery implements DTOInterface
 {
     public function toArray(): array
     {

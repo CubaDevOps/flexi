@@ -3,28 +3,28 @@
 ## ✅ Migración Finalizada
 
 ### **Value Objects Migrados** ✅
-- [x] `LogLevel.php` → `ValueObjectContract`
-- [x] `ID.php` → `ValueObjectContract`
-- [x] `ServiceType.php` → `ValueObjectContract`
-- [x] `Version.php` → `ValueObjectContract`
-- [x] `CollectionType.php` → `ValueObjectContract`
-- [x] `Operator.php` → `ValueObjectContract`
-- [x] `Order.php` → `ValueObjectContract`
+- [x] `LogLevel.php` → `ValueObjectInterface`
+- [x] `ID.php` → `ValueObjectInterface`
+- [x] `ServiceType.php` → `ValueObjectInterface`
+- [x] `Version.php` → `ValueObjectInterface`
+- [x] `CollectionType.php` → `ValueObjectInterface`
+- [x] `Operator.php` → `ValueObjectInterface`
+- [x] `Order.php` → `ValueObjectInterface`
 
 ### **Domain Classes Migradas** ✅
-- [x] `DummyEntity.php` → `EntityContract`
-- [x] `Collection.php` → `CollectionContract`
-- [x] `Log.php` → `LogContract`
-- [x] `Service.php` → `ServiceDefinitionContract`
-- [x] `ServiceClassDefinition.php` → `ServiceDefinitionContract`
-- [x] `ServiceFactoryDefinition.php` → `ServiceDefinitionContract`
-- [x] `DummySearchCriteria.php` → `CriteriaContract`
-- [x] `ServicesDefinitionParser.php` → `CacheContract`
+- [x] `DummyEntity.php` → `EntityInterface`
+- [x] `Collection.php` → `CollectionInterface`
+- [x] `Log.php` → `LogInterface`
+- [x] `Service.php` → `ServiceDefinitionInterface`
+- [x] `ServiceClassDefinition.php` → `ServiceDefinitionInterface`
+- [x] `ServiceFactoryDefinition.php` → `ServiceDefinitionInterface`
+- [x] `DummySearchCriteria.php` → `CriteriaInterface`
+- [x] `ServicesDefinitionParser.php` → `CacheInterface`
 
 ### **Nuevos Contratos Creados** ✅
-- [x] `ServiceDefinitionContract.php`
-- [x] `LogContract.php`
-- [x] `CriteriaContract.php`
+- [x] `ServiceDefinitionInterface.php`
+- [x] `LogInterface.php`
+- [x] `CriteriaInterface.php`
 
 ### **Estado de la Migración**
 ```bash
@@ -47,11 +47,11 @@ src/Domain/Interfaces/ (scattered, PSR mixed)
 ### **Después** ✅
 ```
 contracts/src/ (centralized, PSR-first)
-├── EntityContract.php
-├── ValueObjectContract.php
-├── LogContract.php
-├── ServiceDefinitionContract.php
-├── CriteriaContract.php
+├── EntityInterface.php
+├── ValueObjectInterface.php
+├── LogInterface.php
+├── ServiceDefinitionInterface.php
+├── CriteriaInterface.php
 └── ... (all PSR dependencies managed here)
 ```
 
@@ -67,12 +67,12 @@ contracts/src/ (centralized, PSR-first)
 // En tests: Cambiar
 $this->createMock(LogInterface::class)
 // Por:
-$this->createMock(LogContract::class)
+$this->createMock(LogInterface::class)
 
 // En Use Cases: Cambiar
 public function handle(): MessageInterface
 // Por:
-public function handle(): MessageContract
+public function handle(): MessageInterface
 ```
 
 ## 📊 Impacto de la Migración

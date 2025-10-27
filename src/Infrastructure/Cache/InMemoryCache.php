@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Cache;
 
-use CubaDevOps\Flexi\Contracts\CacheContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
 use CubaDevOps\Flexi\Domain\Exceptions\InvalidArgumentCacheException;
 
-class InMemoryCache implements CacheContract
+class InMemoryCache implements CacheInterface
 {
     private array $cache;
 

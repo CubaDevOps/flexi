@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\DevTools\Application\Queries;
 
-use CubaDevOps\Flexi\Contracts\CliDTOContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CliDTOInterface;
 
-class ListQueriesQuery implements CliDTOContract
+class ListQueriesQuery implements CliDTOInterface
 {
     private bool $with_aliases;
 

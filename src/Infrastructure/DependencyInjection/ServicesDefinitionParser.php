@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Contracts\CacheContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
 use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
 use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
@@ -20,11 +20,11 @@ class ServicesDefinitionParser
     private const ERROR_SERVICE_ALREADY_DEFINED = 'Service %s is already defined in %s';
     private const ERROR_FILE_NOT_FOUND = 'Service file not found: %s';
 
-    private CacheContract $cache;
+    private CacheInterface $cache;
     private array $serviceDefinitions = [];
     private array $filesProcessed = [];
 
-    public function __construct(CacheContract $cache)
+    public function __construct(CacheInterface $cache)
     {
         $this->cache = $cache;
         $this->filesProcessed = $cache->get(self::SERVICE_DEFINITION_FILES_KEY, []);

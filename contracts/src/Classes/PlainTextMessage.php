@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Contracts\Classes;
 
-use CubaDevOps\Flexi\Contracts\MessageContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;;
 use DateTimeImmutable;
 
-class PlainTextMessage implements MessageContract
+class PlainTextMessage implements MessageInterface
 {
     private string $body;
     private \DateTimeImmutable $created_at;

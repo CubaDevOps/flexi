@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Contracts\ValueObjects;
 
-use CubaDevOps\Flexi\Contracts\ValueObjectContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\ValueObjectInterface;;
 
 /**
  * Describes log levels.
  */
-class LogLevel implements ValueObjectContract
+class LogLevel implements ValueObjectInterface
 {
     public const EMERGENCY = 'emergency';
     public const ALERT = 'alert';
@@ -59,7 +59,7 @@ class LogLevel implements ValueObjectContract
         return $currentLevelIndex < $thresholdLevelIndex;
     }
 
-    public function equals(ValueObjectContract $other): bool
+    public function equals(ValueObjectInterface $other): bool
     {
         return $other instanceof self && $this->level === $other->getValue();
     }

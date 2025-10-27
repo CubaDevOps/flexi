@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Contracts;
+namespace CubaDevOps\Flexi\Contracts\Interfaces;
 
 /**
- * Contract for DTOs (Data Transfer Objects)
- * Pure contract without dependencies.
+ * Interface for DTOs (Data Transfer Objects)
+ * Pure interface without dependencies.
  */
-interface DTOContract
+interface DTOInterface
 {
     /**
      * Create a DTO instance from an array.

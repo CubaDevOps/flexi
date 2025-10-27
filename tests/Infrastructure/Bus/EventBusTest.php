@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
 use CubaDevOps\Flexi\Application\EventListeners\LoggerEventListener;
-use CubaDevOps\Flexi\Contracts\ConfigurationRepositoryContract;
-use CubaDevOps\Flexi\Contracts\EventContract;
-use CubaDevOps\Flexi\Contracts\LogRepositoryContract;
-use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\EventInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\LogRepositoryInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
@@ -31,10 +31,10 @@ class EventBusTest extends TestCase
     public function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->class_factory = $this->createMock(ObjectBuilderContract::class);
+        $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
 
-        $configRepo = $this->createMock(ConfigurationRepositoryContract::class);
-        $logRepository = $this->createMock(LogRepositoryContract::class);
+        $configRepo = $this->createMock(ConfigurationRepositoryInterface::class);
+        $logRepository = $this->createMock(LogRepositoryInterface::class);
 
         // Create a simpler logger for testing
         $logger = $this->createMock(LoggerInterface::class);
@@ -51,7 +51,7 @@ class EventBusTest extends TestCase
      */
     public function testExecute(): void
     {
-        $dtoMock = $this->createMock(EventContract::class);
+        $dtoMock = $this->createMock(EventInterface::class);
         $handlerMock = $this->createMock(LoggerEventListener::class);
 
         $dtoMock->expects($this->once())->method('getName')->willReturn('*');

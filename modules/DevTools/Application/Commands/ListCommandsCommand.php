@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\DevTools\Application\Commands;
 
-use CubaDevOps\Flexi\Contracts\CliDTOContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CliDTOInterface;
 
-class ListCommandsCommand implements CliDTOContract
+class ListCommandsCommand implements CliDTOInterface
 {
     private bool $with_aliases;
 

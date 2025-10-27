@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Modules\DevTools\Test\Application\UseCase;
 
 use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Contracts\BusContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
 use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListQueries;
 use PHPUnit\Framework\TestCase;
 
 class ListQueriesTest extends TestCase
 {
-    private BusContract $queryBus;
+    private BusInterface $queryBus;
     private ListQueries $listQueries;
 
     public function setUp(): void
     {
-        $this->queryBus = $this->createMock(BusContract::class);
+        $this->queryBus = $this->createMock(BusInterface::class);
         $this->listQueries = new ListQueries($this->queryBus);
     }
 

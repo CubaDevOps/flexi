@@ -39,21 +39,21 @@
 │  └─────────────────────────────────────────────────┘   │
 │  ┌─────────────────────────────────────────────────┐   │
 │  │              Framework Contracts                 │   │
-│  │  • DTOContract                                  │   │
-│  │  • HandlerContract                              │   │
-│  │  • BusContract                                  │   │
-│  │  • EventContract (extends PSR-14)              │   │
-│  │  • EventBusContract (extends PSR-14)           │   │
-│  │  • EventListenerContract                       │   │
-│  │  • MessageContract                              │   │
-│  │  • CollectionContract                           │   │
-│  │  • TemplateEngineContract                       │   │
-│  │  • TemplateContract                             │   │
-│  │  • EntityContract                               │   │
-│  │  • ValueObjectContract                          │   │
-│  │  • RepositoryContract                           │   │
-│  │  • FactoryContract                              │   │
-│  │  • CacheContract (pure PSR-16)                 │   │
+│  │  • DTOInterface                                  │   │
+│  │  • HandlerInterface                              │   │
+│  │  • BusInterface                                  │   │
+│  │  • EventInterface (extends PSR-14)              │   │
+│  │  • EventBusInterface (extends PSR-14)           │   │
+│  │  • EventListenerInterface                       │   │
+│  │  • MessageInterface                              │   │
+│  │  • CollectionInterface                           │   │
+│  │  • TemplateEngineInterface                       │   │
+│  │  • TemplateInterface                             │   │
+│  │  • EntityInterface                               │   │
+│  │  • ValueObjectInterface                          │   │
+│  │  • RepositoryInterface                           │   │
+│  │  • FactoryInterface                              │   │
+│  │  • CacheInterface (pure PSR-16)                 │   │
 │  └─────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────┘
                            ↑

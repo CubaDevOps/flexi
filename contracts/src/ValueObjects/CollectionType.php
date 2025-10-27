@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Contracts\ValueObjects;
 
-use CubaDevOps\Flexi\Contracts\ValueObjectContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\ValueObjectInterface;;
 
-class CollectionType implements ValueObjectContract
+class CollectionType implements ValueObjectInterface
 {
     public const TYPE_ENUMS = [
         'array' => true,
@@ -47,7 +47,7 @@ class CollectionType implements ValueObjectContract
         return $this->type;
     }
 
-    public function equals(ValueObjectContract $other): bool
+    public function equals(ValueObjectInterface $other): bool
     {
         return $other instanceof self && $this->type === $other->getValue();
     }

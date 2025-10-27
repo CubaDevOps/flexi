@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Session;
 
-use CubaDevOps\Flexi\Contracts\SessionStorageContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\SessionStorageInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * @template TKey
  * @template TValue
  *
- * @implements SessionStorageContract<TKey,TValue>
+ * @implements SessionStorageInterface<TKey,TValue>
  */
-class NativeSessionStorage implements SessionStorageContract
+class NativeSessionStorage implements SessionStorageInterface
 {
     private array $storage;
     private LoggerInterface $logger;

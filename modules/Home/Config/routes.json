@@ -12,7 +12,9 @@
       "path": "/auth-example",
       "method": "GET",
       "controller": "CubaDevOps\\Flexi\\Modules\\Home\\Infrastructure\\Controllers\\AuthenticatedController",
-      "parameters": [],
+      "parameters": [
+        "TODO: remove this endpoint or move the middleware to a more appropriate place"
+      ],
       "middlewares": [
         "CubaDevOps\\Flexi\\Infrastructure\\Middlewares\\AuthCheckMiddleware"
       ]

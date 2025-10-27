@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Contracts;
+namespace CubaDevOps\Flexi\Contracts\Interfaces;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-interface EventBusContract extends BusContract, EventDispatcherInterface
+interface EventBusInterface extends BusInterface, EventDispatcherInterface
 {
     public function getListeners(string $event): array;
 }

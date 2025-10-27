@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Contracts;
+namespace CubaDevOps\Flexi\Contracts\Interfaces;
 
 /**
- * Contract for Domain Entities
+ * Interface for Domain Entities
  * Objects with identity that can change over time.
  */
-interface EntityContract
+interface EntityInterface
 {
     /**
      * Get the unique identifier.

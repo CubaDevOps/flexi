@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Contracts\CliDTOContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CliDTOInterface;
 use CubaDevOps\Flexi\Application\Services\DTOFactory;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use Psr\Container\ContainerExceptionInterface;
@@ -27,7 +27,7 @@ class QueryHandler
     public function handle(CliInput $input): string
     {
         $dto = DTOFactory::fromArray($this->query_bus, $input->getCommandName(), $input->getArguments());
-        if ($dto instanceof CliDTOContract && $input->showHelp()) {
+        if ($dto instanceof CliDTOInterface && $input->showHelp()) {
             return $dto->usage();
         }
 

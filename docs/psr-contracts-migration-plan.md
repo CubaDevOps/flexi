@@ -96,12 +96,12 @@ modules/
 
 ### **Step 2: Migrate Current Interfaces**
 ```php
-// En lugar de crear ModuleContract, migrar interfaces existentes:
-src/Domain/Interfaces/DTOInterface.php → contracts/src/DTOContract.php
-src/Domain/Interfaces/HandlerInterface.php → contracts/src/HandlerContract.php
-src/Domain/Interfaces/EntityInterface.php → contracts/src/EntityContract.php
-src/Domain/Interfaces/ValueObjectInterface.php → contracts/src/ValueObjectContract.php
-src/Domain/Interfaces/RepositoryInterface.php → contracts/src/RepositoryContract.php
+// En lugar de crear ModuleInterface, migrar interfaces existentes:
+src/Domain/Interfaces/DTOInterface.php → contracts/src/DTOInterface.php
+src/Domain/Interfaces/HandlerInterface.php → contracts/src/HandlerInterface.php
+src/Domain/Interfaces/EntityInterface.php → contracts/src/EntityInterface.php
+src/Domain/Interfaces/ValueObjectInterface.php → contracts/src/ValueObjectInterface.php
+src/Domain/Interfaces/RepositoryInterface.php → contracts/src/RepositoryInterface.php
 
 // Mantener estructura JSON existente - NO cambiar
 modules/*/Config/*.json ← KEEP AS IS
@@ -132,7 +132,7 @@ modules/*/Config/*.json ← KEEP AS IS
 ## 🚀 Next Steps
 
 1. **Migrate Current Interfaces** → Move to contracts/
-2. **Update Module Structure** → Implement ModuleContract
+2. **Update Module Structure** → Implement ModuleInterface
 3. **Create Framework Registry** → Central service discovery
 4. **Update Dependencies** → Point to contracts instead of core
 5. **Test & Validate** → Ensure no circular deps

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Contracts\EventBusContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Events\Event;
 
 class EventHandler
 {
-    private EventBusContract $event_bus;
+    private EventBusInterface $event_bus;
 
-    public function __construct(EventBusContract $event_bus)
+    public function __construct(EventBusInterface $event_bus)
     {
         $this->event_bus = $event_bus;
     }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Contracts;
+namespace CubaDevOps\Flexi\Contracts\Interfaces;
 
-interface ServiceDefinitionContract
+interface ServiceDefinitionInterface
 {
     public function getClass(): string;
 

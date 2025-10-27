@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Contracts\CriteriaContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CriteriaInterface;
 
-class DummySearchCriteria implements CriteriaContract
+class DummySearchCriteria implements CriteriaInterface
 {
     public function __toString(): string
     {

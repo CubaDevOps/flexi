@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\HealthCheck\Domain\Entities;
 
-use CubaDevOps\Flexi\Contracts\EntityContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\EntityInterface;
 use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
 
 /**
  * Entity representing version information.
  * This is a placeholder entity used by VersionRepository when no specific entity is needed.
  */
-class VersionEntity implements EntityContract
+class VersionEntity implements EntityInterface
 {
     private ID $id;
     private \DateTimeImmutable $createdAt;

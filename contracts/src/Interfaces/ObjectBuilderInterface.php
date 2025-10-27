@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Contracts;
+namespace CubaDevOps\Flexi\Contracts\Interfaces;
 
 use Psr\Container\ContainerInterface;
 
-interface ObjectBuilderContract
+interface ObjectBuilderInterface
 {
     public function build(ContainerInterface $container, string $className): object;
 

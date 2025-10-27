@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
 use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Contracts\EventBusContract;
-use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Test\TestData\Commands\TestCommand;
 use CubaDevOps\Flexi\Test\TestData\Handlers\TestCommandHandler;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
@@ -19,8 +19,8 @@ class CommandBusTest extends TestCase
 {
     private CommandBus $commandBus;
     private ContainerInterface $container;
-    private EventBusContract $event_bus;
-    private ObjectBuilderContract $class_factory;
+    private EventBusInterface $event_bus;
+    private ObjectBuilderInterface $class_factory;
 
     /**
      * @throws NotFoundExceptionInterface
@@ -31,8 +31,8 @@ class CommandBusTest extends TestCase
     public function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->event_bus = $this->createMock(EventBusContract::class);
-        $this->class_factory = $this->createMock(ObjectBuilderContract::class);
+        $this->event_bus = $this->createMock(EventBusInterface::class);
+        $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
 
         $this->commandBus = new CommandBus($this->container, $this->event_bus, $this->class_factory);
 

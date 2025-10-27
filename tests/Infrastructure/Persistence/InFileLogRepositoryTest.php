@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\Persistence;
 
-use CubaDevOps\Flexi\Contracts\LogContract;
-use CubaDevOps\Flexi\Contracts\MessageContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\LogInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
 use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\FileHandler;
@@ -27,7 +27,7 @@ class InFileLogRepositoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->log = $this->createMock(LogContract::class);
+        $this->log = $this->createMock(LogInterface::class);
 
         $this->repository = new InFileLogRepository(
             $this->log_path,
@@ -43,7 +43,7 @@ class InFileLogRepositoryTest extends TestCase
         $this->log->expects($this->exactly(2))
             ->method('getLogLevel')->willReturn($logLevel);
 
-        $message = $this->createMock(MessageContract::class);
+        $message = $this->createMock(MessageInterface::class);
         $createdAt = $this->createMock(\DateTimeImmutable::class);
 
         $this->log->expects($this->exactly(2))

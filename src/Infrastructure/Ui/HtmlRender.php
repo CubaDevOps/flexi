@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui;
 
-use CubaDevOps\Flexi\Contracts\TemplateEngineContract;
-use CubaDevOps\Flexi\Contracts\TemplateLocatorContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\TemplateEngineInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\TemplateLocatorInterface;
 
-class HtmlRender implements TemplateEngineContract
+class HtmlRender implements TemplateEngineInterface
 {
-    private TemplateLocatorContract $template_locator;
+    private TemplateLocatorInterface $template_locator;
 
-    public function __construct(TemplateLocatorContract $template_locator)
+    public function __construct(TemplateLocatorInterface $template_locator)
     {
         $this->template_locator = $template_locator;
     }

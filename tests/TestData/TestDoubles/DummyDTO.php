@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
 
-class DummyDTO implements DTOContract
+class DummyDTO implements DTOInterface
 {
     /**
      * @return string[]

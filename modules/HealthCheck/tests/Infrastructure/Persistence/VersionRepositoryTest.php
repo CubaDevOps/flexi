@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\HealthCheck\Test\Infrastructure\Persistence;
 
-use CubaDevOps\Flexi\Contracts\CriteriaContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CriteriaInterface;
 use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
 use CubaDevOps\Flexi\Modules\HealthCheck\Domain\Entities\VersionEntity;
 use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
@@ -21,7 +21,7 @@ class VersionRepositoryTest extends TestCase
 
     public function testRetrieveValue(): void
     {
-        $criteria = $this->createMock(CriteriaContract::class);
+        $criteria = $this->createMock(CriteriaInterface::class);
 
         $version = $this->versionRepository->retrieveValue($criteria);
 

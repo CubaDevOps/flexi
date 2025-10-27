@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Infrastructure\Http;
 
 use CubaDevOps\Flexi\Contracts\Classes\ObjectCollection;
-use CubaDevOps\Flexi\Contracts\EventBusContract;
-use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
-use CubaDevOps\Flexi\Contracts\SessionStorageContract;
-use CubaDevOps\Flexi\Contracts\CacheContract;
-use CubaDevOps\Flexi\Contracts\CollectionContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\SessionStorageInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\CollectionInterface;
 use CubaDevOps\Flexi\Infrastructure\Http\Route;
 use CubaDevOps\Flexi\Infrastructure\Utils\CacheKeyGeneratorTrait;
 use CubaDevOps\Flexi\Domain\Events\Event;
@@ -31,16 +31,16 @@ class Router
 
     protected ObjectCollection $routes_indexed_by_name;
     protected ObjectCollection $routes_indexed_by_path;
-    protected SessionStorageContract $session;
-    protected EventBusContract $event_bus;
-    protected ObjectBuilderContract $class_factory;
+    protected SessionStorageInterface $session;
+    protected EventBusInterface $event_bus;
+    protected ObjectBuilderInterface $class_factory;
     protected ResponseFactoryInterface $response_factory;
     protected ContainerInterface $container;
 
     public function __construct(
-        SessionStorageContract $session,
-        EventBusContract $event_bus,
-        ObjectBuilderContract $class_factory,
+        SessionStorageInterface $session,
+        EventBusInterface $event_bus,
+        ObjectBuilderInterface $class_factory,
         ResponseFactoryInterface $response_factory,
         ContainerInterface $container
     ) {

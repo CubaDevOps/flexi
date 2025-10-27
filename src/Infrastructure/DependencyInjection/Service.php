@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Contracts\ServiceDefinitionContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\ServiceDefinitionInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
 
 class Service
 {
     private ServiceType $type;
-    private ServiceDefinitionContract $definition;
+    private ServiceDefinitionInterface $definition;
     private string $name;
 
     public function __construct(
         string $name,
         ServiceType $type,
-        ServiceDefinitionContract $definition
+        ServiceDefinitionInterface $definition
     ) {
         $this->name = $name;
         $this->type = $type;
@@ -28,7 +28,7 @@ class Service
         return $this->type;
     }
 
-    public function getDefinition(): ServiceDefinitionContract
+    public function getDefinition(): ServiceDefinitionInterface
     {
         return $this->definition;
     }

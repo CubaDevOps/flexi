@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Modules\DevTools\Application\UseCase;
 
 use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Contracts\DTOContract;
-use CubaDevOps\Flexi\Contracts\HandlerContract;
-use CubaDevOps\Flexi\Contracts\MessageContract;
-use CubaDevOps\Flexi\Contracts\BusContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\HandlerInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
 
-class ListQueries implements HandlerContract
+class ListQueries implements HandlerInterface
 {
-    private BusContract $queryBus;
+    private BusInterface $queryBus;
 
-    public function __construct(BusContract $queryBus)
+    public function __construct(BusInterface $queryBus)
     {
         $this->queryBus = $queryBus;
     }
@@ -25,7 +25,7 @@ class ListQueries implements HandlerContract
      *
      * @throws \JsonException
      */
-    public function handle(DTOContract $dto): MessageContract
+    public function handle(DTOInterface $dto): MessageInterface
     {
         $list = json_encode($this->queryBus->getHandlersDefinition($dto->withAliases()), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
 

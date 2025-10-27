@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
 use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Contracts\EventBusContract;
-use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Test\TestData\Queries\TestQuery;
 use CubaDevOps\Flexi\Test\TestData\Handlers\TestQueryHandler;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
@@ -31,8 +31,8 @@ class QueryBusTest extends TestCase
     public function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->event_bus = $this->createMock(EventBusContract::class);
-        $this->class_factory = $this->createMock(ObjectBuilderContract::class);
+        $this->event_bus = $this->createMock(EventBusInterface::class);
+        $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
 
         $this->queryBus = new QueryBus($this->container, $this->event_bus, $this->class_factory);
 

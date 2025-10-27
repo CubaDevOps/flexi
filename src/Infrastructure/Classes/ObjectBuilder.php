@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Contracts\CacheContract;
-use CubaDevOps\Flexi\Contracts\ObjectBuilderContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Infrastructure\Utils\CacheKeyGeneratorTrait;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class ObjectBuilder implements ObjectBuilderContract
+class ObjectBuilder implements ObjectBuilderInterface
 {
     use CacheKeyGeneratorTrait;
 
@@ -20,9 +20,9 @@ class ObjectBuilder implements ObjectBuilderContract
     private const ERROR_PARAMETER_NO_TYPE = 'Parameter %s has no type';
     private const ERROR_INVALID_DEFINITION = 'Invalid service definition';
 
-    private CacheContract $cache;
+    private CacheInterface $cache;
 
-    public function __construct(CacheContract $cache)
+    public function __construct(CacheInterface $cache)
     {
         $this->cache = $cache;
     }

@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence;
 
 use CubaDevOps\Flexi\Contracts\Classes\ObjectCollection;
-use CubaDevOps\Flexi\Contracts\CollectionContract;
-use CubaDevOps\Flexi\Contracts\CriteriaContract;
-use CubaDevOps\Flexi\Contracts\EntityContract;
-use CubaDevOps\Flexi\Contracts\RepositoryContract;
-use CubaDevOps\Flexi\Contracts\ValueObjectContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CollectionInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\CriteriaInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\EntityInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\RepositoryInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\ValueObjectInterface;
 use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
 use CubaDevOps\Flexi\Contracts\ValueObjects\Version;
 use CubaDevOps\Flexi\Modules\HealthCheck\Domain\Entities\VersionEntity;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 
-class VersionRepository implements RepositoryContract
+class VersionRepository implements RepositoryInterface
 {
     use JsonFileReader;
 
@@ -25,8 +25,8 @@ class VersionRepository implements RepositoryContract
      * @throws \JsonException
      */
     public function retrieveValue(
-        CriteriaContract $criteria
-    ): ValueObjectContract {
+        CriteriaInterface $criteria
+    ): ValueObjectInterface {
         $version_string = $this->readJsonFile('composer.json')['version'];
         [$major, $minor, $patch] = array_map('intval', explode('.', $version_string));
 
@@ -36,19 +36,19 @@ class VersionRepository implements RepositoryContract
     /**
      * @return VersionEntity
      */
-    public function get(ID $id): EntityContract
+    public function get(ID $id): EntityInterface
     {
         return new VersionEntity();
     }
 
-    public function delete(EntityContract $entity): void
+    public function delete(EntityInterface $entity): void
     {
     }
 
     /**
      * @return ObjectCollection
      */
-    public function getAll(): CollectionContract
+    public function getAll(): CollectionInterface
     {
         return new ObjectCollection(__CLASS__);
     }
@@ -56,17 +56,17 @@ class VersionRepository implements RepositoryContract
     /**
      * @return ObjectCollection
      */
-    public function search(CriteriaContract $criteria): CollectionContract
+    public function search(CriteriaInterface $criteria): CollectionInterface
     {
         return new ObjectCollection(__CLASS__);
     }
 
-    public function findById($id): ?EntityContract
+    public function findById($id): ?EntityInterface
     {
         return new VersionEntity();
     }
 
-    public function save(EntityContract $entity): void
+    public function save(EntityInterface $entity): void
     {
     }
 }

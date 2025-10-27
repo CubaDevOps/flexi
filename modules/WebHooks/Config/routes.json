@@ -8,7 +8,9 @@
       "middlewares": [
         "CubaDevOps\\Flexi\\Infrastructure\\Middlewares\\JWTAuthMiddleware"
       ],
-      "parameters": []
+      "parameters": [
+        "TODO: move the middleware to a more appropriate place"
+      ]
     }
   ]
 }

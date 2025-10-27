@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Modules\Home\Application;
 
 use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Contracts\DTOContract;
-use CubaDevOps\Flexi\Contracts\HandlerContract;
-use CubaDevOps\Flexi\Contracts\MessageContract;
-use CubaDevOps\Flexi\Contracts\TemplateEngineContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\HandlerInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\TemplateEngineInterface;
 use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 
-class RenderHome implements HandlerContract
+class RenderHome implements HandlerInterface
 {
-    private TemplateEngineContract $html_render;
+    private TemplateEngineInterface $html_render;
 
-    public function __construct(TemplateEngineContract $html_render)
+    public function __construct(TemplateEngineInterface $html_render)
     {
         $this->html_render = $html_render;
     }
@@ -23,7 +23,7 @@ class RenderHome implements HandlerContract
     /**
      * @param HomePageDTO $dto
      */
-    public function handle(DTOContract $dto): MessageContract
+    public function handle(DTOInterface $dto): MessageInterface
     {
         return new PlainTextMessage(
             $this->html_render->render(

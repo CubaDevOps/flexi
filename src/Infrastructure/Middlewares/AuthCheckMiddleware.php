@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Middlewares;
 
-use CubaDevOps\Flexi\Contracts\SessionStorageContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\SessionStorageInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,10 +13,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class AuthCheckMiddleware implements MiddlewareInterface
 {
-    private SessionStorageContract $session;
+    private SessionStorageInterface $session;
     private ResponseFactoryInterface $response_factory;
 
-    public function __construct(SessionStorageContract $session, ResponseFactoryInterface $response_factory)
+    public function __construct(SessionStorageInterface $session, ResponseFactoryInterface $response_factory)
     {
         $this->session = $session;
         $this->response_factory = $response_factory;

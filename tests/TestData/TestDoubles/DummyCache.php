@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Contracts\CacheContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
 
 /**
  * Dummy cache that doesn't cache anything.
  * Used for testing to avoid cache interference between tests.
  */
-class DummyCache implements CacheContract
+class DummyCache implements CacheInterface
 {
     public function get($key, $default = null)
     {

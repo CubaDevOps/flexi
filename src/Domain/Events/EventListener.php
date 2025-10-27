@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Events;
 
-use CubaDevOps\Flexi\Contracts\DTOContract;
-use CubaDevOps\Flexi\Contracts\EventContract;
-use CubaDevOps\Flexi\Contracts\EventListenerContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\EventInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\EventListenerInterface;
 
-abstract class EventListener implements EventListenerContract
+abstract class EventListener implements EventListenerInterface
 {
-    public function handle(DTOContract $dto): void
+    public function handle(DTOInterface $dto): void
     {
-        if ($dto instanceof EventContract) {
+        if ($dto instanceof EventInterface) {
             $this->handleEvent($dto);
         }
     }

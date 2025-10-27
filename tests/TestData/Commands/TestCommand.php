@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\TestData\Commands;
 
-use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
 
 /**
  * Simple test command for unit testing purposes.
  * This is a real implementation, not a test double.
  */
-class TestCommand implements DTOContract
+class TestCommand implements DTOInterface
 {
     public function toArray(): array
     {

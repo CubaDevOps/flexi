@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Contracts\ValueObjects;
 
-use CubaDevOps\Flexi\Contracts\ValueObjectContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\ValueObjectInterface;;
 
-class Version implements ValueObjectContract
+class Version implements ValueObjectInterface
 {
     private int $major_version;
     private int $minor_version;
@@ -34,7 +34,7 @@ class Version implements ValueObjectContract
         return (int) "$this->major_version$this->minor_version$this->fix_version";
     }
 
-    public function equals(ValueObjectContract $other): bool
+    public function equals(ValueObjectInterface $other): bool
     {
         return $other instanceof self
             && $this->major_version === $other->major_version

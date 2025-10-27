@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Contracts\ValueObjectContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\ValueObjectInterface;
 
-class ServiceType implements ValueObjectContract
+class ServiceType implements ValueObjectInterface
 {
     public const TYPE_CLASS = 'class';
     public const TYPE_FACTORY = 'factory';
@@ -32,7 +32,7 @@ class ServiceType implements ValueObjectContract
         return $this->type;
     }
 
-    public function equals(ValueObjectContract $other): bool
+    public function equals(ValueObjectInterface $other): bool
     {
         return $other instanceof self && $this->type === $other->getValue();
     }

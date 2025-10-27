@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Modules\HealthCheck\Test\Application\UseCase;
 
 use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Contracts\ValueObjects\Version;
 use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
 use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
@@ -25,7 +25,7 @@ class HealthTest extends TestCase
 
     public function testHandleEvent(): void
     {
-        $dto = $this->createMock(DTOContract::class);
+        $dto = $this->createMock(DTOInterface::class);
 
         $this->versionRepository->expects($this->once())
             ->method('retrieveValue')

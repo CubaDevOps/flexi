@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Contracts;
+namespace CubaDevOps\Flexi\Contracts\Interfaces;
 
 /**
  * Contract for Value Objects
  * Immutable objects that represent a concept by their value.
  */
-interface ValueObjectContract
+interface ValueObjectInterface
 {
     /**
      * Get the value of this value object.
@@ -18,7 +18,7 @@ interface ValueObjectContract
     /**
      * Compare with another value object.
      */
-    public function equals(ValueObjectContract $other): bool;
+    public function equals(ValueObjectInterface $other): bool;
 
     /**
      * String representation.

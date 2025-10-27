@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Test\Domain\Entities;
 
 use CubaDevOps\Flexi\Contracts\Classes\Log;
 use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Contracts\MessageContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +18,7 @@ class LogTest extends TestCase
     ];
 
     private LogLevel $logLevel;
-    private MessageContract $message;
+    private MessageInterface $message;
     private Log $log;
 
     public function setUp(): void
@@ -39,7 +39,7 @@ class LogTest extends TestCase
     {
         $this->assertEquals($this->message->get('body'), $this->log->__toString());
         $this->assertEquals($this->message->get('body'), $this->log->getMessage()->get('body'));
-        $this->assertInstanceOf(MessageContract::class, $this->log->getMessage());
+        $this->assertInstanceOf(MessageInterface::class, $this->log->getMessage());
     }
 
     public function testGetLogContext(): void

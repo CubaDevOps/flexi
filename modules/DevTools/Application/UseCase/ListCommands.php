@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Modules\DevTools\Application\UseCase;
 
 use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Contracts\DTOContract;
-use CubaDevOps\Flexi\Contracts\HandlerContract;
-use CubaDevOps\Flexi\Contracts\MessageContract;
-use CubaDevOps\Flexi\Contracts\BusContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\HandlerInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
 
-class ListCommands implements HandlerContract
+class ListCommands implements HandlerInterface
 {
-    private BusContract $command_bus;
+    private BusInterface $command_bus;
 
-    public function __construct(BusContract $command_bus)
+    public function __construct(BusInterface $command_bus)
     {
         $this->command_bus = $command_bus;
     }
@@ -25,7 +25,7 @@ class ListCommands implements HandlerContract
      *
      * @throws \JsonException
      */
-    public function handle(DTOContract $dto): MessageContract
+    public function handle(DTOInterface $dto): MessageInterface
     {
         $list = json_encode($this->command_bus->getHandlersDefinition($dto->withAliases()), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
 

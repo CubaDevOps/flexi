@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Contracts;
+namespace CubaDevOps\Flexi\Contracts\Interfaces;
 
 use Psr\SimpleCache\CacheInterface as PsrCacheInterface;
 
 /**
- * Cache Contract - Pure PSR-16 implementation
+ * Cache Interface - Pure PSR-16 implementation
  * No need for additional methods, PSR-16 covers all cache needs.
  */
-interface CacheContract extends PsrCacheInterface
+interface CacheInterface extends PsrCacheInterface
 {
 }

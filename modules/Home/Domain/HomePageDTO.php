@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\Home\Domain;
 
-use CubaDevOps\Flexi\Contracts\DTOContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
 
-class HomePageDTO implements DTOContract
+class HomePageDTO implements DTOInterface
 {
     private string $template;
 

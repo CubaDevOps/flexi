@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Events;
 
-use CubaDevOps\Flexi\Contracts\EventContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\EventInterface;
 
-class Event implements EventContract
+class Event implements EventInterface
 {
     private string $name;
     private array $data;

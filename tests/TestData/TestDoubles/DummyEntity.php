@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Contracts\EntityContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\EntityInterface;
 use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
 
-class DummyEntity implements EntityContract
+class DummyEntity implements EntityInterface
 {
     public function getId(): ID
     {

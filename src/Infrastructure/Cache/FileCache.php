@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Cache;
 
-use CubaDevOps\Flexi\Contracts\CacheContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
 use DateInterval;
 use Psr\Cache\InvalidArgumentException;
 
-class FileCache implements CacheContract
+class FileCache implements CacheInterface
 {
     /**
      * @var string The cache directory where files will be stored

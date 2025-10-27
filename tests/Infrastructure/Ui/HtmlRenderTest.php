@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\Ui;
 
-use CubaDevOps\Flexi\Contracts\TemplateContract;
-use CubaDevOps\Flexi\Contracts\TemplateLocatorContract;
+use CubaDevOps\Flexi\Contracts\Interfaces\TemplateInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\TemplateLocatorInterface;
 use CubaDevOps\Flexi\Infrastructure\Ui\HtmlRender;
 use PHPUnit\Framework\TestCase;
 
@@ -23,8 +23,8 @@ class HtmlRenderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->template = $this->createMock(TemplateContract::class);
-        $this->templateLocator = $this->createMock(TemplateLocatorContract::class);
+        $this->template = $this->createMock(TemplateInterface::class);
+        $this->templateLocator = $this->createMock(TemplateLocatorInterface::class);
         $this->htmlRender = new HtmlRender($this->templateLocator);
     }
 

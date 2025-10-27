@@ -5,11 +5,11 @@
 ### ✅ **Lo que SÍ haremos:**
 1. **Contracts Package** - Solo interfaces puras
 2. **Mantener JSON Config** - Tu sistema de autodescubrimiento funciona perfecto
-3. **Zero ModuleContract** - No necesitas lógica repetitiva
+3. **Zero ModuleInterface** - No necesitas lógica repetitiva
 4. **Migración gradual** - Cambiar imports progresivamente
 
 ### ❌ **Lo que NO haremos:**
-- ❌ ModuleContract con lógica repetitiva
+- ❌ ModuleInterface con lógica repetitiva
 - ❌ Cambiar sistema JSON de autodescubrimiento
 - ❌ Framework registry complex
 - ❌ Romper la funcionalidad existente
@@ -43,12 +43,12 @@ class RenderHome implements HandlerInterface
 #### Después (con contracts):
 ```php
 // modules/Home/Application/RenderHome.php
-use CubaDevOps\Flexi\Contracts\DTOContract;
-use CubaDevOps\Flexi\Contracts\HandlerContract;
+use CubaDevOps\Flexi\Contracts\DTOInterface;
+use CubaDevOps\Flexi\Contracts\HandlerInterface;
 
-class RenderHome implements HandlerContract
+class RenderHome implements HandlerInterface
 {
-    public function handle(DTOContract $dto): MessageInterface
+    public function handle(DTOInterface $dto): MessageInterface
     {
         // lógica... (sin cambios)
     }
@@ -116,7 +116,7 @@ Módulos → Contracts (PSR-first) ← Core
 
 ### **Beneficios Concretos:**
 - ✅ **Zero cambios** en tu lógica JSON de autodescubrimiento
-- ✅ **Zero ModuleContract** innecesario
+- ✅ **Zero ModuleInterface** innecesario
 - ✅ **Solo cambiar imports** en los archivos existentes
 - ✅ **Contracts puros** sin dependencies vendor en Domain
 - ✅ **Mantener** toda la funcionalidad actual

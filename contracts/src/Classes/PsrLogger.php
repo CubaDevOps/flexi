@@ -8,6 +8,7 @@ use CubaDevOps\Flexi\Contracts\Classes\Log;
 use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
 use CubaDevOps\Flexi\Contracts\Interfaces\LogRepositoryInterface;
 use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
+use Psr\Container\ContainerInterface;
 use Psr\Log\AbstractLogger;
 
 /**
@@ -21,9 +22,9 @@ use Psr\Log\AbstractLogger;
 class PsrLogger extends AbstractLogger
 {
     private LogRepositoryInterface $log_repository;
-    private object $configuration; // Injected Configuration from Infrastructure
+    private ContainerInterface $configuration; // Injected Configuration from Infrastructure
 
-    public function __construct(LogRepositoryInterface $log_repository, object $configuration)
+    public function __construct(LogRepositoryInterface $log_repository, ContainerInterface $configuration)
     {
         $this->log_repository = $log_repository;
         $this->configuration = $configuration;

@@ -18,7 +18,7 @@ use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
 use CubaDevOps\Flexi\Infrastructure\Session\NativeSessionStorage;
-use CubaDevOps\Flexi\Infrastructure\Ui\HtmlRender;
+use CubaDevOps\Flexi\Modules\Ui\Infrastructure\Ui\HtmlRender;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyCache;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;

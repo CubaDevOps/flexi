@@ -69,22 +69,6 @@
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory"
     },
     {
-      "name": "html_render",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\HtmlRender",
-        "arguments": [
-          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface"
-        ]
-      }
-    },
-    {
-      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\TemplateLocator",
-        "arguments": []
-      }
-    },
-    {
       "name": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\CommandBus",
       "factory": {
         "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\BusFactory",

@@ -1,7 +1,7 @@
 # PsrLogger Migration to Contracts
 
-**Date:** October 27, 2025  
-**Branch:** refactor-complete-psr-compatibility  
+**Date:** October 27, 2025
+**Branch:** refactor-complete-psr-compatibility
 **Status:** ✅ COMPLETED
 
 ## Overview
@@ -38,7 +38,7 @@ Created new file: `contracts/src/Classes/PsrLogger.php`
 ```
 - Namespace: CubaDevOps\Flexi\Contracts\Classes\PsrLogger
 - Extends: Psr\Log\AbstractLogger
-- Dependencies: 
+- Dependencies:
   - LogRepositoryInterface (from Contracts)
   - Configuration (injected from Infrastructure)
 - Implementation: PSR-3 compliant logging with level filtering

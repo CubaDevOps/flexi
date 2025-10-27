@@ -351,7 +351,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
-use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
+use CubaDevOps\Flexi\Contracts\Classes\Traits\FileHandlerTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

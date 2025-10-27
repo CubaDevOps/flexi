@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Bus;
 
+use CubaDevOps\Flexi\Contracts\Classes\Traits\GlobFileReader;
+use CubaDevOps\Flexi\Contracts\Classes\Traits\JsonFileReader;
 use CubaDevOps\Flexi\Contracts\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
@@ -12,8 +14,6 @@ use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Domain\Events\Event;
-use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
-use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

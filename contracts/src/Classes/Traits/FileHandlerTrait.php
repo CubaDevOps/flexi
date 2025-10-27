@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Utils;
+namespace CubaDevOps\Flexi\Contracts\Classes\Traits;
+
+use CubaDevOps\Flexi\Contracts\Classes\Utils\OSDetector;
 
 trait FileHandlerTrait
 {
@@ -30,7 +32,7 @@ trait FileHandlerTrait
             return $relative_path;
         }
 
-        $rootDir = dirname(__DIR__, 3);
+        $rootDir = dirname(__DIR__, 4);
         $fullPath = $rootDir.DIRECTORY_SEPARATOR.$relative_path;
         $segments = preg_split('/[\/\\\\]+/', $fullPath);
         $normalizedSegments = [];

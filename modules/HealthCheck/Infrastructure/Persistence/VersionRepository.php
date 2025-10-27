@@ -13,7 +13,7 @@ use CubaDevOps\Flexi\Contracts\Interfaces\ValueObjectInterface;
 use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
 use CubaDevOps\Flexi\Contracts\ValueObjects\Version;
 use CubaDevOps\Flexi\Modules\HealthCheck\Domain\Entities\VersionEntity;
-use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
+use CubaDevOps\Flexi\Contracts\Classes\Traits\JsonFileReader;
 
 class VersionRepository implements RepositoryInterface
 {

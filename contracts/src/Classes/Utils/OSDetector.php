@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Utils;
+namespace CubaDevOps\Flexi\Contracts\Classes\Utils;
 
 trait OSDetector
 {

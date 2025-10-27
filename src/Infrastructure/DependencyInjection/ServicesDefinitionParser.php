@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
 
+use CubaDevOps\Flexi\Contracts\Classes\Traits\FileHandlerTrait;
+use CubaDevOps\Flexi\Contracts\Classes\Traits\GlobFileReader;
+use CubaDevOps\Flexi\Contracts\Classes\Traits\JsonFileReader;
 use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
-use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
-use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 
 class ServicesDefinitionParser
 {

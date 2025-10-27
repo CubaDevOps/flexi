@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\ValueObjects;
+namespace CubaDevOps\Flexi\Contracts\ValueObjects;
 
 use CubaDevOps\Flexi\Contracts\Interfaces\ValueObjectInterface;
 

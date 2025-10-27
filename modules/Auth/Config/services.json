@@ -15,7 +15,10 @@
         "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\AuthCheckMiddleware",
         "arguments": [
           "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\SessionStorageInterface",
-          "@Psr\\Http\\Message\\ResponseFactoryInterface"
+          "@Psr\\Http\\Message\\ResponseFactoryInterface",
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\EventBusInterface",
+          "@Psr\\Log\\LoggerInterface",
+          "ENV.AUTH_SESSION_TIMEOUT"
         ]
       }
     },
@@ -26,6 +29,55 @@
         "arguments": [
           "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\SecretProviderInterface",
           "@Psr\\Http\\Message\\ResponseFactoryInterface"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Domain\\Interfaces\\CredentialsRepositoryInterface",
+      "class": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Adapters\\ConfigurationCredentialsRepository"
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Domain\\Interfaces\\CredentialsVerifierInterface",
+      "class": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Adapters\\DefaultCredentialsVerifier"
+    },
+    {
+      "name": "basic_auth_middleware",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\BasicAuthMiddleware",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Modules\\Auth\\Domain\\Interfaces\\CredentialsRepositoryInterface",
+          "@CubaDevOps\\Flexi\\Modules\\Auth\\Domain\\Interfaces\\CredentialsVerifierInterface",
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\SessionStorageInterface",
+          "@Psr\\Http\\Message\\ResponseFactoryInterface",
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\EventBusInterface",
+          "@Psr\\Log\\LoggerInterface"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Domain\\Interfaces\\AuthorizationProviderInterface",
+      "class": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Adapters\\RoleBasedAuthorizationProvider"
+    },
+    {
+      "name": "authorization_middleware",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\AuthorizationMiddleware",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Modules\\Auth\\Domain\\Interfaces\\AuthorizationProviderInterface",
+          "@Psr\\Http\\Message\\ResponseFactoryInterface",
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\EventBusInterface",
+          "@Psr\\Log\\LoggerInterface"
+        ]
+      }
+    },
+    {
+      "name": "login_controller",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Controllers\\LoginController",
+        "arguments": [
+          "@Psr\\Http\\Message\\ResponseFactoryInterface",
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\SessionStorageInterface",
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\EventBusInterface"
         ]
       }
     }

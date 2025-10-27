@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\WebHooks\Infrastructure\Controllers;
 
+use CubaDevOps\Flexi\Contracts\Classes\HttpHandler;
 use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Events\Event;
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

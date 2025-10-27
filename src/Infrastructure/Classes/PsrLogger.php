@@ -25,14 +25,10 @@ class PsrLogger extends AbstractLogger
     {
         $log_level = new LogLevel($level);
 
-        if (!$this->configuration->get('log_enabled') || $log_level->getValue() < (new LogLevel($this->configuration->get('log_level')))->getValue()) {
+        if (!$this->configuration->get('log_enabled') || $log_level->isBelowThreshold(new LogLevel($this->configuration->get('log_level')))) {
             return;
         }
-        // Use the comparison method from LogLevel
-        $threshold_level = new LogLevel($this->configuration->get('log_level'));
-        if ($log_level->isBelowThreshold($threshold_level)) {
-            return;
-        }
+
         $log = new Log(
             $log_level,
             new PlainTextMessage($message),

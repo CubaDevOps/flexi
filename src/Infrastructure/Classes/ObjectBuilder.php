@@ -33,7 +33,7 @@ class ObjectBuilder implements ObjectBuilderInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function build(ContainerInterface $container, string $className, array $arguments = []): object
     {

@@ -6,10 +6,9 @@
       "method": "POST",
       "controller": "CubaDevOps\\Flexi\\Modules\\WebHooks\\Infrastructure\\Controllers\\WebHookController",
       "middlewares": [
-        "CubaDevOps\\Flexi\\Infrastructure\\Middlewares\\JWTAuthMiddleware"
+        "jwt_auth_middleware"
       ],
       "parameters": [
-        "TODO: move the middleware to a more appropriate place"
       ]
     }
   ]

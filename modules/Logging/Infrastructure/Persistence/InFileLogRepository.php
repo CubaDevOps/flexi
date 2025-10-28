@@ -45,7 +45,7 @@ class InFileLogRepository implements LogRepositoryInterface
                 ->createdAt()
                 ->format(DATE_ATOM),
             '{message}' => $log->getMessage()->__toString(),
-            '{context}' => implode('|', $log->getContext()),
+            '{context}' => $this->serializeToJson($log->getContext()),
         ];
 
         return str_replace(
@@ -53,5 +53,10 @@ class InFileLogRepository implements LogRepositoryInterface
             array_values($values),
             $this->format
         );
+    }
+
+    private function serializeToJson(array $data): string
+    {
+        return json_encode($data, JSON_THROW_ON_ERROR);
     }
 }

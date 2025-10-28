@@ -115,7 +115,7 @@ class Router
         ServerRequestInterface $request
     ): ResponseInterface {
         $request_path = $request->getUri()->getPath();
-        $event = new Event('core.onRequest', __CLASS__, ['request' => $request]);
+        $event = new Event('core.onRequest', __CLASS__, ['request' => $request->getUri()->__toString()]);
         $this->event_bus->dispatch($event);
         $this->assertThatRouteCollectionIsNotEmpty();
 
@@ -193,7 +193,7 @@ class Router
 
         $response = $this->executeStack($route, $request);
 
-        $event = new Event('core.onResponse', __CLASS__, ['response' => $response]);
+        $event = new Event('core.onResponse', __CLASS__, ['response' => ['status' => $response->getStatusCode(), 'reason' => $response->getReasonPhrase()]]);
         $this->event_bus->dispatch($event);
 
         return $response;

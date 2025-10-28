@@ -65,7 +65,7 @@ class InFileLogRepositoryTest extends TestCase
         // Running the test alone fails but running the collection is does not
         $this->assertFileExists($this->log_path);
         $this->assertStringContainsString(
-            '['.$level.' - 2005-08-15T15:52:01+00:00]: message info - line 23',
+            '['.$level.' - 2005-08-15T15:52:01+00:00]: message info - {"context":"line 23"}',
             file_get_contents($this->log_path)
         );
         $this->assertEquals(LogLevel::INFO, $this->log->getLogLevel()->getValue());

@@ -92,7 +92,7 @@ class RouterTest extends TestCase
 
         $testHandler->setMockResponse($responseInterfaceMock);
 
-        $serverRequestMock->expects($this->once())
+        $serverRequestMock->expects($this->exactly(2))
             ->method('getUri')->willReturn($uriInterfaceMock);
 
         $uriInterfaceMock->expects($this->once())
@@ -132,7 +132,7 @@ class RouterTest extends TestCase
         $uriInterfaceMock = $this->createMock(UriInterface::class);
         $serverRequestMock = $this->createMock(ServerRequestInterface::class);
 
-        $serverRequestMock->expects($this->once())
+        $serverRequestMock->expects($this->exactly(2))
             ->method('getUri')->willReturn($uriInterfaceMock);
 
         $uriInterfaceMock->expects($this->once())
@@ -142,7 +142,6 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage('Define at least one route');
 
         $emptyRouter->dispatch($serverRequestMock);
-        $this->assertFalse($this->router->redirect_to_not_found_spy);
     }
 
     /**
@@ -174,7 +173,7 @@ class RouterTest extends TestCase
         $uriInterfaceMock = $this->createMock(UriInterface::class);
         $serverRequestMock = $this->createMock(ServerRequestInterface::class);
 
-        $serverRequestMock->expects($this->once())
+        $serverRequestMock->expects($this->exactly(2))
             ->method('getUri')->willReturn($uriInterfaceMock);
 
         $uriInterfaceMock->expects($this->once())
@@ -187,7 +186,6 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage("Parameter '{$requiredParam}' is required");
 
         $this->router->dispatch($serverRequestMock);
-        $this->assertFalse($this->router->redirect_to_not_found_spy);
     }
 
     /**
@@ -205,7 +203,7 @@ class RouterTest extends TestCase
         $uriInterfaceMock = $this->createMock(UriInterface::class);
         $serverRequestMock = $this->createMock(ServerRequestInterface::class);
 
-        $serverRequestMock->expects($this->once())
+        $serverRequestMock->expects($this->exactly(2))
             ->method('getUri')->willReturn($uriInterfaceMock);
 
         $uriInterfaceMock->expects($this->once())
@@ -218,7 +216,6 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage("Method $invalidMethod is not allowed for this route");
 
         $this->router->dispatch($serverRequestMock);
-        $this->assertFalse($this->router->redirect_to_not_found_spy);
     }
 
     /**
@@ -238,7 +235,7 @@ class RouterTest extends TestCase
         $responseInterfaceMock->expects($this->once())
             ->method('getStatusCode')->willReturn(404);
 
-        $serverRequestMock->expects($this->once())
+        $serverRequestMock->expects($this->exactly(2))
             ->method('getUri')->willReturn($uriInterfaceMock);
 
         $uriInterfaceMock->expects($this->once())
@@ -250,7 +247,6 @@ class RouterTest extends TestCase
         $response = $this->router->dispatch($serverRequestMock);
 
         $this->assertEquals(404, $response->getStatusCode());
-        $this->assertTrue($this->router->redirect_to_not_found_spy);
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 

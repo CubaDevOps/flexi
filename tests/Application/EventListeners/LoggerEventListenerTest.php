@@ -24,22 +24,17 @@ class LoggerEventListenerTest extends TestCase
     public function testHandleEvent(): void
     {
         $event = $this->createMock(EventInterface::class);
-        $datetime = $this->createMock(\DateTimeImmutable::class);
 
         $event->expects($this->once())
             ->method('getName')->willReturn('test event');
 
         $event->expects($this->once())
-            ->method('occurredOn')->willReturn($datetime);
-
-        $datetime->expects($this->once())
-            ->method('format')
-            ->with(DATE_ATOM)
-            ->willReturn('2024-01-01T00:00:00+00:00');
-
-        $event->expects($this->once())
             ->method('firedBy')
             ->willReturn('trigger');
+
+        $event->expects($this->once())
+            ->method('toArray')
+            ->willReturn([]);
 
         $this->logger->expects($this->once())
             ->method('log')

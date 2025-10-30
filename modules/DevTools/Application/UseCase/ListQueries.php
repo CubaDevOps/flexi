@@ -15,9 +15,9 @@ class ListQueries implements HandlerInterface
 {
     private BusInterface $queryBus;
 
-    public function __construct(BusInterface $queryBus)
+    public function __construct(BusInterface $query_bus)
     {
-        $this->queryBus = $queryBus;
+        $this->queryBus = $query_bus;
     }
 
     /**

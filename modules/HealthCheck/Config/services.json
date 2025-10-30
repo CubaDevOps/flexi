@@ -6,6 +6,10 @@
         "name": "CubaDevOps\\Flexi\\Modules\\HealthCheck\\Infrastructure\\Persistence\\VersionRepository",
         "arguments": []
       }
+    },
+    {
+      "name": "version_repository",
+      "alias": "CubaDevOps\\Flexi\\Modules\\HealthCheck\\Infrastructure\\Persistence\\VersionRepository"
     }
   ]
 }

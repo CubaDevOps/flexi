@@ -55,12 +55,14 @@ class ContainerFactory
         $configRepo = $configRepo ?? new ConfigurationRepository();
         $configuration = $configuration ?? new Configuration($configRepo);
 
-        // Use InMemoryCache as default if no cache provided
+        // Container depends on Cache module
         if (null === $cache) {
-            // Try to use module's cache implementation
-            if (class_exists('CubaDevOps\\Flexi\\Modules\\Cache\\Infrastructure\\Cache\\InMemoryCache')) {
-                $cache = new \CubaDevOps\Flexi\Modules\Cache\Infrastructure\Cache\InMemoryCache();
-            } else {
+            if (class_exists('CubaDevOps\\Flexi\\Modules\\Cache\\Infrastructure\\Factories\\CacheFactory')) {
+                $cacheFactoryClass = 'CubaDevOps\\Flexi\\Modules\\Cache\\Infrastructure\\Factories\\CacheFactory';
+                /** @var \CubaDevOps\Flexi\Modules\Cache\Infrastructure\Factories\CacheFactory $cacheFactory */
+                $cacheFactory = new $cacheFactoryClass($configuration);
+                $cache = $cacheFactory->getInstance();
+            }else {
                 throw new \RuntimeException('Cache implementation not available. Please ensure Cache module is installed.');
             }
         }

@@ -55,6 +55,10 @@
       }
     },
     {
+      "name": "command_bus",
+      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\CommandBus"
+    },
+    {
       "name": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\QueryBus",
       "factory": {
         "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\BusFactory",
@@ -64,6 +68,10 @@
           "./src/Config/queries.json"
         ]
       }
+    },
+    {
+      "name": "query_bus",
+      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\QueryBus"
     },
     {
       "name": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\EventBus",

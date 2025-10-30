@@ -39,16 +39,16 @@ class BusFactory
         $logger = $this->container->get('logger');
         $class_factory = $this->container->get(ObjectBuilderInterface::class);
         $configuration = $this->container->get(ConfigurationRepositoryInterface::class);
-        $bus = new EventBus($this->container, $class_factory, $logger, $configuration);
+        $event_bus = new EventBus($this->container, $class_factory, $logger, $configuration);
         switch ($type) {
             case CommandBus::class:
-                $bus = new CommandBus($this->container, $bus, $class_factory);
+                $bus = new CommandBus($this->container, $event_bus, $class_factory);
                 break;
             case QueryBus::class:
-                $bus = new QueryBus($this->container, $bus, $class_factory);
+                $bus = new QueryBus($this->container, $event_bus, $class_factory);
                 break;
             case EventBus::class:
-                // event bus is already assigned
+                $bus = $event_bus;
                 break;
             default:
                 throw new \InvalidArgumentException('Invalid bus type');

@@ -13,9 +13,6 @@ if (PHP_SAPI !== "cli") {
     throw new \RuntimeException("This script is only accessed from terminal");
 }
 
-echo ConsoleOutputFormatter::format('*** Running Flexi Console Application ***', 'cyan');
-echo PHP_EOL;
 ConsoleApplication::run($argv);
 echo PHP_EOL;
 ConsoleApplication::printUsage();
-echo ConsoleOutputFormatter::format('*** Flexi Console Application Finished ***', 'cyan');

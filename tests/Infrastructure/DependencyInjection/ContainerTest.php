@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
 
 use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\ConfigurationInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\LogRepositoryInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\SessionStorageInterface;
@@ -53,7 +54,7 @@ class ContainerTest extends TestCase
      */
     public function testGetService(): void
     {
-        $this->assertInstanceOf(Configuration::class, $this->container->get(Configuration::class));
+        $this->assertInstanceOf(ConfigurationInterface::class, $this->container->get(ConfigurationInterface::class));
         $this->assertInstanceOf(SessionStorageInterface::class, $this->container->get(SessionStorageInterface::class));
         $this->assertInstanceOf(ObjectBuilderInterface::class, $this->container->get(ObjectBuilderInterface::class));
         $this->assertNotNull($this->container->get('router'));
@@ -98,7 +99,7 @@ class ContainerTest extends TestCase
      */
     public function testHasService(): void
     {
-        $this->assertTrue($this->container->has(Configuration::class), Configuration::class.' not found');
+        $this->assertTrue($this->container->has(ConfigurationInterface::class), ConfigurationInterface::class.' not found');
         $this->assertTrue($this->container->has(SessionStorageInterface::class), SessionStorageInterface::class.' not found');
         $this->assertTrue($this->container->has(ObjectBuilderInterface::class), ObjectBuilderInterface::class.' not found');
         $this->assertTrue($this->container->has('router'), 'router not found');
@@ -133,8 +134,8 @@ class ContainerTest extends TestCase
      */
     public function testResolveAlias(): void
     {
-        $this->container->set('alias_service', Configuration::class);
-        $this->assertInstanceOf(Configuration::class, $this->container->get('alias_service'));
+        $this->container->set('alias_service', ConfigurationInterface::class);
+        $this->assertInstanceOf(ConfigurationInterface::class, $this->container->get('alias_service'));
     }
 
     /**

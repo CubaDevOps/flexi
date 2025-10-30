@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Factories;
+namespace CubaDevOps\Flexi\Modules\Cache\Infrastructure\Factories;
 
 use CubaDevOps\Flexi\Contracts\Classes\Traits\FileHandlerTrait;
 use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Infrastructure\Cache\FileCache;
-use CubaDevOps\Flexi\Infrastructure\Cache\InMemoryCache;
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use CubaDevOps\Flexi\Contracts\Interfaces\ConfigurationInterface;
+use CubaDevOps\Flexi\Modules\Cache\Infrastructure\Cache\FileCache;
+use CubaDevOps\Flexi\Modules\Cache\Infrastructure\Cache\InMemoryCache;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -16,9 +16,9 @@ class CacheFactory
 {
     use FileHandlerTrait;
 
-    private Configuration $configuration;
+    private ConfigurationInterface $configuration;
 
-    public function __construct(Configuration $configuration)
+    public function __construct(ConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -44,7 +44,7 @@ class CacheFactory
         }
     }
 
-    public static function createDefault(Configuration $configuration)
+    public static function createDefault(ConfigurationInterface $configuration)
     {
         return (new self($configuration))->getInstance();
     }

@@ -1,0 +1,18 @@
+{
+  "services": [
+    {
+      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\CacheInterface",
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Modules\\Cache\\Infrastructure\\Factories\\CacheFactory",
+        "method": "createDefault",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationInterface"
+        ]
+      }
+    },
+    {
+      "name": "cache",
+      "alias": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\CacheInterface"
+    }
+  ]
+}

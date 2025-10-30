@@ -7,7 +7,7 @@ namespace CubaDevOps\Flexi\Test\Domain\Utils;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
 use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
-use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
+use CubaDevOps\Flexi\Modules\Cache\Infrastructure\Factories\CacheFactory;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\HasNoConstructor;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\IsNotInstantiable;

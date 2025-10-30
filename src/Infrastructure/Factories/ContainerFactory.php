@@ -49,13 +49,22 @@ class ContainerFactory
         string $file = '',
         ?ConfigurationRepository $configRepo = null,
         ?Configuration $configuration = null,
-        ?CacheFactory $cacheFactory = null,
+        ?CacheInterface $cache = null,
         ?ObjectBuilder $objectBuilder = null
     ): Container {
         $configRepo = $configRepo ?? new ConfigurationRepository();
         $configuration = $configuration ?? new Configuration($configRepo);
-        $cacheFactory = $cacheFactory ?? new CacheFactory($configuration);
-        $cache = $cacheFactory->getInstance();
+
+        // Use InMemoryCache as default if no cache provided
+        if (null === $cache) {
+            // Try to use module's cache implementation
+            if (class_exists('CubaDevOps\\Flexi\\Modules\\Cache\\Infrastructure\\Cache\\InMemoryCache')) {
+                $cache = new \CubaDevOps\Flexi\Modules\Cache\Infrastructure\Cache\InMemoryCache();
+            } else {
+                throw new \RuntimeException('Cache implementation not available. Please ensure Cache module is installed.');
+            }
+        }
+
         $objectBuilder = $objectBuilder ?? new ObjectBuilder($cache);
 
         return (new self($cache, $objectBuilder))->getInstance($file);

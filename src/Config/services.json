@@ -17,7 +17,7 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
+      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
         "arguments": [
@@ -81,16 +81,6 @@
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\EventBus"
     },
     {
-      "name": "logger",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Contracts\\Classes\\PsrLogger",
-        "arguments": [
-          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
-          "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"
-        ]
-      }
-    },
-    {
       "name": "Psr\\Http\\Message\\ResponseFactoryInterface",
       "class": {
         "name": "GuzzleHttp\\Psr7\\HttpFactory",
@@ -110,7 +100,7 @@
         "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\CacheFactory",
         "method": "createDefault",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationInterface"
         ]
       }
     },

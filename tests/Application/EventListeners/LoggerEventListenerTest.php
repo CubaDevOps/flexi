@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Application\EventListeners;
 
-use CubaDevOps\Flexi\Application\EventListeners\LoggerEventListener;
+use CubaDevOps\Flexi\Modules\Logging\Application\EventListeners\LoggerEventListener;
 use CubaDevOps\Flexi\Contracts\Interfaces\EventInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

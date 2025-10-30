@@ -5,7 +5,7 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Adapters\\ConfigurationSecretProvider",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationInterface"
         ]
       }
     },

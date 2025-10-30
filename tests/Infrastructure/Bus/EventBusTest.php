@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Application\EventListeners\LoggerEventListener;
+use CubaDevOps\Flexi\Modules\Logging\Application\EventListeners\LoggerEventListener;
 use CubaDevOps\Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\EventInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\LogRepositoryInterface;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Web;
 
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use CubaDevOps\Flexi\Contracts\Interfaces\ConfigurationInterface;
 use CubaDevOps\Flexi\Infrastructure\Factories\RouterFactory;
 use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use GuzzleHttp\Psr7\ServerRequest;
@@ -36,7 +36,7 @@ class Application
      */
     public function run(): void
     {
-        $config = $this->container->get(Configuration::class);
+        $config = $this->container->get(ConfigurationInterface::class);
         if ('true' === $config->get('DEBUG_MODE')) {
             Debug::enable();
         }

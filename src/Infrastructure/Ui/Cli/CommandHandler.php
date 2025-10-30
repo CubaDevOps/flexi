@@ -7,7 +7,6 @@ namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 use CubaDevOps\Flexi\Contracts\Interfaces\CliDTOInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\HandlerInterface;
-use CubaDevOps\Flexi\Application\Services\DTOFactory;
 use Psr\Container\ContainerInterface;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use Psr\Container\ContainerExceptionInterface;

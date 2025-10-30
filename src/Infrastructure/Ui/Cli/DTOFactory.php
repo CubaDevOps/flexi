@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Application\Services;
+namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 
 use CubaDevOps\Flexi\Contracts\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;

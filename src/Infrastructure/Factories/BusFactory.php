@@ -14,6 +14,7 @@ use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Log\NullLogger;
 
 class BusFactory
 {
@@ -36,7 +37,13 @@ class BusFactory
         string $type,
         string $file = ''
     ): BusInterface {
-        $logger = $this->container->get('logger');
+        // Use NullLogger if logger service is not available (e.g., Logging module not installed)
+        try {
+            $logger = $this->container->get('logger');
+        } catch (\Exception $e) {
+            $logger = new NullLogger();
+        }
+
         $class_factory = $this->container->get(ObjectBuilderInterface::class);
         $configuration = $this->container->get(ConfigurationRepositoryInterface::class);
         $event_bus = new EventBus($this->container, $class_factory, $logger, $configuration);

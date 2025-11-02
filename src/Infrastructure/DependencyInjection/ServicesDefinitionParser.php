@@ -19,10 +19,12 @@ class ServicesDefinitionParser
     private const SERVICES_CACHE_KEY_PREFIX = 'services_file.';
     private const ERROR_SERVICE_ALREADY_DEFINED = 'Service %s is already defined in %s';
     private const ERROR_FILE_NOT_FOUND = 'Service file not found: %s';
+    private const COMPOSER_JSON_PATH = './composer.json';
 
     private CacheInterface $cache;
     private array $serviceDefinitions = [];
     private array $filesProcessed = [];
+    private ?array $installedModules = null;
 
     public function __construct(CacheInterface $cache)
     {
@@ -103,10 +105,14 @@ class ServicesDefinitionParser
 
     /**
      * Processes services defined by a glob pattern.
+     * Only processes files from installed modules.
      */
     private function processGlobServices(string $glob, array &$services, string $filename): void
     {
         $files = $this->readGlob($glob);
+
+        // Filter files to only include installed modules
+        $files = $this->filterInstalledModuleFiles($files);
 
         foreach ($files as $file) {
             $fileServices = $this->parse($file);
@@ -145,5 +151,97 @@ class ServicesDefinitionParser
     private function getFileCacheKey(string $filename): string
     {
         return self::SERVICES_CACHE_KEY_PREFIX.md5($filename);
+    }
+
+    /**
+     * Filters files to only include those from installed modules.
+     *
+     * @param array $files List of file paths
+     * @return array Filtered list of files from installed modules only
+     */
+    private function filterInstalledModuleFiles(array $files): array
+    {
+        $installedModules = $this->getInstalledModules();
+
+        return array_filter($files, function ($file) use ($installedModules) {
+            // If the file is not in a module directory, include it
+            if (!$this->isModuleFile($file)) {
+                return true;
+            }
+
+            // Extract module name from file path
+            $moduleName = $this->extractModuleName($file);
+
+            // Only include if module is installed
+            return $moduleName && isset($installedModules[$moduleName]);
+        });
+    }
+
+    /**
+     * Checks if a file path is from a module directory.
+     *
+     * @param string $file File path
+     * @return bool True if file is in modules directory
+     */
+    private function isModuleFile(string $file): bool
+    {
+        return (bool) preg_match('#/modules/([^/]+)/#', $file);
+    }
+
+    /**
+     * Extracts the module name from a file path.
+     *
+     * @param string $file File path
+     * @return string|null Module name or null if not a module file
+     */
+    private function extractModuleName(string $file): ?string
+    {
+        if (preg_match('#/modules/([^/]+)/#', $file, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the list of installed modules from composer.json.
+     *
+     * @return array Associative array of installed module packages
+     * @throws \JsonException
+     */
+    private function getInstalledModules(): array
+    {
+        if ($this->installedModules !== null) {
+            return $this->installedModules;
+        }
+
+        if (!file_exists(self::COMPOSER_JSON_PATH)) {
+            $this->installedModules = [];
+            return $this->installedModules;
+        }
+
+        $composerData = json_decode(
+            file_get_contents(self::COMPOSER_JSON_PATH),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+
+        $this->installedModules = [];
+
+        if (isset($composerData['require'])) {
+            foreach ($composerData['require'] as $package => $version) {
+                // Only consider flexi modules
+                if (str_starts_with($package, 'cubadevops/flexi-module-')) {
+                    // Extract module name from package name
+                    // cubadevops/flexi-module-auth -> Auth
+                    $moduleName = str_replace('cubadevops/flexi-module-', '', $package);
+                    $moduleName = ucfirst($moduleName);
+                    $this->installedModules[$moduleName] = $package;
+                }
+            }
+        }
+
+        return $this->installedModules;
     }
 }

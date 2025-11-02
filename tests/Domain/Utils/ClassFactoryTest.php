@@ -7,7 +7,7 @@ namespace CubaDevOps\Flexi\Test\Domain\Utils;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
 use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
-use CubaDevOps\Flexi\Modules\Cache\Infrastructure\Factories\CacheFactory;
+use CubaDevOps\Flexi\Infrastructure\Classes\InMemoryCache;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\HasNoConstructor;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\IsNotInstantiable;
@@ -21,7 +21,7 @@ class ClassFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $cache = (new CacheFactory(new Configuration(new ConfigurationRepository())))->getInstance();
+        $cache = new InMemoryCache();
         $this->classFactory = new ObjectBuilder($cache);
 
         $this->container = ContainerFactory::createDefault('./tests/TestData/Configurations/container-test.json');

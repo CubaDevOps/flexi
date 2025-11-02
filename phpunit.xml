@@ -7,10 +7,10 @@
          verbose="true"
          stderr="true">
     <testsuites>
-        <testsuite name="Core Test Suite">
+        <testsuite name="Core">
             <directory>./tests</directory>
         </testsuite>
-        <testsuite name="Modules Test Suite">
+        <testsuite name="Modules">
             <directory>./modules/*/tests</directory>
         </testsuite>
     </testsuites>

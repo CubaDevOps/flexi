@@ -1,0 +1,45 @@
+{
+  "name": "cubadevops/flexi-module-cache",
+  "description": "Cache module for Flexi Framework with File and InMemory implementations",
+  "version": "1.0.0",
+  "type": "flexi-module",
+  "license": "MIT",
+  "keywords": [
+    "flexi",
+    "module",
+    "cache",
+    "psr-16",
+    "file-cache",
+    "memory-cache"
+  ],
+  "authors": [
+    {
+      "name": "Carlos Batista",
+      "email": "info@carlosbatista.dev",
+      "homepage": "https://carlosbatista.dev"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "cubadevops/flexi-contracts": "@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "CubaDevOps\\Flexi\\Modules\\Cache\\": ""
+    }
+  },
+  "extra": {
+    "flexi": {
+      "module-name": "Cache",
+      "module-type": "infrastructure",
+      "config-files": [
+        "Config/services.json"
+      ],
+      "provides": [
+        "cache",
+        "file-cache",
+        "memory-cache"
+      ]
+    }
+  }
+}

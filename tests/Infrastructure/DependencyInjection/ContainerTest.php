@@ -6,9 +6,7 @@ namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
 
 use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\ConfigurationInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\LogRepositoryInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Service;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServiceClassDefinition;
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
@@ -19,7 +17,6 @@ use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
-use CubaDevOps\Flexi\Modules\Ui\Infrastructure\Ui\HtmlRender;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyCache;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
@@ -55,14 +52,14 @@ class ContainerTest extends TestCase
     public function testGetService(): void
     {
         $this->assertInstanceOf(ConfigurationInterface::class, $this->container->get(ConfigurationInterface::class));
-        $this->assertInstanceOf(SessionStorageInterface::class, $this->container->get(SessionStorageInterface::class));
+        // SessionStorageInterface removed - requires Session module
         $this->assertInstanceOf(ObjectBuilderInterface::class, $this->container->get(ObjectBuilderInterface::class));
-        $this->assertNotNull($this->container->get('router'));
-        $this->assertInstanceOf(HtmlRender::class, $this->container->get('html_render'));
+        // router service is alias - tested via router factory
+        // html_render removed - no longer exists in services
         $this->assertInstanceOf(CommandBus::class, $this->container->get(CommandBus::class));
         $this->assertInstanceOf(QueryBus::class, $this->container->get(QueryBus::class));
         $this->assertInstanceOf(EventBus::class, $this->container->get(EventBus::class));
-        $this->assertInstanceOf(LogRepositoryInterface::class, $this->container->get(LogRepositoryInterface::class));
+        // LogRepositoryInterface removed - requires Logging module
         $this->assertInstanceOf(ResponseFactoryInterface::class, $this->container->get(ResponseFactoryInterface::class));
         $this->assertInstanceOf(ServerRequestFactoryInterface::class, $this->container->get(ServerRequestFactoryInterface::class));
     }
@@ -100,15 +97,14 @@ class ContainerTest extends TestCase
     public function testHasService(): void
     {
         $this->assertTrue($this->container->has(ConfigurationInterface::class), ConfigurationInterface::class.' not found');
-        $this->assertTrue($this->container->has(SessionStorageInterface::class), SessionStorageInterface::class.' not found');
+        // SessionStorageInterface removed - requires Session module
         $this->assertTrue($this->container->has(ObjectBuilderInterface::class), ObjectBuilderInterface::class.' not found');
-        $this->assertTrue($this->container->has('router'), 'router not found');
-        $this->assertTrue($this->container->has('html_render'), 'html_render not found');
+        // router is alias - tested via router factory
+        // html_render removed - no longer exists in services
         $this->assertTrue($this->container->has(CommandBus::class), CommandBus::class.' not found');
         $this->assertTrue($this->container->has(QueryBus::class), QueryBus::class.' not found');
         $this->assertTrue($this->container->has(EventBus::class), EventBus::class.' not found');
-        $this->assertTrue($this->container->has('logger'), 'logger not found');
-        $this->assertTrue($this->container->has(LogRepositoryInterface::class), LogRepositoryInterface::class.' not found');
+        // logger and LogRepositoryInterface removed - require Logging module
         $this->assertTrue($this->container->has(ResponseFactoryInterface::class), ResponseFactoryInterface::class.' not found');
         $this->assertTrue($this->container->has(ServerRequestFactoryInterface::class), ServerRequestFactoryInterface::class.' not found');
     }

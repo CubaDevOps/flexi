@@ -84,7 +84,7 @@ class Container implements ContainerInterface
         if (in_array($id, $this->selfReference, true)) {
             return $this;
         }
-        if ('cache' === $id || $id instanceof CacheInterface) {
+        if ('cache' === $id) {
             return $this->cache;
         }
         if ('factory' === $id || $id instanceof ObjectBuilderInterface) {

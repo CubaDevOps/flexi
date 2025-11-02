@@ -1,87 +1,98 @@
 {
-  "name": "cubadevops/flexi",
-  "description": "The flexible framework that respects standards",
-  "version": "1.5.0",
-  "time": "2024-06-02",
-  "license": "MIT",
-  "type": "project",
-  "minimum-stability": "stable",
-  "prefer-stable": true,
-  "keywords": [
-    "PHP",
-    "DDD",
-    "Hexagonal Architecture",
-    "PSR"
-  ],
-  "authors": [
-    {
-      "name": "Carlos Batista",
-      "email": "info@carlosbatista.dev",
-      "homepage": "https://carlosbatista.dev",
-      "role": "Maintainer"
-    }
-  ],
-  "require": {
-    "php": ">=7.4",
-    "ext-json": "*",
-    "ext-pcntl": "*",
-    "cubadevops/flexi-contracts": "@dev",
-    "cubadevops/upgrader": "^1.6",
-    "firebase/php-jwt": "6.10.0",
-    "guzzlehttp/guzzle": "^7.7",
-    "symfony/error-handler": "^5.4",
-    "vlucas/phpdotenv": "^5.5"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^9.6",
-    "vimeo/psalm": "^5.22.2",
-    "friendsofphp/php-cs-fixer": "^3.57"
-  },
-  "autoload": {
-    "psr-4": {
-      "CubaDevOps\\Flexi\\": "src/",
-      "CubaDevOps\\Flexi\\Modules\\": "modules/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "CubaDevOps\\Flexi\\Test\\": "tests/"
-    }
-  },
-  "scripts": {
-    "test": "phpunit --configuration phpunit.xml",
-    "coverage": "export XDEBUG_MODE=coverage && phpunit --configuration phpunit.xml --coverage-text",
-    "psalm": "psalm --show-info=true",
-    "fix-dry": "psalter --issues=all --dry-run",
-    "fix": "psalter --issues=all",
-    "format": "php-cs-fixer fix --rules=@PSR12,@Symfony,declare_strict_types --allow-risky=yes .",
-    "post-root-package-install": [
-      "@php -r \"file_exists('.env') || copy('env.example', '.env');\"",
-      "@php -r \"if (!file_exists('var/logs')) { mkdir('var/logs', 0777, true); } touch('var/logs/app.log');\""
+    "name": "cubadevops/flexi",
+    "description": "The flexible framework that respects standards",
+    "version": "1.5.0",
+    "time": "2024-06-02",
+    "license": "MIT",
+    "type": "project",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "keywords": [
+        "PHP",
+        "DDD",
+        "Hexagonal Architecture",
+        "PSR"
     ],
-    "update-framework": [
-      "upgrader upgrade-safely"
+    "authors": [
+        {
+            "name": "Carlos Batista",
+            "email": "info@carlosbatista.dev",
+            "homepage": "https://carlosbatista.dev",
+            "role": "Maintainer"
+        }
     ],
-    "check": [
-      "@composer test",
-      "@composer psalm"
+    "require": {
+        "php": ">=7.4",
+        "ext-json": "*",
+        "ext-pcntl": "*",
+        "cubadevops/flexi-contracts": "@dev",
+        "cubadevops/upgrader": "^1.6",
+        "firebase/php-jwt": "6.10.0",
+        "guzzlehttp/guzzle": "^7.7",
+        "symfony/error-handler": "^5.4",
+        "vlucas/phpdotenv": "^5.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6",
+        "vimeo/psalm": "^5.22.2",
+        "friendsofphp/php-cs-fixer": "^3.57"
+    },
+    "autoload": {
+        "psr-4": {
+            "CubaDevOps\\Flexi\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CubaDevOps\\Flexi\\Test\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --configuration phpunit.xml",
+        "coverage": "export XDEBUG_MODE=coverage && phpunit --configuration phpunit.xml --coverage-text",
+        "psalm": "psalm --show-info=true",
+        "fix-dry": "psalter --issues=all --dry-run",
+        "fix": "psalter --issues=all",
+        "format": "php-cs-fixer fix --rules=@PSR12,@Symfony,declare_strict_types --allow-risky=yes .",
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('env.example', '.env');\"",
+            "@php -r \"if (!file_exists('var/logs')) { mkdir('var/logs', 0777, true); } touch('var/logs/app.log');\""
+        ],
+        "post-install-cmd": [
+            "@modules:sync"
+        ],
+        "update-framework": [
+            "upgrader upgrade-safely"
+        ],
+        "check": [
+            "@composer test",
+            "@composer psalm"
+        ],
+        "modules:sync": [
+            "@php bin/console -c modules:sync"
+        ],
+        "modules:list": [
+            "@php bin/console -c modules:list"
+        ],
+        "modules:validate": [
+            "@php bin/console -c modules:validate"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "auto",
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "bangpound/composer-constants": true
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./contracts",
+            "options": {
+                "symlink": true
+            }
+        }
     ]
-  },
-  "config": {
-    "sort-packages": true,
-    "preferred-install": "auto",
-    "optimize-autoloader": true,
-    "allow-plugins": {
-      "bangpound/composer-constants": true
-    }
-  },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "./contracts",
-      "options": {
-        "symlink": true
-      }
-    }
-  ]
 }

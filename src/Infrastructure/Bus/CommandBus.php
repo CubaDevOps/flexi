@@ -155,7 +155,8 @@ class CommandBus implements BusInterface
 
     public function getDtoClassFromAlias(string $id): string
     {
-        $dto = $this->handlers_definitions[$id] ?? false;
+        $handler = $this->aliases[$id];
+        $dto = array_search($handler, $this->commands, true);
 
         return $dto ?: NotFoundCommand::class;
     }

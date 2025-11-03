@@ -108,4 +108,48 @@ class EventTest extends TestCase
         $this->assertNotEmpty($serialized);
         $this->assertEquals($expected, $serialized);
     }
+
+    public function testSetAndGetData(): void
+    {
+        $this->event->set('custom_key', 'custom_value');
+
+        $this->assertEquals('custom_value', $this->event->get('custom_key'));
+    }
+
+    public function testHasMethod(): void
+    {
+        // Test with existing keys from initial data
+        $this->assertTrue($this->event->has('1-tst-data'));
+        $this->assertTrue($this->event->has('2-tst-data'));
+
+        // Test with non-existing key
+        $this->assertFalse($this->event->has('non_existing_key'));
+
+        // Test after setting a new key
+        $this->event->set('new_key', 'new_value');
+        $this->assertTrue($this->event->has('new_key'));
+    }
+
+    public function testStopPropagation(): void
+    {
+        // Initially, propagation should not be stopped
+        $this->assertFalse($this->event->isPropagationStopped());
+
+        // Stop propagation
+        $this->event->stopPropagation();
+
+        // Now propagation should be stopped
+        $this->assertTrue($this->event->isPropagationStopped());
+    }
+
+    public function testSetOverwritesExistingData(): void
+    {
+        // Set initial value
+        $this->event->set('test_key', 'initial_value');
+        $this->assertEquals('initial_value', $this->event->get('test_key'));
+
+        // Overwrite with new value
+        $this->event->set('test_key', 'updated_value');
+        $this->assertEquals('updated_value', $this->event->get('test_key'));
+    }
 }

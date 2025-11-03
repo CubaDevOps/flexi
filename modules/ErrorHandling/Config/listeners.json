@@ -1,0 +1,8 @@
+[
+    {
+      "event": "core.routeNotFound",
+      "listeners": [
+        "CubaDevOps\\Flexi\\Modules\\ErrorHandling\\Infrastructure\\Listeners\\RouteNotFoundListener"
+      ]
+    }
+  ]

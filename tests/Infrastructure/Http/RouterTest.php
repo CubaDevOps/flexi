@@ -6,7 +6,6 @@ namespace CubaDevOps\Flexi\Test\Infrastructure\Http;
 
 use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
 use CubaDevOps\Flexi\Infrastructure\Classes\Collection;
 use CubaDevOps\Flexi\Infrastructure\Http\Route;
@@ -27,26 +26,24 @@ class RouterTest extends TestCase
     private const ROUTE_PATH = '/health';
     private const ROUTE_CTRL = 'TestingControllerFactory';
 
-    private $session;
     private $event_bus;
     private $class_factory;
     private ResponseFactoryInterface $response_factory;
     private \Psr\Container\ContainerInterface $container;
 
-    private Router $router;
+    private RouterMock $router;
 
     /**
      * @throws \JsonException
      */
     public function setUp(): void
     {
-        $this->session = $this->createMock(SessionStorageInterface::class);
         $this->event_bus = $this->createMock(EventBusInterface::class);
         $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
         $this->response_factory = $this->createMock(ResponseFactoryInterface::class);
         $this->container = $this->createMock(\Psr\Container\ContainerInterface::class);
 
-        $this->router = new RouterMock($this->session, $this->event_bus, $this->class_factory, $this->response_factory, $this->container);
+        $this->router = new RouterMock($this->event_bus, $this->class_factory, $this->response_factory, $this->container);
 
         $route = new Route(
             self::ROUTE_NAME,
@@ -126,7 +123,7 @@ class RouterTest extends TestCase
         $_SERVER['REQUEST_SCHEME'] = 'https';
 
         $emptyRouter = new Router(
-            $this->session, $this->event_bus, $this->class_factory, $this->response_factory, $this->container
+            $this->event_bus, $this->class_factory, $this->response_factory, $this->container
         );
 
         $uriInterfaceMock = $this->createMock(UriInterface::class);

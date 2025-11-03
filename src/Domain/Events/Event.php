@@ -88,6 +88,12 @@ class Event implements EventInterface
 
     public function get(string $name)
     {
+        // First check in the data array (where custom data is stored)
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+
+        // Then check in the main event structure
         return $this->toArray()[$name] ?? null;
     }
 
@@ -99,5 +105,15 @@ class Event implements EventInterface
     public function stopPropagation(): void
     {
         $this->is_stopped = true;
+    }
+
+    public function set(string $key, $value): void
+    {
+        $this->data[$key] = $value;
+    }
+
+    public function has(string $key): bool
+    {
+        return isset($this->data[$key]);
     }
 }

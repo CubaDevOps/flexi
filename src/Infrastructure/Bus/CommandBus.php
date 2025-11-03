@@ -14,6 +14,7 @@ use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Domain\Events\Event;
+use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -72,6 +73,11 @@ class CommandBus implements BusInterface
     private function loadGlobHandlers(string $glob_path): void
     {
         $handlers = $this->readGlob($glob_path);
+
+        // Filter files to only include installed modules
+        $filter = new InstalledModulesFilter();
+        $handlers = $filter->filterFiles($handlers);
+
         foreach ($handlers as $handler) {
             $this->loadHandlersFromJsonFile($handler);
         }

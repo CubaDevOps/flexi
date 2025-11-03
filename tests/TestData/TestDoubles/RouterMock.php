@@ -14,7 +14,7 @@ class RouterMock extends Router
     public bool $redirect_to_not_found_spy = false;
     public int $route_counter = 0;
 
-    public function redirectToNotFound(
+    public function handleNotFound(
         ServerRequestInterface $request,
         string $previous_route
     ): ResponseInterface {

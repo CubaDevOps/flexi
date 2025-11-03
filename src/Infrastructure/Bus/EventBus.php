@@ -13,6 +13,7 @@ use CubaDevOps\Flexi\Contracts\Interfaces\EventInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\EventListenerInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -74,6 +75,11 @@ class EventBus implements EventBusInterface
     public function loadGlobListeners(array $listener): void
     {
         $files = $this->readGlob($listener['glob']);
+
+        // Filter files to only include installed modules
+        $filter = new InstalledModulesFilter();
+        $files = $filter->filterFiles($files);
+
         foreach ($files as $file) {
             $this->loadHandlersFromJsonFile($file);
         }

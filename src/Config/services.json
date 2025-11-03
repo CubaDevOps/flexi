@@ -31,7 +31,6 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory",
         "arguments": [
-          "@session",
           "@CubaDevOps\\Flexi\\Infrastructure\\Bus\\EventBus",
           "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\ObjectBuilderInterface",
           "@Psr\\Http\\Message\\ResponseFactoryInterface",

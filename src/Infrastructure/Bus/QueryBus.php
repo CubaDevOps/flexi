@@ -14,6 +14,7 @@ use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
 use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Domain\Events\Event;
+use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -73,6 +74,11 @@ class QueryBus implements BusInterface
     private function loadGlobFiles(array $handler): void
     {
         $files = $this->readGlob($handler['glob']);
+
+        // Filter files to only include installed modules
+        $filter = new InstalledModulesFilter();
+        $files = $filter->filterFiles($files);
+
         foreach ($files as $file) {
             $this->loadHandlersFromJsonFile($file);
         }

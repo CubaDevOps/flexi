@@ -50,7 +50,7 @@ class NotFoundController extends HttpHandler
             __CLASS__,
         ]);
         $this->session->remove('previous_route');
-        $response = $this->createResponse(404);
+        $response = $this->createResponse(404, 'Not Found');
         $response->getBody()->write($body);
 
         return $response;

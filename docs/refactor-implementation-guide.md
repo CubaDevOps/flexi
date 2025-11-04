@@ -43,7 +43,7 @@ src/Infrastructure/Utils/JsonFileReader.php             → contracts/src/Classe
 namespace CubaDevOps\Flexi\Infrastructure\Utils;
 
 // DESPUÉS:
-namespace CubaDevOps\Flexi\Contracts\Classes\Traits;
+namespace Flexi\Contracts\Classes\Traits;
 ```
 
 ### Paso 1.3: Actualizar imports en src/Infrastructure/Bus
@@ -61,8 +61,8 @@ use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
 use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
 
 // DESPUÉS:
-use CubaDevOps\Flexi\Contracts\Classes\Traits\GlobFileReader;
-use CubaDevOps\Flexi\Contracts\Classes\Traits\JsonFileReader;
+use Flexi\Contracts\Classes\Traits\GlobFileReader;
+use Flexi\Contracts\Classes\Traits\JsonFileReader;
 ```
 
 ### Paso 1.4: Actualizar composer autoload
@@ -105,7 +105,7 @@ git commit -m "refactor: move utility traits to contracts"
 namespace CubaDevOps\Flexi\Domain\Events;
 
 // DESPUÉS:
-namespace CubaDevOps\Flexi\Contracts\Classes;
+namespace Flexi\Contracts\Classes;
 ```
 
 ### Paso 2.2: Actualizar imports
@@ -120,7 +120,7 @@ namespace CubaDevOps\Flexi\Contracts\Classes;
 use CubaDevOps\Flexi\Domain\Events\EventListener;
 
 // DESPUÉS:
-use CubaDevOps\Flexi\Contracts\Classes\EventListener;
+use Flexi\Contracts\Classes\EventListener;
 ```
 
 ### Paso 2.3: Actualizar composer autoload

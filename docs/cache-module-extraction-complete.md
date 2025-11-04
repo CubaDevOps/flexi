@@ -90,16 +90,16 @@ namespace Modules\Cache\Domain\Exceptions;
 **Eliminado de `src/Config/services.json`:**
 ```json
 {
-  "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\CacheInterface",
+  "name": "Flexi\\Contracts\\Interfaces\\CacheInterface",
   "factory": {
     "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\CacheFactory",
     "method": "createDefault",
-    "arguments": ["@CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationInterface"]
+    "arguments": ["@Flexi\\Contracts\\Interfaces\\ConfigurationInterface"]
   }
 },
 {
   "name": "cache",
-  "alias": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\CacheInterface"
+  "alias": "Flexi\\Contracts\\Interfaces\\CacheInterface"
 }
 ```
 
@@ -108,16 +108,16 @@ namespace Modules\Cache\Domain\Exceptions;
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\CacheInterface",
+      "name": "Flexi\\Contracts\\Interfaces\\CacheInterface",
       "factory": {
         "class": "Modules\\Cache\\Infrastructure\\Factories\\CacheFactory",
         "method": "createDefault",
-        "arguments": ["@CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationInterface"]
+        "arguments": ["@Flexi\\Contracts\\Interfaces\\ConfigurationInterface"]
       }
     },
     {
       "name": "cache",
-      "alias": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\CacheInterface"
+      "alias": "Flexi\\Contracts\\Interfaces\\CacheInterface"
     }
   ]
 }
@@ -205,7 +205,7 @@ El core del framework sigue utilizando cache internamente a través de la interf
 
 ```php
 // src/Infrastructure/DependencyInjection/Container.php
-use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
+use Flexi\Contracts\Interfaces\CacheInterface;
 
 class Container {
     public function __construct(CacheInterface $cache, ...) {
@@ -214,7 +214,7 @@ class Container {
 }
 
 // src/Infrastructure/Classes/ObjectBuilder.php
-use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
+use Flexi\Contracts\Interfaces\CacheInterface;
 
 class ObjectBuilder {
     public function __construct(CacheInterface $cache) {

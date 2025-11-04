@@ -152,7 +152,7 @@ class InstalledModulesFilter
 
 ```php
 // ANTES
-use CubaDevOps\Flexi\Contracts\Classes\Traits\InstalledModulesFilterTrait;
+use Flexi\Contracts\Classes\Traits\InstalledModulesFilterTrait;
 
 class EventBus
 {
@@ -195,7 +195,7 @@ Los módulos pueden usar `InstalledModulesProviderTrait` para verificar dependen
 ```php
 namespace CubaDevOps\Flexi\Modules\MyModule;
 
-use CubaDevOps\Flexi\Contracts\Classes\Traits\InstalledModulesProviderTrait;
+use Flexi\Contracts\Classes\Traits\InstalledModulesProviderTrait;
 
 class MyModuleService
 {

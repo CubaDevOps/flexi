@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Application\Commands;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
+use Flexi\Contracts\Interfaces\DTOInterface;
 
 /**
  * Command used when no handler is found for a given command identifier.

@@ -220,17 +220,17 @@ Los módulos ahora pueden importar y usar:
 
 ```php
 // Traits genéricas
-use CubaDevOps\Flexi\Contracts\Classes\Traits\CacheKeyGeneratorTrait;
-use CubaDevOps\Flexi\Contracts\Classes\Traits\FileHandlerTrait;
-use CubaDevOps\Flexi\Contracts\Classes\Traits\GlobFileReader;
-use CubaDevOps\Flexi\Contracts\Classes\Traits\JsonFileReader;
+use Flexi\Contracts\Classes\Traits\CacheKeyGeneratorTrait;
+use Flexi\Contracts\Classes\Traits\FileHandlerTrait;
+use Flexi\Contracts\Classes\Traits\GlobFileReader;
+use Flexi\Contracts\Classes\Traits\JsonFileReader;
 
 // Clase abstracta base
-use CubaDevOps\Flexi\Contracts\Classes\EventListener;
+use Flexi\Contracts\Classes\EventListener;
 
 // ValueObjects genéricos
-use CubaDevOps\Flexi\Contracts\ValueObjects\Operator;
-use CubaDevOps\Flexi\Contracts\ValueObjects\Order;
+use Flexi\Contracts\ValueObjects\Operator;
+use Flexi\Contracts\ValueObjects\Order;
 
 // Sin necesidad de importar del core!
 // No más: use CubaDevOps\Flexi\Infrastructure\Utils\...

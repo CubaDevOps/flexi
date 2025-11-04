@@ -225,14 +225,14 @@ src/Infrastructure/  (Limpio y enfocado)
 Mover EventListener
 ├─ src/Application/EventListeners/LoggerEventListener.php
 │  ├─ usa: extends EventListener
-│  └─ update: use CubaDevOps\Flexi\Contracts\Classes\EventListener
+│  └─ update: use Flexi\Contracts\Classes\EventListener
 ├─ Potencialmente: todos los módulos que tengan listeners
 └─ Necesita: regenerar composer autoload
 
 Mover Traits de Utils
 ├─ src/Infrastructure/Bus/CommandBus.php
 │  ├─ usa: use JsonFileReader; use GlobFileReader;
-│  └─ update: use CubaDevOps\Flexi\Contracts\Classes\Traits\JsonFileReader;
+│  └─ update: use Flexi\Contracts\Classes\Traits\JsonFileReader;
 ├─ src/Infrastructure/Bus/QueryBus.php
 │  ├─ usa: use JsonFileReader; use GlobFileReader;
 │  └─ update: idem

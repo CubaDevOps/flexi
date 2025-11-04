@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\ConfigurationInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use Flexi\Contracts\Interfaces\CacheInterface;
+use Flexi\Contracts\Interfaces\ConfigurationInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Service;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServiceClassDefinition;
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;

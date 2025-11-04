@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Domain\Collections;
 
-use CubaDevOps\Flexi\Contracts\Classes\Collection as ConcreteCollection;
-use CubaDevOps\Flexi\Contracts\ValueObjects\CollectionType;
+use Flexi\Contracts\Classes\Collection as ConcreteCollection;
+use Flexi\Contracts\ValueObjects\CollectionType;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyEntity;
 use PHPUnit\Framework\TestCase;
 

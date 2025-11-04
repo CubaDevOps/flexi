@@ -39,7 +39,7 @@ modules/Logging/
 **Service Registration:**
 ```json
 {
-  "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
+  "name": "Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
   "class": {
     "name": "CubaDevOps\\Flexi\\Modules\\Logging\\Infrastructure\\Persistence\\InFileLogRepository",
     "arguments": ["ENV.log_file_path", "ENV.log_format"]
@@ -75,7 +75,7 @@ modules/Session/
 **Service Registration:**
 ```json
 {
-  "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\SessionStorageInterface",
+  "name": "Flexi\\Contracts\\Interfaces\\SessionStorageInterface",
   "class": {
     "name": "CubaDevOps\\Flexi\\Modules\\Session\\Infrastructure\\Session\\NativeSessionStorage",
     "arguments": [
@@ -98,7 +98,7 @@ modules/Session/
 },
 {
   "name": "session",
-  "alias": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\SessionStorageInterface"
+  "alias": "Flexi\\Contracts\\Interfaces\\SessionStorageInterface"
 }
 ```
 
@@ -272,7 +272,7 @@ class LogstashLogRepository implements LogRepositoryInterface { ... }
 Switch implementations by changing `services.json`:
 ```json
 {
-  "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
+  "name": "Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
   "class": {
     "name": "CubaDevOps\\Flexi\\Modules\\Logging\\Infrastructure\\Persistence\\DatabaseLogRepository"
   }

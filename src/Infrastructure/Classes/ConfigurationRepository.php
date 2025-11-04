@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Contracts\Classes\Collection;
-use CubaDevOps\Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
-use CubaDevOps\Flexi\Contracts\ValueObjects\CollectionType;
+use Flexi\Contracts\Classes\Collection;
+use Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
+use Flexi\Contracts\ValueObjects\CollectionType;
 use Dotenv\Dotenv;
 
 class ConfigurationRepository implements ConfigurationRepositoryInterface

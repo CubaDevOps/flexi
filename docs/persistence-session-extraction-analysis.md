@@ -267,7 +267,7 @@ modules/Logging/
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
+      "name": "Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Modules\\Logging\\Infrastructure\\Persistence\\InFileLogRepository",
         "arguments": ["ENV.log_file_path", "ENV.log_format"]
@@ -294,7 +294,7 @@ modules/Session/
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\SessionStorageInterface",
+      "name": "Flexi\\Contracts\\Interfaces\\SessionStorageInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Modules\\Session\\Infrastructure\\Session\\NativeSessionStorage",
         "arguments": [

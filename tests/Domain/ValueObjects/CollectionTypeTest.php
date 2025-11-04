@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Contracts\ValueObjects\CollectionType;
+use Flexi\Contracts\ValueObjects\CollectionType;
 use PHPUnit\Framework\TestCase;
 
 class CollectionTypeTest extends TestCase

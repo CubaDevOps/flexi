@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\ConfigurationInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
+use Flexi\Contracts\Interfaces\ConfigurationInterface;
+use Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
 
 class Configuration implements ConfigurationInterface
 {

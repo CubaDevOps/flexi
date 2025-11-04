@@ -388,7 +388,7 @@ Si `EventListener.php` se mueve a Contracts:
 use CubaDevOps\Flexi\Domain\Events\EventListener;
 
 // Después
-use CubaDevOps\Flexi\Contracts\Classes\EventListener;
+use Flexi\Contracts\Classes\EventListener;
 ```
 
 **Archivos a actualizar:**

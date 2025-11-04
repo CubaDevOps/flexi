@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\CliDTOInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\BusInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\HandlerInterface;
+use Flexi\Contracts\Interfaces\CliDTOInterface;
+use Flexi\Contracts\Interfaces\BusInterface;
+use Flexi\Contracts\Interfaces\HandlerInterface;
 use Psr\Container\ContainerInterface;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use Psr\Container\ContainerExceptionInterface;

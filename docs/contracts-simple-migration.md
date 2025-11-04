@@ -43,8 +43,8 @@ class RenderHome implements HandlerInterface
 #### Después (con contracts):
 ```php
 // modules/Home/Application/RenderHome.php
-use CubaDevOps\Flexi\Contracts\DTOInterface;
-use CubaDevOps\Flexi\Contracts\HandlerInterface;
+use Flexi\Contracts\DTOInterface;
+use Flexi\Contracts\HandlerInterface;
 
 class RenderHome implements HandlerInterface
 {

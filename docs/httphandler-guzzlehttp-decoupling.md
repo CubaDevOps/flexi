@@ -150,7 +150,7 @@ public function __construct(?ResponseFactoryInterface $response_factory = null)
 <?php
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Contracts\Classes;
+namespace Flexi\Contracts\Classes;
 
 use Psr\Http\Message\ResponseFactoryInterface;  // ✅ PSR standard
 use Psr\Http\Message\ResponseInterface;

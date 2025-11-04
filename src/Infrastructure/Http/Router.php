@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Http;
 
-use CubaDevOps\Flexi\Contracts\Classes\ObjectCollection;
-use CubaDevOps\Flexi\Contracts\Classes\Traits\CacheKeyGeneratorTrait;
-use CubaDevOps\Flexi\Contracts\Classes\Traits\GlobFileReader;
-use CubaDevOps\Flexi\Contracts\Classes\Traits\JsonFileReader;
-use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\CollectionInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use Flexi\Contracts\Classes\ObjectCollection;
+use Flexi\Contracts\Classes\Traits\CacheKeyGeneratorTrait;
+use Flexi\Contracts\Classes\Traits\GlobFileReader;
+use Flexi\Contracts\Classes\Traits\JsonFileReader;
+use Flexi\Contracts\Interfaces\CacheInterface;
+use Flexi\Contracts\Interfaces\CollectionInterface;
+use Flexi\Contracts\Interfaces\EventBusInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Domain\Events\RouteNotFoundEvent;
-use CubaDevOps\Flexi\Contracts\Classes\HttpHandler;
+use Flexi\Contracts\Classes\HttpHandler;
 use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
 use CubaDevOps\Flexi\Infrastructure\Http\Route;
 use Psr\Container\ContainerExceptionInterface;

@@ -159,7 +159,7 @@ should be instantiated, either directly or via factory methods.
     {
       "name": "logger",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Contracts\\Classes\\PsrLogger",
+        "name": "Flexi\\Contracts\\Classes\\PsrLogger",
         "arguments": [
           "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository"
         ]
@@ -421,7 +421,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
-use CubaDevOps\Flexi\Contracts\Classes\Traits\FileHandlerTrait;
+use Flexi\Contracts\Classes\Traits\FileHandlerTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

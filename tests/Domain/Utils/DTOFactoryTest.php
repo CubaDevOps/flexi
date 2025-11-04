@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Domain\Utils;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\BusInterface;
+use Flexi\Contracts\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyDTO;
 use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Infrastructure\Ui\Cli\DTOFactory;

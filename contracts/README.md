@@ -1,1 +1,0 @@
-TODO: review the core responsibilities

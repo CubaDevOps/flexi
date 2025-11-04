@@ -64,10 +64,10 @@ public function handleNotFound(
 #### Changes Made
 1. **Removed Imports**:
    - `CubaDevOps\Flexi\Modules\Logging\Application\EventListeners\LoggerEventListener`
-   - `CubaDevOps\Flexi\Contracts\Interfaces\LogRepositoryInterface`
+   - `Flexi\Contracts\Interfaces\LogRepositoryInterface`
 
 2. **Added Import**:
-   - `CubaDevOps\Flexi\Contracts\Interfaces\EventListenerInterface`
+   - `Flexi\Contracts\Interfaces\EventListenerInterface`
 
 3. **Added Test Constant**:
    ```php

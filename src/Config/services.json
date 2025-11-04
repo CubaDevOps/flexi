@@ -1,7 +1,7 @@
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\ObjectBuilderInterface",
+      "name": "Flexi\\Contracts\\Interfaces\\ObjectBuilderInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ObjectBuilder",
         "arguments": [
@@ -10,18 +10,18 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationRepositoryInterface",
+      "name": "Flexi\\Contracts\\Interfaces\\ConfigurationRepositoryInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ConfigurationRepository",
         "arguments": []
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationInterface",
+      "name": "Flexi\\Contracts\\Interfaces\\ConfigurationInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationRepositoryInterface"
+          "@Flexi\\Contracts\\Interfaces\\ConfigurationRepositoryInterface"
         ]
       }
     },
@@ -32,7 +32,7 @@
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory",
         "arguments": [
           "@CubaDevOps\\Flexi\\Infrastructure\\Bus\\EventBus",
-          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\ObjectBuilderInterface",
+          "@Flexi\\Contracts\\Interfaces\\ObjectBuilderInterface",
           "@Psr\\Http\\Message\\ResponseFactoryInterface",
           "@container"
         ]
@@ -84,7 +84,7 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\EventBusInterface",
+      "name": "Flexi\\Contracts\\Interfaces\\EventBusInterface",
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\EventBus"
     },
     {

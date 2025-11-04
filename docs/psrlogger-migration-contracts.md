@@ -36,7 +36,7 @@ Created new file: `contracts/src/Classes/PsrLogger.php`
 
 **Key Details:**
 ```
-- Namespace: CubaDevOps\Flexi\Contracts\Classes\PsrLogger
+- Namespace: Flexi\Contracts\Classes\PsrLogger
 - Extends: Psr\Log\AbstractLogger
 - Dependencies:
   - LogRepositoryInterface (from Contracts)
@@ -58,7 +58,7 @@ BEFORE:
 "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\PsrLogger"
 
 AFTER:
-"name": "CubaDevOps\\Flexi\\Contracts\\Classes\\PsrLogger"
+"name": "Flexi\\Contracts\\Classes\\PsrLogger"
 ```
 
 **b) Documentation (Readme.md)**

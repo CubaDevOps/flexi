@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Application\Commands;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\CliDTOInterface;
+use Flexi\Contracts\Interfaces\CliDTOInterface;
 
 /**
  * Command DTO for getting detailed information about a specific module.

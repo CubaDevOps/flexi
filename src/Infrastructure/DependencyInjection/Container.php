@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use Flexi\Contracts\Interfaces\CacheInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

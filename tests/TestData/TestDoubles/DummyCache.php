@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
+use Flexi\Contracts\Interfaces\CacheInterface;
 
 /**
  * Dummy cache that doesn't cache anything.

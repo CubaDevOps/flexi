@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\ServiceDefinitionInterface;
+use Flexi\Contracts\Interfaces\ServiceDefinitionInterface;
 
 class ServiceFactoryDefinition implements ServiceDefinitionInterface
 {

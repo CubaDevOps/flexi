@@ -36,7 +36,7 @@ Created new file: `contracts/src/Classes/Criteria/AnyCriteria.php`
 ```
 contracts/src/Classes/Criteria/
 └── AnyCriteria.php
-    ├── Namespace: CubaDevOps\Flexi\Contracts\Classes\Criteria
+    ├── Namespace: Flexi\Contracts\Classes\Criteria
     ├── Implements: CriteriaInterface
     └── Pattern: Null Object (matches all requests)
 ```
@@ -51,7 +51,7 @@ contracts/src/Classes/Criteria/
 **Module: HealthCheck**
 - File: `modules/HealthCheck/Application/UseCase/Health.php`
 - Old: `use CubaDevOps\Flexi\Domain\Criteria\AnyCriteria;`
-- New: `use CubaDevOps\Flexi\Contracts\Classes\Criteria\AnyCriteria;`
+- New: `use Flexi\Contracts\Classes\Criteria\AnyCriteria;`
 
 ## Verification
 

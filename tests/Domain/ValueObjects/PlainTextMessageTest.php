@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
+use Flexi\Contracts\Classes\PlainTextMessage;
 use PHPUnit\Framework\TestCase;
 
 class PlainTextMessageTest extends TestCase

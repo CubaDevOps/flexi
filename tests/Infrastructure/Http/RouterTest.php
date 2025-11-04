@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\Http;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
+use Flexi\Contracts\Interfaces\EventBusInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use Flexi\Contracts\Interfaces\CacheInterface;
 use CubaDevOps\Flexi\Infrastructure\Classes\Collection;
 use CubaDevOps\Flexi\Infrastructure\Http\Route;
 use CubaDevOps\Flexi\Infrastructure\Http\Router;

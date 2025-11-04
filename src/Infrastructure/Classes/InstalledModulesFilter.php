@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Contracts\Classes\Traits\InstalledModulesProviderTrait;
+use Flexi\Contracts\Classes\Traits\InstalledModulesProviderTrait;
 
 /**
  * Centralized service for filtering files based on installed modules.

@@ -57,7 +57,7 @@ class HttpHandler implements RequestHandlerInterface {
 Location: `contracts/src/Classes/HttpHandler.php`
 
 ```php
-namespace CubaDevOps\Flexi\Contracts\Classes;
+namespace Flexi\Contracts\Classes;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -85,7 +85,7 @@ All controllers extending `HttpHandler` must pass the dependency to parent const
 ```php
 namespace CubaDevOps\Flexi\Modules\Home\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Contracts\Classes\HttpHandler;
+use Flexi\Contracts\Classes\HttpHandler;
 use Psr\Http\Message\ResponseFactoryInterface;
 
 class HomeController extends HttpHandler
@@ -231,7 +231,7 @@ The following test files were updated to use pure PSR test doubles:
 If creating a new controller extending HttpHandler:
 
 ```php
-use CubaDevOps\Flexi\Contracts\Classes\HttpHandler;
+use Flexi\Contracts\Classes\HttpHandler;
 use Psr\Http\Message\ResponseFactoryInterface;
 
 class MyNewController extends HttpHandler

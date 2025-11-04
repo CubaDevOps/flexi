@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Domain\Entities;
 
-use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
+use Flexi\Contracts\ValueObjects\ID;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyEntity;
 use PHPUnit\Framework\TestCase;
 

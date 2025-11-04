@@ -1,8 +1,0 @@
-{
-  "handlers": [
-    {
-      "id": "CubaDevOps\\Flexi\\Modules\\Home\\Domain\\HomePageDTO",
-      "handler": "CubaDevOps\\Flexi\\Modules\\Home\\Application\\RenderHome"
-    }
-  ]
-}

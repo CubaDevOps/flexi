@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Contracts\Classes\Traits\FileHandlerTrait;
+use Flexi\Contracts\Classes\Traits\FileHandlerTrait;
 
 class FileHandler
 {

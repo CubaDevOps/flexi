@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Application\UseCase;
 
 use CubaDevOps\Flexi\Application\Commands\InstallModuleCommand;
-use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\HandlerInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
+use Flexi\Contracts\Classes\PlainTextMessage;
+use Flexi\Contracts\Interfaces\DTOInterface;
+use Flexi\Contracts\Interfaces\HandlerInterface;
+use Flexi\Contracts\Interfaces\MessageInterface;
 use RuntimeException;
 
 /**

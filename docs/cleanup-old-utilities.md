@@ -28,11 +28,11 @@ From `src/Infrastructure/Utils/`:
 
 **2. Test Fixtures (`tests/TestData/TestDoubles/FileHandler.php`)**
 - Old: `use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;`
-- New: `use CubaDevOps\Flexi\Contracts\Classes\Traits\FileHandlerTrait;`
+- New: `use Flexi\Contracts\Classes\Traits\FileHandlerTrait;`
 
 **3. Module Code (`modules/HealthCheck/Infrastructure/Persistence/VersionRepository.php`)**
 - Old: `use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;`
-- New: `use CubaDevOps\Flexi\Contracts\Classes\Traits\JsonFileReader;`
+- New: `use Flexi\Contracts\Classes\Traits\JsonFileReader;`
 
 ## Verification Steps
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
+use Flexi\Contracts\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Events\Event;
 
 class EventHandler

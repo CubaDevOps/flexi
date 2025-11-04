@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
+use Flexi\Contracts\ValueObjects\LogLevel;
 use PHPUnit\Framework\TestCase;
 
 class LogLevelTest extends TestCase

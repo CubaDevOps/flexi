@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Events;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\EventInterface;
+use Flexi\Contracts\Interfaces\EventInterface;
 
 class Event implements EventInterface
 {

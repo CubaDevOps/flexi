@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Domain\Entities;
 
-use CubaDevOps\Flexi\Contracts\Classes\Log;
-use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
-use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
+use Flexi\Contracts\Classes\Log;
+use Flexi\Contracts\Classes\PlainTextMessage;
+use Flexi\Contracts\Interfaces\MessageInterface;
+use Flexi\Contracts\ValueObjects\LogLevel;
 use PHPUnit\Framework\TestCase;
 
 class LogTest extends TestCase

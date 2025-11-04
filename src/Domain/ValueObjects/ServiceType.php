@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\ValueObjectInterface;
+use Flexi\Contracts\Interfaces\ValueObjectInterface;
 
 class ServiceType implements ValueObjectInterface
 {

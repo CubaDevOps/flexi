@@ -197,12 +197,12 @@ contracts/src/Interfaces/TemplateEngineInterface.php
   "class": {
     "name": "CubaDevOps\\Flexi\\Modules\\Ui\\Infrastructure\\Ui\\HtmlRender",
     "arguments": [
-      "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface"
+      "@Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface"
     ]
   }
 },
 {
-  "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface",
+  "name": "Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface",
   "class": {
     "name": "CubaDevOps\\Flexi\\Modules\\Ui\\Infrastructure\\Ui\\TemplateLocator",
     "arguments": []
@@ -387,11 +387,11 @@ tests/Infrastructure/Ui/HtmlRenderTest.php
       "name": "html_render",
       "class": {
         "name": "CubaDevOps\\Flexi\\Modules\\Ui\\Infrastructure\\Ui\\HtmlRender",
-        "arguments": ["@CubaDevOps\\Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface"]
+        "arguments": ["@Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface"]
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface",
+      "name": "Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Modules\\Ui\\Infrastructure\\Ui\\TemplateLocator",
         "arguments": []

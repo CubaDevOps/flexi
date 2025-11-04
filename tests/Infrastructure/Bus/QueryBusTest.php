@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use Flexi\Contracts\Classes\PlainTextMessage;
+use Flexi\Contracts\Interfaces\EventBusInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Test\TestData\Queries\TestQuery;
 use CubaDevOps\Flexi\Test\TestData\Handlers\TestQueryHandler;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;

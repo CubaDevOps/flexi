@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\ServiceDefinitionInterface;
+use Flexi\Contracts\Interfaces\ServiceDefinitionInterface;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Service;
 use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
 use PHPUnit\Framework\TestCase;

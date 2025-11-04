@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\CriteriaInterface;
+use Flexi\Contracts\Interfaces\CriteriaInterface;
 
 class DummySearchCriteria implements CriteriaInterface
 {

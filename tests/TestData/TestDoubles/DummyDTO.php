@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
+use Flexi\Contracts\Interfaces\DTOInterface;
 
 class DummyDTO implements DTOInterface
 {

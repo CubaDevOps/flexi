@@ -341,7 +341,7 @@ modules/Auth/
 ### Phase 1: Extract HttpHandler to Contracts
 
 1. Move `src/Infrastructure/Classes/HttpHandler.php` to `contracts/src/Classes/HttpHandler.php`
-2. Update namespace: `CubaDevOps\Flexi\Infrastructure\Classes` → `CubaDevOps\Flexi\Contracts\Classes`
+2. Update namespace: `CubaDevOps\Flexi\Infrastructure\Classes` → `Flexi\Contracts\Classes`
 3. Update imports in all controllers/handlers in core and modules
 
 ### Phase 2: Create modules/Auth
@@ -437,7 +437,7 @@ Module `modules/Auth/Config/services.json` will define:
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\SecretProviderInterface",
+      "name": "Flexi\\Contracts\\Interfaces\\SecretProviderInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Adapters\\ConfigurationSecretProvider",
         "arguments": ["@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"]
@@ -447,14 +447,14 @@ Module `modules/Auth/Config/services.json` will define:
       "name": "auth_check_middleware",
       "class": {
         "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\AuthCheckMiddleware",
-        "arguments": ["@CubaDevOps\\Flexi\\Contracts\\Interfaces\\SessionStorageInterface", "@Psr\\Http\\Message\\ResponseFactoryInterface"]
+        "arguments": ["@Flexi\\Contracts\\Interfaces\\SessionStorageInterface", "@Psr\\Http\\Message\\ResponseFactoryInterface"]
       }
     },
     {
       "name": "jwt_auth_middleware",
       "class": {
         "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\JWTAuthMiddleware",
-        "arguments": ["@CubaDevOps\\Flexi\\Contracts\\Interfaces\\SecretProviderInterface", "@Psr\\Http\\Message\\ResponseFactoryInterface"]
+        "arguments": ["@Flexi\\Contracts\\Interfaces\\SecretProviderInterface", "@Psr\\Http\\Message\\ResponseFactoryInterface"]
       }
     }
   ]

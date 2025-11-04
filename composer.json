@@ -25,9 +25,8 @@
         "php": ">=7.4",
         "ext-json": "*",
         "ext-pcntl": "*",
-        "cubadevops/flexi-contracts": "@dev",
         "cubadevops/upgrader": "^1.6",
-        "firebase/php-jwt": "6.10.0",
+        "flexi/contracts": "^2.0",
         "guzzlehttp/guzzle": "^7.7",
         "symfony/error-handler": "^5.4",
         "vlucas/phpdotenv": "^5.5"
@@ -87,12 +86,5 @@
         }
     },
     "repositories": [
-        {
-            "type": "path",
-            "url": "./contracts",
-            "options": {
-                "symlink": true
-            }
-        }
     ]
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Contracts\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use Flexi\Contracts\Interfaces\CacheInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Infrastructure\Classes\InMemoryCache;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServicesDefinitionParser;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;

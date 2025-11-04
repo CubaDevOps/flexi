@@ -22,7 +22,7 @@ contracts/src/Classes/HttpHandler.php
 ```
 
 **Cambios:**
-- Namespace: `CubaDevOps\Flexi\Infrastructure\Classes` → `CubaDevOps\Flexi\Contracts\Classes`
+- Namespace: `CubaDevOps\Flexi\Infrastructure\Classes` → `Flexi\Contracts\Classes`
 - Actualizado import en Router.php
 - Actualizado import en TestHttpHandler.php
 - Eliminado original del core
@@ -81,7 +81,7 @@ $key = $this->secret_provider->getSecret();  // ✅ 95% genérica
 ```json
 // modules/Auth/Config/services.json
 {
-  "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\SecretProviderInterface",
+  "name": "Flexi\\Contracts\\Interfaces\\SecretProviderInterface",
   "class": {
     "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Adapters\\ConfigurationSecretProvider",
     "arguments": ["@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"]
@@ -269,7 +269,7 @@ class OAuth2Middleware implements MiddlewareInterface { ... }
 class VaultSecretProvider implements SecretProviderInterface { ... }
 
 // 2. Registrar en modules/Auth/Config/services.json
-{ "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\SecretProviderInterface",
+{ "name": "Flexi\\Contracts\\Interfaces\\SecretProviderInterface",
   "class": { "name": "MyApp\\VaultSecretProvider", ... } }
 
 // 3. JWTAuthMiddleware automáticamente usa VaultSecretProvider

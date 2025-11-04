@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
+use Flexi\Contracts\Classes\Traits\FileHandlerTrait;
 
 class FileHandler
 {

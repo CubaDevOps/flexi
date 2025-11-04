@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Domain\Classes\Collection;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationRepositoryInterface;
-use CubaDevOps\Flexi\Domain\ValueObjects\CollectionType;
+use Flexi\Contracts\Classes\Collection;
+use Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
+use Flexi\Contracts\ValueObjects\CollectionType;
 use Dotenv\Dotenv;
 
 class ConfigurationRepository implements ConfigurationRepositoryInterface
@@ -36,9 +36,7 @@ class ConfigurationRepository implements ConfigurationRepositoryInterface
     }
 
     /**
-     * Summary of get
-     * @param string $key
-     * @return mixed
+     * Summary of get.
      */
     public function get(string $key)
     {

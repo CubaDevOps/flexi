@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Domain\Classes\ServiceFactoryDefinition;
+use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServiceFactoryDefinition;
 use PHPUnit\Framework\TestCase;
 
 class ServiceFactoryDefinitionTest extends TestCase
 {
     private const FACTORY_CLASS = 'testServiceClass';
     private const FACTORY_METHOD = 'getInstance';
-    private const FACTORY_ARGS  = ['arg' => 'test-arg'];
+    private const FACTORY_ARGS = ['arg' => 'test-arg'];
 
     private ServiceFactoryDefinition $factory;
 

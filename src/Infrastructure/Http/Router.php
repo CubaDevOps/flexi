@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Http;
 
+use Flexi\Contracts\Classes\ObjectCollection;
+use Flexi\Contracts\Classes\Traits\CacheKeyGeneratorTrait;
+use Flexi\Contracts\Classes\Traits\GlobFileReader;
+use Flexi\Contracts\Classes\Traits\JsonFileReader;
+use Flexi\Contracts\Interfaces\CacheInterface;
+use Flexi\Contracts\Interfaces\CollectionInterface;
+use Flexi\Contracts\Interfaces\EventBusInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Events\Event;
-use CubaDevOps\Flexi\Domain\Classes\ObjectCollection;
-use CubaDevOps\Flexi\Domain\Classes\Route;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
-use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
-use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
+use CubaDevOps\Flexi\Domain\Events\RouteNotFoundEvent;
+use Flexi\Contracts\Classes\HttpHandler;
+use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
+use CubaDevOps\Flexi\Infrastructure\Http\Route;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -28,20 +32,17 @@ class Router
 
     protected ObjectCollection $routes_indexed_by_name;
     protected ObjectCollection $routes_indexed_by_path;
-    protected SessionStorageInterface $session;
     protected EventBusInterface $event_bus;
     protected ObjectBuilderInterface $class_factory;
     protected ResponseFactoryInterface $response_factory;
     protected ContainerInterface $container;
 
     public function __construct(
-        SessionStorageInterface $session,
         EventBusInterface $event_bus,
         ObjectBuilderInterface $class_factory,
         ResponseFactoryInterface $response_factory,
         ContainerInterface $container
     ) {
-        $this->session = $session;
         $this->event_bus = $event_bus;
         $this->class_factory = $class_factory;
         $this->response_factory = $response_factory;
@@ -86,6 +87,11 @@ class Router
     public function loadGlobRoutes(string $glob_path): void
     {
         $routes_files = $this->readGlob($glob_path);
+
+        // Filter files to only include installed modules
+        $filter = new InstalledModulesFilter();
+        $routes_files = $filter->filterFiles($routes_files);
+
         foreach ($routes_files as $file) {
             $this->loadRoutesFile($file);
         }
@@ -112,12 +118,12 @@ class Router
         ServerRequestInterface $request
     ): ResponseInterface {
         $request_path = $request->getUri()->getPath();
-        $event = new Event('core.onRequest', __CLASS__, ['request' => $request]);
+        $event = new Event('core.onRequest', __CLASS__, ['request' => $request->getUri()->__toString()]);
         $this->event_bus->dispatch($event);
         $this->assertThatRouteCollectionIsNotEmpty();
 
         if (!$this->routes_indexed_by_path->offsetExists($request_path)) {
-            return $this->redirectToNotFound($request, $request_path);
+            return $this->handleNotFound($request, $request_path);
         }
         /** @var Route $route */
         $route = $this->routes_indexed_by_path->get($request_path);
@@ -132,25 +138,23 @@ class Router
         }
     }
 
-    public function redirectToNotFound(
+    public function handleNotFound(
         ServerRequestInterface $request,
-        string $previous_route
+        string $requested_path
     ): ResponseInterface {
-        $this->session->set('previous_route', $previous_route);
-        $not_found_route = $this->getByName('404');
-        $event = new Event('core.redirect', __CLASS__, [
-            'from' => $previous_route,
-            'to' => $not_found_route->getPath(),
-        ]);
+        $event = new RouteNotFoundEvent($request, $requested_path, __CLASS__);
         $this->event_bus->dispatch($event);
-        $response = $this->response_factory->createResponse();
 
-        return $response
-            ->withHeader(
-                'Location',
-                $not_found_route->getAbsoluteUrl(self::getUrlBase())
-            )
-            ->withStatus(301);
+        // If a listener handled the event and provided a response, use it
+        if ($event->hasResponse()) {
+            return $event->getResponse();
+        }
+
+        // Otherwise, return a simple 404 response
+        $response = $this->response_factory->createResponse(404);
+        $response->getBody()->write('404 - Not Found');
+
+        return $response;
     }
 
     /**
@@ -190,7 +194,7 @@ class Router
 
         $response = $this->executeStack($route, $request);
 
-        $event = new Event('core.onResponse', __CLASS__, ['response' => $response]);
+        $event = new Event('core.onResponse', __CLASS__, ['response' => ['status' => $response->getStatusCode(), 'reason' => $response->getReasonPhrase()]]);
         $this->event_bus->dispatch($event);
 
         return $response;
@@ -245,7 +249,7 @@ class Router
     }
 
     /**
-     * Configures middlewares in the handler if it's an HttpHandler instance
+     * Configures middlewares in the handler if it's an HttpHandler instance.
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

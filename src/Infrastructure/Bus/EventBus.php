@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventListenerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationRepositoryInterface;
-use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
-use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
+use Flexi\Contracts\Classes\Traits\GlobFileReader;
+use Flexi\Contracts\Classes\Traits\JsonFileReader;
+use Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
+use Flexi\Contracts\Interfaces\DTOInterface;
+use Flexi\Contracts\Interfaces\EventBusInterface;
+use Flexi\Contracts\Interfaces\EventInterface;
+use Flexi\Contracts\Interfaces\EventListenerInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -74,6 +75,11 @@ class EventBus implements EventBusInterface
     public function loadGlobListeners(array $listener): void
     {
         $files = $this->readGlob($listener['glob']);
+
+        // Filter files to only include installed modules
+        $filter = new InstalledModulesFilter();
+        $files = $filter->filterFiles($files);
+
         foreach ($files as $file) {
             $this->loadHandlersFromJsonFile($file);
         }
@@ -93,7 +99,6 @@ class EventBus implements EventBusInterface
         $this->events[$identifier][] = $handler;
     }
 
-
     /**
      * @throws \ReflectionException
      * @throws ContainerExceptionInterface
@@ -109,8 +114,10 @@ class EventBus implements EventBusInterface
     /**
      * Dispatches an event to all relevant listeners.
      *
-     * @param object $event The event object to dispatch.
-     * @return object The event after processing by listeners.
+     * @param object $event the event object to dispatch
+     *
+     * @return object the event after processing by listeners
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
@@ -134,7 +141,6 @@ class EventBus implements EventBusInterface
         return $event;
     }
 
-
     public function hasHandler(string $identifier): bool
     {
         return isset($this->events[$identifier]);
@@ -155,7 +161,7 @@ class EventBus implements EventBusInterface
 
     public function getDtoClassFromAlias(string $id): string
     {
-        return NotFoundCliCommand::class;
+        return NotFoundCommand::class;
     }
 
     /**
@@ -168,7 +174,6 @@ class EventBus implements EventBusInterface
         foreach ($listeners as $listener) {
             $this->handleListener($listener, $event);
         }
-
     }
 
     /**
@@ -187,9 +192,6 @@ class EventBus implements EventBusInterface
         $listener_obj->handle($event);
     }
 
-    /**
-     * @return void
-     */
     private function closeBuffers(): void
     {
         if (function_exists('fastcgi_finish_request')) {
@@ -210,14 +212,11 @@ class EventBus implements EventBusInterface
                 fclose(STDERR);
             }
         } catch (\Exception $e) {
-            $this->logger->warning("Error closing file descriptors: " . $e->getMessage(),[__CLASS__]);
+            $this->logger->warning('Error closing file descriptors: '.$e->getMessage(), [__CLASS__]);
         }
     }
 
     /**
-     * @param array $listeners
-     * @param object $event
-     * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
@@ -226,12 +225,12 @@ class EventBus implements EventBusInterface
     {
         $pid = pcntl_fork();
 
-        if ($pid === -1) {
-            $this->logger->error("Could not fork process");
-            throw new \RuntimeException("Could not fork process");
+        if (-1 === $pid) {
+            $this->logger->error('Could not fork process');
+            throw new \RuntimeException('Could not fork process');
         }
 
-        if ($pid === 0) {
+        if (0 === $pid) {
             $this->notifyListeners($listeners, $event);
 
             $this->closeBuffers(); // Close the standard file descriptors to prevent blank output on parent process
@@ -242,12 +241,18 @@ class EventBus implements EventBusInterface
     }
 
     /**
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function asyncMode(): bool
     {
-        return PHP_SAPI === 'cli' && ($this->configuration->has('dispatch_mode') && (int)$this->configuration->get('dispatch_mode'));
+        return PHP_SAPI === 'cli' && ($this->configuration->has('dispatch_mode') && (int) $this->configuration->get('dispatch_mode'));
+    }
+
+    public function getHandlersDefinition(bool $with_aliases = false): array
+    {
+        // EventBus doesn't have traditional handlers like Command/QueryBus
+        // Return event listeners mapping
+        return $this->events;
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Domain\Classes\Route;
+use CubaDevOps\Flexi\Infrastructure\Http\Route;
 
 class RouteMock extends Route
 {
@@ -11,6 +13,7 @@ class RouteMock extends Route
     public function hasMiddlewares(): bool
     {
         $this->has_middlewares_spy = parent::hasMiddlewares();
+
         return $this->has_middlewares_spy;
     }
 }

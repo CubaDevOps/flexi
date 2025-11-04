@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
+use Flexi\Contracts\Classes\PlainTextMessage;
 use PHPUnit\Framework\TestCase;
 
 class PlainTextMessageTest extends TestCase
@@ -24,7 +26,7 @@ class PlainTextMessageTest extends TestCase
     public function testToArray(): void
     {
         $expected = [
-            'body'       => 'body',
+            'body' => 'body',
             'created_at' => $this->now,
         ];
 
@@ -34,7 +36,7 @@ class PlainTextMessageTest extends TestCase
     public function testFromArray(): void
     {
         $data = [
-            'body' => 'body'
+            'body' => 'body',
         ];
 
         $newPlainTextMessage = PlainTextMessage::fromArray($data);
@@ -46,11 +48,11 @@ class PlainTextMessageTest extends TestCase
     public function testFromArrayInvalidData(): void
     {
         $data = [
-            'test' => 'body'
+            'test' => 'body',
         ];
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid data provided for '. PlainTextMessage::class);
+        $this->expectExceptionMessage('Invalid data provided for '.PlainTextMessage::class);
 
         PlainTextMessage::fromArray($data);
     }

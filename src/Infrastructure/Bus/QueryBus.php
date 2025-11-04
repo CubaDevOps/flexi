@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Bus;
 
+use Flexi\Contracts\Classes\Traits\GlobFileReader;
+use Flexi\Contracts\Classes\Traits\JsonFileReader;
+use Flexi\Contracts\Interfaces\BusInterface;
+use Flexi\Contracts\Interfaces\DTOInterface;
+use Flexi\Contracts\Interfaces\EventBusInterface;
+use Flexi\Contracts\Interfaces\HandlerInterface;
+use Flexi\Contracts\Interfaces\MessageInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Domain\Events\Event;
-use CubaDevOps\Flexi\Domain\DTO\NotFoundCliCommand;
-use CubaDevOps\Flexi\Domain\Interfaces\BusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
-use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
+use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -73,6 +74,11 @@ class QueryBus implements BusInterface
     private function loadGlobFiles(array $handler): void
     {
         $files = $this->readGlob($handler['glob']);
+
+        // Filter files to only include installed modules
+        $filter = new InstalledModulesFilter();
+        $files = $filter->filterFiles($files);
+
         foreach ($files as $file) {
             $this->loadHandlersFromJsonFile($file);
         }
@@ -163,6 +169,7 @@ class QueryBus implements BusInterface
     {
         $handler = $this->aliases[$id];
         $dto = array_search($handler, $this->queries, true);
-        return $dto ?: NotFoundCliCommand::class;
+
+        return $dto ?: NotFoundCommand::class;
     }
 }

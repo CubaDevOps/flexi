@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Domain\Interfaces\CacheInterface;
+use Flexi\Contracts\Interfaces\CacheInterface;
 
 /**
  * Dummy cache that doesn't cache anything.
@@ -43,6 +43,7 @@ class DummyCache implements CacheInterface
         foreach ($keys as $key) {
             $result[$key] = $default;
         }
+
         return $result;
     }
 

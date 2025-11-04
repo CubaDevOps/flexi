@@ -23,7 +23,8 @@ leverages Dependency Injection (DI), a flexible routing system, CQRS and an even
 
 ## Features
 
-- **Modularity & Extensibility**: Flexi offers a modular architecture that promotes code organization and reusability. Its extensibility allows developers to customize and extend functionality according to specific project requirements.
+- **Modularity & Extensibility**: Flexi offers a modular architecture that promotes code organization and reusability. Its extensibility allows developers to customize and extend functionality according to specific project requirements. Each module is a self-contained Composer package with its own dependencies, allowing for easy installation, uninstallation, and version management.
+- **Automatic Module Discovery**: Modules are automatically discovered and registered. Simply create a module in the `modules/` directory with a `composer.json` file, run `composer modules:sync`, and it's ready to use.
 - **Dependency Injection**: Built-in support for Dependency Injection simplifies management and injection of dependencies, enhancing code maintainability and testability. DI in Flexi is implemented using a container that manages service with lazy loading instantiation.
 - **Flexible Routing**: With a flexible routing system, developers can easily define and manage HTTP request handling, streamlining development of complex routing logic enriched with middleware support.
 - **Event-Driven Architecture**: Flexi's event-driven architecture enables asynchronous handling of events by event listeners, fostering loose coupling and flexibility in application design.
@@ -33,9 +34,10 @@ leverages Dependency Injection (DI), a flexible routing system, CQRS and an even
 ## Structure
 
 - **Core**: the `src/` directory contains the core classes and interfaces that make up the framework.
-- **Modules**: the `modules/` directory contains the all pieces of code that are not part of the core framework. Each module is a separate directory that contains its own controllers, services, and configuration files. There are plug and play plugins that can be added to the application to extend its functionality.
-- **Config**: the `src/Config/` and `modules/*/Config` directory contains the configuration files for the framework (`routes`, `commands`, `queries`, `event listeners` and `services`).
-- **Console**: the `bin/` directory contains the console application that can be run from the command line. `(coming soon)`
+- **Contracts**: the `contracts/` directory contains shared interfaces and base classes used by both core and modules, ensuring loose coupling and standardization.
+- **Modules**: the `modules/` directory contains all pieces of code that are not part of the core framework. Each module is a self-contained Composer package with its own `composer.json`, dependencies, controllers, services, and configuration files. Modules are plug-and-play and can be easily installed, uninstalled, or versioned independently.
+- **Config**: the `src/Config/` and `modules/*/Config` directories contain configuration files for the framework (`routes`, `commands`, `queries`, `event listeners` and `services`).
+- **Console**: the `bin/` directory contains the console application for CLI commands.
 
 ## Installation
 
@@ -58,6 +60,74 @@ To get started with Flexi Framework, ensure you:
 
 After setup, browse to the URL of your application to see the welcome page. If you use the default configuration
 with Docker, you can access the application at http://localhost:8080.
+
+## Module Management
+
+Flexi features an automatic module discovery system that makes managing modules simple and efficient.
+
+### Available Commands
+
+```bash
+# Sync all modules (auto-discover and register)
+composer modules:sync
+
+# List all available modules
+composer modules:list
+
+# Get detailed information about a module
+php bin/console modules:info Auth
+
+# Validate module configuration
+composer modules:validate
+
+# Install a module
+php bin/console modules:install ModuleName
+
+# Uninstall a module
+php bin/console modules:uninstall ModuleName
+```
+
+### Creating a New Module
+
+```bash
+# 1. Create module structure
+mkdir -p modules/MyModule/{Domain,Infrastructure,Config}
+
+# 2. Create composer.json
+cat > modules/MyModule/composer.json << 'EOF'
+{
+  "name": "cubadevops/flexi-module-mymodule",
+  "version": "1.0.0",
+  "type": "flexi-module",
+  "require": {
+    "php": ">=7.4",
+    "cubadevops/flexi-contracts": "@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "CubaDevOps\\Flexi\\Modules\\MyModule\\": ""
+    }
+  }
+}
+EOF
+
+# 3. Sync modules
+composer modules:sync
+```
+
+That's it! Your module is now installed and ready to use. Changes to module code are immediately reflected thanks to symlinks.
+
+### How It Works
+
+1. Each module has its own `composer.json` defining its package name and dependencies
+2. The `modules:sync` command scans the `modules/` directory and auto-discovers modules
+3. Composer creates symlinks from `vendor/cubadevops/flexi-module-*` to `modules/*`
+4. All dependencies are managed centrally by Composer
+5. Modules can be versioned, published to Git repositories, and shared across projects
+
+For detailed documentation, see:
+- [Automatic Module System](docs/modular-system-automatic.md)
+- [Modules README](modules/README.md)
 
 ## Configuration
 
@@ -89,7 +159,7 @@ should be instantiated, either directly or via factory methods.
     {
       "name": "logger",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\PsrLogger",
+        "name": "Flexi\\Contracts\\Classes\\PsrLogger",
         "arguments": [
           "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository"
         ]
@@ -351,7 +421,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Controllers;
 
 use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
 use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
-use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
+use Flexi\Contracts\Classes\Traits\FileHandlerTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

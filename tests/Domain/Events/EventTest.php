@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Domain\Events;
 
 use CubaDevOps\Flexi\Domain\Events\Event;
@@ -11,7 +13,7 @@ class EventTest extends TestCase
     private const EVENT_TRIGGER = 'eventTrigger';
     private const EVENT_DATA = [
         '1-tst-data' => [1, 2, 3],
-        '2-tst-data' => 'event-data'
+        '2-tst-data' => 'event-data',
     ];
 
     private \DateTimeImmutable $now;
@@ -52,9 +54,9 @@ class EventTest extends TestCase
     public function testGetEventData(): void
     {
         $expected = [
-            'event'       => self::EVENT_NAME,
-            'data'        => self::EVENT_DATA,
-            'fired_by'    => self::EVENT_TRIGGER,
+            'event' => self::EVENT_NAME,
+            'data' => self::EVENT_DATA,
+            'fired_by' => self::EVENT_TRIGGER,
             'occurred_on' => $this->now->format(DATE_ATOM),
         ];
 
@@ -64,9 +66,9 @@ class EventTest extends TestCase
     public function testCreateEventFromArray(): void
     {
         $data = [
-            'event'    => self::EVENT_NAME,
-            'data'     => self::EVENT_DATA,
-            'fired_by' => self::EVENT_TRIGGER
+            'event' => self::EVENT_NAME,
+            'data' => self::EVENT_DATA,
+            'fired_by' => self::EVENT_TRIGGER,
         ];
 
         $newEvent = Event::fromArray($data);
@@ -81,11 +83,11 @@ class EventTest extends TestCase
     public function testCreateEventFromArrayInvalidData(): void
     {
         $data = [
-            'event' => self::EVENT_NAME
+            'event' => self::EVENT_NAME,
         ];
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid parameters provided for '. Event::class);
+        $this->expectExceptionMessage('Invalid parameters provided for '.Event::class);
 
         Event::fromArray($data);
     }
@@ -96,14 +98,58 @@ class EventTest extends TestCase
     public function testSerialize(): void
     {
         $expected =
-            '{"event":"'. self::EVENT_NAME .
-            '","data":'. json_encode(self::EVENT_DATA, JSON_THROW_ON_ERROR) .
-            ',"fired_by":"'. self::EVENT_TRIGGER .
-            '","occurred_on":"'. $this->now->format(DATE_ATOM) .'"}';
+            '{"event":"'.self::EVENT_NAME.
+            '","data":'.json_encode(self::EVENT_DATA, JSON_THROW_ON_ERROR).
+            ',"fired_by":"'.self::EVENT_TRIGGER.
+            '","occurred_on":"'.$this->now->format(DATE_ATOM).'"}';
 
         $serialized = $this->event->serialize();
 
         $this->assertNotEmpty($serialized);
         $this->assertEquals($expected, $serialized);
+    }
+
+    public function testSetAndGetData(): void
+    {
+        $this->event->set('custom_key', 'custom_value');
+
+        $this->assertEquals('custom_value', $this->event->get('custom_key'));
+    }
+
+    public function testHasMethod(): void
+    {
+        // Test with existing keys from initial data
+        $this->assertTrue($this->event->has('1-tst-data'));
+        $this->assertTrue($this->event->has('2-tst-data'));
+
+        // Test with non-existing key
+        $this->assertFalse($this->event->has('non_existing_key'));
+
+        // Test after setting a new key
+        $this->event->set('new_key', 'new_value');
+        $this->assertTrue($this->event->has('new_key'));
+    }
+
+    public function testStopPropagation(): void
+    {
+        // Initially, propagation should not be stopped
+        $this->assertFalse($this->event->isPropagationStopped());
+
+        // Stop propagation
+        $this->event->stopPropagation();
+
+        // Now propagation should be stopped
+        $this->assertTrue($this->event->isPropagationStopped());
+    }
+
+    public function testSetOverwritesExistingData(): void
+    {
+        // Set initial value
+        $this->event->set('test_key', 'initial_value');
+        $this->assertEquals('initial_value', $this->event->get('test_key'));
+
+        // Overwrite with new value
+        $this->event->set('test_key', 'updated_value');
+        $this->assertEquals('updated_value', $this->event->get('test_key'));
     }
 }

@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Http;
 
-use CubaDevOps\Flexi\Domain\Classes\Route;
+use Flexi\Contracts\Interfaces\EventBusInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use Flexi\Contracts\Interfaces\CacheInterface;
+use CubaDevOps\Flexi\Infrastructure\Classes\Collection;
+use CubaDevOps\Flexi\Infrastructure\Http\Route;
 use CubaDevOps\Flexi\Infrastructure\Http\Router;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouterMock;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\TestHttpHandler;
 use PHPUnit\Framework\TestCase;
@@ -23,26 +26,24 @@ class RouterTest extends TestCase
     private const ROUTE_PATH = '/health';
     private const ROUTE_CTRL = 'TestingControllerFactory';
 
-    private SessionStorageInterface $session;
-    private EventBusInterface $event_bus;
-    private ObjectBuilderInterface $class_factory;
+    private $event_bus;
+    private $class_factory;
     private ResponseFactoryInterface $response_factory;
     private \Psr\Container\ContainerInterface $container;
 
-    private Router $router;
+    private RouterMock $router;
 
     /**
      * @throws \JsonException
      */
     public function setUp(): void
     {
-        $this->session = $this->createMock(SessionStorageInterface::class);
         $this->event_bus = $this->createMock(EventBusInterface::class);
         $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
         $this->response_factory = $this->createMock(ResponseFactoryInterface::class);
         $this->container = $this->createMock(\Psr\Container\ContainerInterface::class);
 
-        $this->router = new RouterMock($this->session, $this->event_bus, $this->class_factory, $this->response_factory, $this->container);
+        $this->router = new RouterMock($this->event_bus, $this->class_factory, $this->response_factory, $this->container);
 
         $route = new Route(
             self::ROUTE_NAME,
@@ -69,8 +70,8 @@ class RouterTest extends TestCase
 
     public function testDispatch(): void
     {
-        $_SERVER['HTTP_HOST']       = 'flexi';
-        $_SERVER['REQUEST_SCHEME']  = 'https';
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
 
         $route = new Route(
             self::ROUTE_NAME,
@@ -88,7 +89,7 @@ class RouterTest extends TestCase
 
         $testHandler->setMockResponse($responseInterfaceMock);
 
-        $serverRequestMock->expects($this->once())
+        $serverRequestMock->expects($this->exactly(2))
             ->method('getUri')->willReturn($uriInterfaceMock);
 
         $uriInterfaceMock->expects($this->once())
@@ -118,17 +119,17 @@ class RouterTest extends TestCase
      */
     public function testDispatchNoRoutes(): void
     {
-        $_SERVER['HTTP_HOST']       = 'flexi';
-        $_SERVER['REQUEST_SCHEME']  = 'https';
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
 
         $emptyRouter = new Router(
-            $this->session, $this->event_bus, $this->class_factory, $this->response_factory, $this->container
+            $this->event_bus, $this->class_factory, $this->response_factory, $this->container
         );
 
         $uriInterfaceMock = $this->createMock(UriInterface::class);
         $serverRequestMock = $this->createMock(ServerRequestInterface::class);
 
-        $serverRequestMock->expects($this->once())
+        $serverRequestMock->expects($this->exactly(2))
             ->method('getUri')->willReturn($uriInterfaceMock);
 
         $uriInterfaceMock->expects($this->once())
@@ -138,7 +139,6 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage('Define at least one route');
 
         $emptyRouter->dispatch($serverRequestMock);
-        $this->assertFalse($this->router->redirect_to_not_found_spy);
     }
 
     /**
@@ -149,8 +149,8 @@ class RouterTest extends TestCase
      */
     public function testDispatchParameterRequired(): void
     {
-        $_SERVER['HTTP_HOST']       = 'flexi';
-        $_SERVER['REQUEST_SCHEME']  = 'https';
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
 
         $requiredParam = 'user';
         $route = new Route(
@@ -161,8 +161,8 @@ class RouterTest extends TestCase
             [
                 0 => [
                     'required' => true,
-                    'name'     => $requiredParam
-                ]
+                    'name' => $requiredParam,
+                ],
             ]
         );
         $this->router->addRoute($route);
@@ -170,7 +170,7 @@ class RouterTest extends TestCase
         $uriInterfaceMock = $this->createMock(UriInterface::class);
         $serverRequestMock = $this->createMock(ServerRequestInterface::class);
 
-        $serverRequestMock->expects($this->once())
+        $serverRequestMock->expects($this->exactly(2))
             ->method('getUri')->willReturn($uriInterfaceMock);
 
         $uriInterfaceMock->expects($this->once())
@@ -183,7 +183,6 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage("Parameter '{$requiredParam}' is required");
 
         $this->router->dispatch($serverRequestMock);
-        $this->assertFalse($this->router->redirect_to_not_found_spy);
     }
 
     /**
@@ -194,14 +193,14 @@ class RouterTest extends TestCase
      */
     public function testDispatchInvalidMethod(): void
     {
-        $_SERVER['HTTP_HOST']       = 'flexi';
-        $_SERVER['REQUEST_SCHEME']  = 'https';
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
         $invalidMethod = 'POST';
 
         $uriInterfaceMock = $this->createMock(UriInterface::class);
         $serverRequestMock = $this->createMock(ServerRequestInterface::class);
 
-        $serverRequestMock->expects($this->once())
+        $serverRequestMock->expects($this->exactly(2))
             ->method('getUri')->willReturn($uriInterfaceMock);
 
         $uriInterfaceMock->expects($this->once())
@@ -214,7 +213,6 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage("Method $invalidMethod is not allowed for this route");
 
         $this->router->dispatch($serverRequestMock);
-        $this->assertFalse($this->router->redirect_to_not_found_spy);
     }
 
     /**
@@ -225,8 +223,8 @@ class RouterTest extends TestCase
      */
     public function testDispatchDirectToNotFound(): void
     {
-        $_SERVER['HTTP_HOST']       = 'flexi';
-        $_SERVER['REQUEST_SCHEME']  = 'https';
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
 
         $uriInterfaceMock = $this->createMock(UriInterface::class);
         $serverRequestMock = $this->createMock(ServerRequestInterface::class);
@@ -234,7 +232,7 @@ class RouterTest extends TestCase
         $responseInterfaceMock->expects($this->once())
             ->method('getStatusCode')->willReturn(404);
 
-        $serverRequestMock->expects($this->once())
+        $serverRequestMock->expects($this->exactly(2))
             ->method('getUri')->willReturn($uriInterfaceMock);
 
         $uriInterfaceMock->expects($this->once())
@@ -246,7 +244,6 @@ class RouterTest extends TestCase
         $response = $this->router->dispatch($serverRequestMock);
 
         $this->assertEquals(404, $response->getStatusCode());
-        $this->assertTrue($this->router->redirect_to_not_found_spy);
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 

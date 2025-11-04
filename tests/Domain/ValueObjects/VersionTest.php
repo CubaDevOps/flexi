@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\Version;
+use Flexi\Contracts\ValueObjects\Version;
 use PHPUnit\Framework\TestCase;
 
 class VersionTest extends TestCase
@@ -13,14 +13,14 @@ class VersionTest extends TestCase
 
     public function testToStringVersion(): void
     {
-        $this->assertEquals('1.0.0', (string)$this->version);
+        $this->assertEquals('1.0.0', (string) $this->version);
     }
 
     public function testInvalidVersion(): void
     {
         $this->expectException(\TypeError::class);
 
-        /**
+        /*
          * @noinspection PhpStrictTypeCheckingInspection
          * @psalm-suppress InvalidArgument
          */

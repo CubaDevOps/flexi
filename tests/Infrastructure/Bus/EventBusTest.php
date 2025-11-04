@@ -1,16 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Application\EventListeners\LoggerEventListener;
+use Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
+use Flexi\Contracts\Interfaces\EventInterface;
+use Flexi\Contracts\Interfaces\EventListenerInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
-use CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository;
-use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationRepositoryInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\LogRepositoryInterface;
-use CubaDevOps\Flexi\Infrastructure\Classes\PsrLogger;
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -22,6 +20,7 @@ class EventBusTest extends TestCase
     private EventBus $eventBus;
     private $container;
     private $class_factory;
+    private const TEST_LISTENER_CLASS = 'TestEventListener';
 
     /**
      * @throws NotFoundExceptionInterface
@@ -35,16 +34,14 @@ class EventBusTest extends TestCase
         $this->class_factory = $this->createMock(ObjectBuilderInterface::class);
 
         $configRepo = $this->createMock(ConfigurationRepositoryInterface::class);
-        $configuration = new Configuration($configRepo);
 
-        $logger = new PsrLogger(
-            $this->createMock(LogRepositoryInterface::class),
-            $configuration
-        );
+        // Create a simpler logger for testing
+        $logger = $this->createMock(LoggerInterface::class);
 
         $this->eventBus = new EventBus($this->container, $this->class_factory, $logger, $configRepo);
 
-        $this->eventBus->loadHandlersFromJsonFile('./src/Config/listeners.json');
+        // Instead of loading from actual files, manually register a test listener
+        $this->eventBus->register('test.event', self::TEST_LISTENER_CLASS);
     }
 
     /**
@@ -55,15 +52,15 @@ class EventBusTest extends TestCase
     public function testExecute(): void
     {
         $dtoMock = $this->createMock(EventInterface::class);
-        $handlerMock = $this->createMock(LoggerEventListener::class);
+        $handlerMock = $this->createMock(EventListenerInterface::class);
 
-        $dtoMock->expects($this->once())->method('getName')->willReturn('*');
+        $dtoMock->expects($this->once())->method('getName')->willReturn('test.event');
         $dtoMock->expects($this->atLeastOnce())->method('isPropagationStopped')->willReturn(false);
 
         $this->class_factory
             ->expects($this->atLeastOnce())
             ->method('build')
-            ->with($this->container, LoggerEventListener::class)
+            ->with($this->container, self::TEST_LISTENER_CLASS)
             ->willReturn($handlerMock);
 
         $this->eventBus->execute($dtoMock);
@@ -74,14 +71,19 @@ class EventBusTest extends TestCase
      */
     public function testGetHandler(): void
     {
-        $expected = json_encode([LoggerEventListener::class], JSON_THROW_ON_ERROR);
-        $actual = $this->eventBus->getHandler('*');
+        $expected = json_encode([self::TEST_LISTENER_CLASS], JSON_THROW_ON_ERROR);
+        $actual = $this->eventBus->getHandler('test.event');
 
         $this->assertEquals($expected, $actual);
     }
 
     public function testHasHandler(): void
     {
-        $this->assertTrue($this->eventBus->hasHandler('*'));
+        $this->assertTrue($this->eventBus->hasHandler('test.event'));
+    }
+
+    public function testHasNoHandler(): void
+    {
+        $this->assertFalse($this->eventBus->hasHandler('non.existent.event'));
     }
 }

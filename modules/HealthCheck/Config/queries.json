@@ -1,9 +1,0 @@
-{
-  "handlers": [
-    {
-      "id": "CubaDevOps\\Flexi\\Modules\\HealthCheck\\Application\\Queries\\GetVersionQuery",
-      "cli_alias": "version",
-      "handler": "CubaDevOps\\Flexi\\Modules\\HealthCheck\\Application\\UseCase\\Health"
-    }
-  ]
-}

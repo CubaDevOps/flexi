@@ -1,15 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Http;
 
-use CubaDevOps\Flexi\Domain\Classes\Route;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouteMock;
+use CubaDevOps\Flexi\Infrastructure\Http\Route;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use stdClass;
 
 class RouteTest extends TestCase
 {
@@ -17,11 +14,11 @@ class RouteTest extends TestCase
     private const ROUTE_PATH = 'v1/testing';
     private const ROUTE_CTRL = 'TestingControllerFactory';
     private const ROUTE_METHOD = 'POST';
-    private const ROUTE_PARAMS =  [
+    private const ROUTE_PARAMS = [
         'message' => 'testing',
-        'to'      => 'John Doe'
+        'to' => 'John Doe',
     ];
-    private const ROUTE_MIDDLEWARES =  [MiddlewareInterface::class];
+    private const ROUTE_MIDDLEWARES = [MiddlewareInterface::class];
 
     private Route $route;
 
@@ -30,7 +27,7 @@ class RouteTest extends TestCase
         $this->route = new Route(
             self::ROUTE_NAME,
             self::ROUTE_PATH,
-        self::ROUTE_CTRL,
+            self::ROUTE_CTRL,
             self::ROUTE_METHOD,
             self::ROUTE_PARAMS,
             self::ROUTE_MIDDLEWARES,
@@ -79,7 +76,7 @@ class RouteTest extends TestCase
         $base_url = 'http://flexi.local';
         $_SERVER['REQUEST_SCHEME'] = $base_url;
 
-        $this->assertEquals($base_url. self::ROUTE_PATH, $this->route->getAbsoluteUrl($base_url));
+        $this->assertEquals($base_url.self::ROUTE_PATH, $this->route->getAbsoluteUrl($base_url));
     }
 
     public function testGetAbsoluteUrlInvalidBaseUrl(): void

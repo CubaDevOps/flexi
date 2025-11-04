@@ -8,7 +8,7 @@ use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Example test demonstrating how to use the testing environment
+ * Example test demonstrating how to use the testing environment.
  *
  * This is a practical example showing how the testing environment
  * automatically provides test-specific configurations.
@@ -23,7 +23,7 @@ class TestEnvironmentUsageExampleTest extends TestCase
     }
 
     /**
-     * Example: Verify that events are dispatched synchronously in tests
+     * Example: Verify that events are dispatched synchronously in tests.
      *
      * This is important because synchronous dispatch makes tests predictable.
      * You can assert on event handlers' side effects immediately.
@@ -42,7 +42,7 @@ class TestEnvironmentUsageExampleTest extends TestCase
     }
 
     /**
-     * Example: Verify that tests use in-memory cache
+     * Example: Verify that tests use in-memory cache.
      *
      * In-memory cache is faster and doesn't persist between test runs.
      */
@@ -60,7 +60,7 @@ class TestEnvironmentUsageExampleTest extends TestCase
     }
 
     /**
-     * Example: Verify that test logs go to separate file
+     * Example: Verify that test logs go to separate file.
      *
      * Separate logs make it easier to debug test failures.
      */
@@ -78,7 +78,7 @@ class TestEnvironmentUsageExampleTest extends TestCase
     }
 
     /**
-     * Example: Detect if running in test environment
+     * Example: Detect if running in test environment.
      *
      * Sometimes you need to know if code is running in tests.
      */
@@ -96,7 +96,7 @@ class TestEnvironmentUsageExampleTest extends TestCase
     }
 
     /**
-     * Example: Custom test configuration
+     * Example: Custom test configuration.
      *
      * You can add custom variables to .env.testing for your tests.
      */
@@ -112,7 +112,7 @@ class TestEnvironmentUsageExampleTest extends TestCase
     }
 
     /**
-     * Example: Debug mode is always enabled in tests
+     * Example: Debug mode is always enabled in tests.
      */
     public function testDebugModeIsEnabled(): void
     {

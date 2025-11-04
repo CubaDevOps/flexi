@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ValueObjectInterface;
+use Flexi\Contracts\Interfaces\ValueObjectInterface;
 
 class ServiceType implements ValueObjectInterface
 {
@@ -28,6 +28,16 @@ class ServiceType implements ValueObjectInterface
     }
 
     public function getValue(): string
+    {
+        return $this->type;
+    }
+
+    public function equals(ValueObjectInterface $other): bool
+    {
+        return $other instanceof self && $this->type === $other->getValue();
+    }
+
+    public function __toString(): string
     {
         return $this->type;
     }

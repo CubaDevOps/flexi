@@ -1,6 +1,36 @@
 {
   "handlers": [
     {
+      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ListModulesCommand",
+      "cli_alias": "modules:list",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ListModules"
+    },
+    {
+      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ModuleInfoCommand",
+      "cli_alias": "modules:info",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\GetModuleInfo"
+    },
+    {
+      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ValidateModulesCommand",
+      "cli_alias": "modules:validate",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ValidateModules"
+    },
+    {
+      "id": "CubaDevOps\\Flexi\\Application\\Commands\\InstallModuleCommand",
+      "cli_alias": "modules:install",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\InstallModule"
+    },
+    {
+      "id": "CubaDevOps\\Flexi\\Application\\Commands\\UninstallModuleCommand",
+      "cli_alias": "modules:uninstall",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\UninstallModule"
+    },
+    {
+      "id": "CubaDevOps\\Flexi\\Application\\Commands\\SyncModulesCommand",
+      "cli_alias": "modules:sync",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\SyncModules"
+    },
+    {
       "glob": "./modules/*/Config/commands.json"
     }
   ]

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Domain\Events;
 
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EventInterface;
+use Flexi\Contracts\Interfaces\EventInterface;
 
 class Event implements EventInterface
 {
@@ -24,10 +23,7 @@ class Event implements EventInterface
         $this->occurredOn = new \DateTimeImmutable();
     }
 
-    /**
-     * @return self
-     */
-    public static function fromArray(array $data): DTOInterface
+    public static function fromArray(array $data): self
     {
         self::assertRequiredFields($data);
 
@@ -39,14 +35,10 @@ class Event implements EventInterface
         return !empty($data['event']) && !empty($data['fired_by']);
     }
 
-    /**
-     * @param array $data
-     * @return void
-     */
     private static function assertRequiredFields(array $data): void
     {
         if (!self::validate($data)) {
-            throw new \InvalidArgumentException('Invalid parameters provided for ' . self::class);
+            throw new \InvalidArgumentException('Invalid parameters provided for '.self::class);
         }
     }
 
@@ -65,7 +57,7 @@ class Event implements EventInterface
      */
     public function serialize(): string
     {
-        //Todo refactor to use JsonHandler Trait, implement serialize and deserialize methods for json
+        // Todo refactor to use JsonHandler Trait, implement serialize and deserialize methods for json
         return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
     }
 
@@ -96,12 +88,15 @@ class Event implements EventInterface
 
     public function get(string $name)
     {
+        // First check in the data array (where custom data is stored)
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+
+        // Then check in the main event structure
         return $this->toArray()[$name] ?? null;
     }
 
-    /**
-     * @return bool
-     */
     public function isPropagationStopped(): bool
     {
         return $this->is_stopped;
@@ -110,5 +105,15 @@ class Event implements EventInterface
     public function stopPropagation(): void
     {
         $this->is_stopped = true;
+    }
+
+    public function set(string $key, $value): void
+    {
+        $this->data[$key] = $value;
+    }
+
+    public function has(string $key): bool
+    {
+        return isset($this->data[$key]);
     }
 }

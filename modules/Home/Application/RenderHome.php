@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\Home\Application;
 
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\HandlerInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\TemplateEngineInterface;
 use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 
 class RenderHome implements HandlerInterface

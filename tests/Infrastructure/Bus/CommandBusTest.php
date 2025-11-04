@@ -1,20 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
-use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListCommands;
-use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListQueries;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
+use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Test\TestData\Commands\TestCommand;
+use CubaDevOps\Flexi\Test\TestData\Handlers\TestCommandHandler;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Domain\DTO\CommandListDTO;
-use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
-use CubaDevOps\Flexi\Domain\DTO\EmptyVersionDTO;
-use CubaDevOps\Flexi\Domain\DTO\QueryListDTO;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Modules\Home\Application\RenderHome;
-use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -51,7 +46,7 @@ class CommandBusTest extends TestCase
      */
     public function testExecute(): void
     {
-        $handlerMock = $this->createMock(Health::class);
+        $handlerMock = $this->createMock(TestCommandHandler::class);
 
         $this->event_bus
             ->expects($this->exactly(2))
@@ -60,7 +55,7 @@ class CommandBusTest extends TestCase
         $this->class_factory
             ->expects($this->once())
             ->method('build')
-            ->with($this->container, Health::class)
+            ->with($this->container, TestCommandHandler::class)
             ->willReturn($handlerMock);
 
         $handlerMock
@@ -68,7 +63,7 @@ class CommandBusTest extends TestCase
             ->method('handle')
             ->willReturn(new PlainTextMessage('message'));
 
-        $message = $this->commandBus->execute(new DummyDTO());
+        $message = $this->commandBus->execute(new TestCommand());
 
         $this->assertNotNull($message);
         $this->assertInstanceOf(PlainTextMessage::class, $message);
@@ -77,12 +72,12 @@ class CommandBusTest extends TestCase
 
     public function testGetHandler(): void
     {
-        $this->assertEquals(Health::class, $this->commandBus->getHandler(DummyDTO::class));
+        $this->assertEquals(TestCommandHandler::class, $this->commandBus->getHandler(TestCommand::class));
     }
 
     public function testGetHandlerDoesNotExist(): void
     {
-        $testHandler = EmptyVersionDTO::class;
+        $testHandler = 'NonExistentCommand';
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Not handler found for $testHandler command");
         $this->commandBus->getHandler($testHandler);
@@ -90,17 +85,15 @@ class CommandBusTest extends TestCase
 
     public function testHasHandler(): void
     {
-        $this->assertTrue($this->commandBus->hasHandler(DummyDTO::class));
-        $this->assertFalse($this->commandBus->hasHandler(EmptyVersionDTO::class));
+        $this->assertTrue($this->commandBus->hasHandler(TestCommand::class));
+        $this->assertFalse($this->commandBus->hasHandler('NonExistentCommand'));
     }
 
     public function testGetHandlersDefinitions(): void
     {
         $expectedDefinitions = [
-            DummyDTO::class => Health::class,
-            'test'          => Health::class,
-            'CubaDevOps\\Flexi\\Modules\\DevTools\\Application\\Commands\\ListCommandsCommand' => ListCommands::class,
-            'command:list'  => ListCommands::class,
+            TestCommand::class => TestCommandHandler::class,
+            'test' => TestCommandHandler::class,
         ];
 
         $definitions = $this->commandBus->getHandlersDefinition(true);

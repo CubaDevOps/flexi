@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\ErrorHandling\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Domain\Interfaces\SessionStorageInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
-use CubaDevOps\Flexi\Infrastructure\Utils\FileHandlerTrait;
-use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
+use CubaDevOps\Flexi\Contracts\Classes\HttpHandler;
+use CubaDevOps\Flexi\Contracts\Classes\Traits\FileHandlerTrait;
+use CubaDevOps\Flexi\Contracts\Interfaces\SessionStorageInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\TemplateEngineInterface;
+use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -22,14 +23,15 @@ class NotFoundController extends HttpHandler
     private LoggerInterface $logger;
 
     public function __construct(
+        ResponseFactoryInterface $response_factory,
         TemplateEngineInterface $html_render,
         SessionStorageInterface $session,
         LoggerInterface $logger
     ) {
+        parent::__construct($response_factory);
         $this->html_render = $html_render;
         $this->session = $session;
         $this->logger = $logger;
-        parent::__construct();
     }
 
     protected function process(ServerRequestInterface $request): ResponseInterface
@@ -48,7 +50,7 @@ class NotFoundController extends HttpHandler
             __CLASS__,
         ]);
         $this->session->remove('previous_route');
-        $response = $this->createResponse(404);
+        $response = $this->createResponse(404, 'Not Found');
         $response->getBody()->write($body);
 
         return $response;

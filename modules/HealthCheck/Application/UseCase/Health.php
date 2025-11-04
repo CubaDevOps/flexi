@@ -4,35 +4,35 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase;
 
-use CubaDevOps\Flexi\Domain\Classes\DummySearchCriteria;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence\VersionRepository;
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
-use CubaDevOps\Flexi\Domain\ValueObjects\Version;
-use JsonException;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\HandlerInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\RepositoryInterface;
+use CubaDevOps\Flexi\Contracts\ValueObjects\Version;
+use CubaDevOps\Flexi\Contracts\Classes\Criteria\AnyCriteria;
 
 class Health implements HandlerInterface
 {
-    private VersionRepository $version_repository;
+    private RepositoryInterface $version_repository;
 
-    public function __construct(VersionRepository $version_repository)
+    public function __construct(RepositoryInterface $version_repository)
     {
         $this->version_repository = $version_repository;
     }
 
     /**
      * @return PlainTextMessage
-     * @throws JsonException
+     *
+     * @throws \JsonException
      */
     public function handle(DTOInterface $dto): MessageInterface
     {
         /** @var Version $version */
         $version = $this->version_repository->retrieveValue(
-            new DummySearchCriteria()
+            new AnyCriteria()
         );
 
-        return new PlainTextMessage((string)$version);
+        return new PlainTextMessage((string) $version);
     }
 }

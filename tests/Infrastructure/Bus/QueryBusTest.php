@@ -1,20 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Modules\HealthCheck\Application\UseCase\Health;
-use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListCommands;
-use CubaDevOps\Flexi\Modules\DevTools\Application\UseCase\ListQueries;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
+use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use CubaDevOps\Flexi\Test\TestData\Queries\TestQuery;
+use CubaDevOps\Flexi\Test\TestData\Handlers\TestQueryHandler;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
-use CubaDevOps\Flexi\Domain\DTO\DummyDTO;
-use CubaDevOps\Flexi\Modules\HealthCheck\Application\Queries\GetVersionQuery;
-use CubaDevOps\Flexi\Modules\DevTools\Application\Queries\ListQueriesQuery;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Modules\Home\Application\RenderHome;
-use CubaDevOps\Flexi\Modules\Home\Domain\HomePageDTO;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -23,9 +18,9 @@ use Psr\Container\NotFoundExceptionInterface;
 class QueryBusTest extends TestCase
 {
     private QueryBus $queryBus;
-    private ContainerInterface $container;
-    private EventBusInterface $event_bus;
-    private ObjectBuilderInterface $class_factory;
+    private $container;
+    private $event_bus;
+    private $class_factory;
 
     /**
      * @throws NotFoundExceptionInterface
@@ -41,7 +36,7 @@ class QueryBusTest extends TestCase
 
         $this->queryBus = new QueryBus($this->container, $this->event_bus, $this->class_factory);
 
-        $this->queryBus->loadHandlersFromJsonFile('./tests/TestData/Configurations/queries-bus-test.json');
+        $this->queryBus->loadHandlersFromJsonFile('./tests/TestData/Configurations/queries-bus-core-test.json');
     }
 
     /**
@@ -51,7 +46,7 @@ class QueryBusTest extends TestCase
      */
     public function testExecute(): void
     {
-        $handlerMock = $this->createMock(ListQueries::class);
+        $handlerMock = $this->createMock(TestQueryHandler::class);
 
         $this->event_bus
             ->expects($this->exactly(2))
@@ -60,7 +55,7 @@ class QueryBusTest extends TestCase
         $this->class_factory
             ->expects($this->once())
             ->method('build')
-            ->with($this->container, ListQueries::class)
+            ->with($this->container, TestQueryHandler::class)
             ->willReturn($handlerMock);
 
         $handlerMock
@@ -68,7 +63,7 @@ class QueryBusTest extends TestCase
             ->method('handle')
             ->willReturn(new PlainTextMessage('message'));
 
-        $message = $this->queryBus->execute(new ListQueriesQuery());
+        $message = $this->queryBus->execute(new TestQuery());
 
         $this->assertNotNull($message);
         $this->assertInstanceOf(PlainTextMessage::class, $message);
@@ -77,13 +72,12 @@ class QueryBusTest extends TestCase
 
     public function testGetHandler(): void
     {
-        $this->assertEquals(Health::class, $this->queryBus->getHandler(GetVersionQuery::class));
-        $this->assertEquals(ListQueries::class, $this->queryBus->getHandler(ListQueriesQuery::class));
+        $this->assertEquals(TestQueryHandler::class, $this->queryBus->getHandler(TestQuery::class));
     }
 
     public function testGetHandlerDoesNotExist(): void
     {
-        $testHandler = DummyDTO::class;
+        $testHandler = 'NonExistentQuery';
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Not handler found for $testHandler command");
         $this->queryBus->getHandler($testHandler);
@@ -91,19 +85,15 @@ class QueryBusTest extends TestCase
 
     public function testHasHandler(): void
     {
-        $this->assertTrue($this->queryBus->hasHandler(GetVersionQuery::class));
-        $this->assertTrue($this->queryBus->hasHandler(ListQueriesQuery::class));
-
-        $this->assertFalse($this->queryBus->hasHandler(DummyDTO::class));
+        $this->assertTrue($this->queryBus->hasHandler(TestQuery::class));
+        $this->assertFalse($this->queryBus->hasHandler('NonExistentQuery'));
     }
 
     public function testGetHandlersDefinitions(): void
     {
         $expectedDefinitions = [
-            'version'                       => Health::class,
-            'query:list'                    => ListQueries::class,
-            GetVersionQuery::class          => Health::class,
-            ListQueriesQuery::class         => ListQueries::class
+            'test-query' => TestQueryHandler::class,
+            TestQuery::class => TestQueryHandler::class,
         ];
 
         $definitions = $this->queryBus->getHandlersDefinition();

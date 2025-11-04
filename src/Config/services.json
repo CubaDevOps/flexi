@@ -1,14 +1,7 @@
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\DomainCacheInterface",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\DomainCache",
-        "arguments": []
-      }
-    },
-    {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ObjectBuilderInterface",
+      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\ObjectBuilderInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ObjectBuilder",
         "arguments": [
@@ -17,55 +10,29 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ConfigurationRepositoryInterface",
+      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationRepositoryInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ConfigurationRepository",
         "arguments": []
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
+      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ConfigurationRepositoryInterface"
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\ConfigurationRepositoryInterface"
         ]
       }
     },
-    {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Session\\NativeSessionStorage",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Session\\NativeSessionStorage",
-        "arguments": [
-          "@logger",
-          {
-            "name": "PHPSESSID",
-            "cookie_lifetime": 0,
-            "cookie_path": "/",
-            "cookie_domain": "flexi.local",
-            "cookie_secure": false,
-            "cookie_httponly": true,
-            "use_cookies": true,
-            "use_only_cookies": true,
-            "use_strict_mode": true,
-            "sid_length": 32,
-            "sid_bits_per_character": 5
-          }
-        ]
-      }
-    },
-    {
-      "name": "session",
-      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Session\\NativeSessionStorage"
-    },
+
     {
       "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory",
         "arguments": [
-          "@session",
           "@CubaDevOps\\Flexi\\Infrastructure\\Bus\\EventBus",
-          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ObjectBuilderInterface",
+          "@CubaDevOps\\Flexi\\Contracts\\Interfaces\\ObjectBuilderInterface",
           "@Psr\\Http\\Message\\ResponseFactoryInterface",
           "@container"
         ]
@@ -74,22 +41,6 @@
     {
       "name": "router",
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory"
-    },
-    {
-      "name": "html_render",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\HtmlRender",
-        "arguments": [
-          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\TemplateLocatorInterface"
-        ]
-      }
-    },
-    {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\TemplateLocatorInterface",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\TemplateLocator",
-        "arguments": []
-      }
     },
     {
       "name": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\CommandBus",
@@ -103,6 +54,10 @@
       }
     },
     {
+      "name": "command_bus",
+      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\CommandBus"
+    },
+    {
       "name": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\QueryBus",
       "factory": {
         "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\BusFactory",
@@ -112,6 +67,10 @@
           "./src/Config/queries.json"
         ]
       }
+    },
+    {
+      "name": "query_bus",
+      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\QueryBus"
     },
     {
       "name": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\EventBus",
@@ -125,28 +84,8 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\EventBusInterface",
+      "name": "CubaDevOps\\Flexi\\Contracts\\Interfaces\\EventBusInterface",
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Bus\\EventBus"
-    },
-    {
-      "name": "logger",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\PsrLogger",
-        "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
-          "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"
-        ]
-      }
-    },
-    {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
-        "arguments": [
-          "ENV.log_file_path",
-          "ENV.log_format"
-        ]
-      }
     },
     {
       "name": "Psr\\Http\\Message\\ResponseFactoryInterface",
@@ -161,20 +100,6 @@
         "name": "GuzzleHttp\\Psr7\\HttpFactory",
         "arguments": []
       }
-    },
-    {
-      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\CacheInterface",
-      "factory": {
-        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\CacheFactory",
-        "method": "createDefault",
-        "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"
-        ]
-      }
-    },
-    {
-      "name": "cache",
-      "alias": "CubaDevOps\\Flexi\\Domain\\Interfaces\\CacheInterface"
     },
     {
       "glob": "./modules/*/Config/services.json"

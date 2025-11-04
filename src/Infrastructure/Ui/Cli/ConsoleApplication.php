@@ -7,9 +7,9 @@ namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
+use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\ErrorHandler\Debug;
@@ -30,12 +30,20 @@ class ConsoleApplication
         $configRepo = new ConfigurationRepository();
         $config = new Configuration($configRepo);
 
-        if ('true' === $config->get('DEBUG_MODE')) {
+        $debugMode = 'true' === $config->get('DEBUG_MODE');
+
+        if ($debugMode) {
             Debug::enable();
         }
-        echo ErrorHandler::call(static function () use ($argv, $config) {
-            return self::handle($config, $argv);
-        });
+
+        try {
+            echo ErrorHandler::call(static function () use ($argv, $debugMode) {
+                return self::handle( $argv, $debugMode);
+            });
+        } catch (\Throwable $e) {
+            echo ConsoleExceptionFormatter::format($e, $debugMode);
+            exit(1);
+        }
     }
 
     /**
@@ -44,18 +52,14 @@ class ConsoleApplication
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
      */
-    private static function handle(Configuration $config, array $argv): string
+    private static function handle(array $argv, bool $debugMode): string
     {
         $container = ContainerFactory::createDefault('./src/Config/services.json');
 
         try {
             $input = CliInputParser::parse($argv);
         } catch (\Exception $e) {
-            if ('true' === $config->get('DEBUG_MODE')) {
-                throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-            }
-
-            return ConsoleOutputFormatter::format($e->getMessage(), 'error');
+            return ConsoleExceptionFormatter::format($e, $debugMode);
         }
 
         try {
@@ -69,14 +73,7 @@ class ConsoleApplication
 
             return ConsoleOutputFormatter::format($result);
         } catch (\Exception $e) {
-            if ('true' === $config->get('DEBUG_MODE')) {
-                throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-            }
-
-            return ConsoleOutputFormatter::format(
-                $input->getType().': '.$input->getCommandName().' not found.',
-                'error'
-            );
+            return ConsoleExceptionFormatter::format($e, $debugMode);
         }
     }
 

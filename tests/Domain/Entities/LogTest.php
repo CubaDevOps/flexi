@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Domain\Entities;
 
-use CubaDevOps\Flexi\Domain\Classes\Log;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
-use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
-use CubaDevOps\Flexi\Domain\ValueObjects\LogLevel;
+use CubaDevOps\Flexi\Contracts\Classes\Log;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
+use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
+use CubaDevOps\Flexi\Contracts\ValueObjects\LogLevel;
 use PHPUnit\Framework\TestCase;
 
 class LogTest extends TestCase
 {
     private const LOG_CONTEXT = [
         'class' => 'namespace/ClassName',
-        'line'  => 23
+        'line' => 23,
     ];
 
     private LogLevel $logLevel;
@@ -22,7 +24,7 @@ class LogTest extends TestCase
     public function setUp(): void
     {
         $this->logLevel = new LogLevel('info');
-        $this->message  = new PlainTextMessage('message');
+        $this->message = new PlainTextMessage('message');
 
         $this->log = new Log($this->logLevel, $this->message, self::LOG_CONTEXT);
     }

@@ -1,0 +1,44 @@
+{
+  "name": "cubadevops/flexi-module-healthcheck",
+  "description": "Health check module for Flexi Framework",
+  "version": "1.0.0",
+  "type": "flexi-module",
+  "license": "MIT",
+  "keywords": [
+    "flexi",
+    "module",
+    "health-check",
+    "monitoring"
+  ],
+  "authors": [
+    {
+      "name": "Carlos Batista",
+      "email": "info@carlosbatista.dev",
+      "homepage": "https://carlosbatista.dev"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "cubadevops/flexi-contracts": "@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "CubaDevOps\\Flexi\\Modules\\HealthCheck\\": ""
+    }
+  },
+  "extra": {
+    "flexi": {
+      "module-name": "HealthCheck",
+      "module-type": "application",
+      "config-files": [
+        "Config/queries.json",
+        "Config/routes.json",
+        "Config/services.json"
+      ],
+      "provides": [
+        "health-check",
+        "monitoring-endpoint"
+      ]
+    }
+  }
+}

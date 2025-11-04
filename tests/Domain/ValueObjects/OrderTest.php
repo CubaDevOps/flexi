@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\Order;
+use CubaDevOps\Flexi\Contracts\ValueObjects\Order;
 use PHPUnit\Framework\TestCase;
 
 class OrderTest extends TestCase

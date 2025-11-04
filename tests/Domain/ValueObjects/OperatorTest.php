@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\Operator;
+use CubaDevOps\Flexi\Contracts\ValueObjects\Operator;
 use PHPUnit\Framework\TestCase;
 
 class OperatorTest extends TestCase

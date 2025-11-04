@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Test\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\CollectionType;
+use CubaDevOps\Flexi\Contracts\ValueObjects\CollectionType;
 use PHPUnit\Framework\TestCase;
 
 class CollectionTypeTest extends TestCase
@@ -18,7 +20,7 @@ class CollectionTypeTest extends TestCase
     {
         $type = 'invalid type';
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("{$type} is not a valid type for collections, valid types are (".implode(',', CollectionType::TYPE_ENUMS).')');
+        $this->expectExceptionMessage("{$type} is not a valid type for collections, valid types are (".implode(',', array_keys(CollectionType::TYPE_ENUMS)).')');
         new CollectionType($type);
     }
 
@@ -84,7 +86,7 @@ class CollectionTypeTest extends TestCase
 
     public function testCallableValue(): void
     {
-        $callable = function() {
+        $callable = function () {
             return 'Callable';
         };
 
@@ -95,6 +97,6 @@ class CollectionTypeTest extends TestCase
     public function testIterableValue(): void
     {
         $collectionType = new CollectionType('iterable');
-        $this->assertTrue($collectionType->isValidType(["a", "b", "c"]));
+        $this->assertTrue($collectionType->isValidType(['a', 'b', 'c']));
     }
 }

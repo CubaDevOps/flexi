@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\DevTools\Application\Commands;
 
-use CubaDevOps\Flexi\Domain\Interfaces\CliDTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\CliDTOInterface;
 
 class ListCommandsCommand implements CliDTOInterface
 {
@@ -28,10 +27,7 @@ class ListCommandsCommand implements CliDTOInterface
         return __CLASS__;
     }
 
-    /**
-     * @return self
-     */
-    public static function fromArray(array $data): DTOInterface
+    public static function fromArray(array $data): self
     {
         $with_aliases = isset($data['with_aliases']) && ('true' === $data['with_aliases'] || true === $data['with_aliases']);
 

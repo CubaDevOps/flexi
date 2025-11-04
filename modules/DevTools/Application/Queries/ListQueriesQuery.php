@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\DevTools\Application\Queries;
 
-use CubaDevOps\Flexi\Domain\Interfaces\CliDTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\CliDTOInterface;
 
 class ListQueriesQuery implements CliDTOInterface
 {
@@ -16,10 +15,7 @@ class ListQueriesQuery implements CliDTOInterface
         $this->with_aliases = $with_aliases;
     }
 
-    /**
-     * @return self
-     */
-    public static function fromArray(array $data): DTOInterface
+    public static function fromArray(array $data): self
     {
         $with_aliases = isset($data['with_aliases']) && ('true' === $data['with_aliases'] || true === $data['with_aliases']);
 

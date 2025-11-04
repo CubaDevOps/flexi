@@ -1,0 +1,45 @@
+{
+  "name": "cubadevops/flexi-module-home",
+  "description": "Home page module for Flexi Framework",
+  "version": "1.0.0",
+  "type": "flexi-module",
+  "license": "MIT",
+  "keywords": [
+    "flexi",
+    "module",
+    "home",
+    "landing-page"
+  ],
+  "authors": [
+    {
+      "name": "Carlos Batista",
+      "email": "info@carlosbatista.dev",
+      "homepage": "https://carlosbatista.dev"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "cubadevops/flexi-contracts": "@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "CubaDevOps\\Flexi\\Modules\\Home\\": ""
+    }
+  },
+  "extra": {
+    "flexi": {
+      "module-name": "Home",
+      "module-type": "application",
+      "config-files": [
+        "Config/listeners.json",
+        "Config/queries.json",
+        "Config/routes.json",
+        "Config/services.json"
+      ],
+      "provides": [
+        "home-page",
+        "landing-page"
+      ]
+    }
+  }
+}

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\DevTools\Application\UseCase;
 
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
-use CubaDevOps\Flexi\Domain\Classes\PlainTextMessage;
+use CubaDevOps\Flexi\Contracts\Classes\PlainTextMessage;
+use CubaDevOps\Flexi\Contracts\Interfaces\DTOInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\HandlerInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\MessageInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Modules\DevTools\Application\Commands\ListCommandsCommand;
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\MessageInterface;
 
 class ListCommands implements HandlerInterface
 {
-    private CommandBus $command_bus;
+    private BusInterface $command_bus;
 
-    public function __construct(CommandBus $command_bus)
+    public function __construct(BusInterface $command_bus)
     {
         $this->command_bus = $command_bus;
     }
@@ -23,11 +23,9 @@ class ListCommands implements HandlerInterface
     /**
      * @param ListCommandsCommand $dto
      *
-     * @return MessageInterface
-     *
      * @throws \JsonException
      */
-    public function handle(DTOInterface $dto)
+    public function handle(DTOInterface $dto): MessageInterface
     {
         $list = json_encode($this->command_bus->getHandlersDefinition($dto->withAliases()), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
 

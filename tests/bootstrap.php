@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * PHPUnit Bootstrap for Testing Environment
+ * PHPUnit Bootstrap for Testing Environment.
  *
  * This bootstrap file is executed before running tests.
  * It loads the .env.testing file instead of .env to ensure
@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 
 // Load Composer autoloader (one level up from tests directory)
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 // Set testing flag first
 if (!defined('TESTING_ENVIRONMENT')) {
@@ -20,20 +20,20 @@ if (!defined('TESTING_ENVIRONMENT')) {
 
 // Load test environment variables
 // Using createUnsafeImmutable to match ConfigurationRepository behavior
-$dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/..', '.env.testing');
+$dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__.'/..', '.env.testing');
 try {
     $dotenv->load();
-} catch (\Dotenv\Exception\InvalidPathException $e) {
+} catch (Dotenv\Exception\InvalidPathException $e) {
     // If .env.testing doesn't exist, use .env as fallback
-    $dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/..', '.env');
+    $dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__.'/..', '.env');
     $dotenv->safeLoad();
 }
 
 // Ensure test directories exist (relative to project root)
 $rootDir = dirname(__DIR__);
 $testDirs = [
-    $rootDir . '/var/logs',
-    $rootDir . '/var/cache/test',
+    $rootDir.'/var/logs',
+    $rootDir.'/var/cache/test',
 ];
 
 foreach ($testDirs as $dir) {
@@ -43,9 +43,9 @@ foreach ($testDirs as $dir) {
 }
 
 // Clear test cache before running tests
-$testCacheDir = $rootDir . '/var/cache/test';
+$testCacheDir = $rootDir.'/var/cache/test';
 if (is_dir($testCacheDir)) {
-    $files = glob($testCacheDir . '/*');
+    $files = glob($testCacheDir.'/*');
     foreach ($files as $file) {
         if (is_file($file)) {
             unlink($file);

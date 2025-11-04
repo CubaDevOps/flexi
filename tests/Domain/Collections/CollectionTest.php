@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Domain\Collections;
 
-use CubaDevOps\Flexi\Domain\Classes\Collection;
-use CubaDevOps\Flexi\Domain\Entities\DummyEntity;
-use CubaDevOps\Flexi\Domain\ValueObjects\CollectionType;
+use CubaDevOps\Flexi\Contracts\Classes\Collection as ConcreteCollection;
+use CubaDevOps\Flexi\Contracts\ValueObjects\CollectionType;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyEntity;
 use PHPUnit\Framework\TestCase;
 
 class CollectionTest extends TestCase
 {
     private const EXPECTED_COUNT = 2;
-    private Collection $collection;
+    private ConcreteCollection $collection;
     private array $items;
+
     protected function setUp(): void
     {
         $type = new CollectionType('object');
-        $this->collection = new Collection($type);
+        $this->collection = new ConcreteCollection($type);
 
         $this->items = [new DummyEntity(), new DummyEntity()];
     }

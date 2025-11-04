@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Modules\HealthCheck\Infrastructure\Persistence;
 
-use CubaDevOps\Flexi\Domain\Classes\ObjectCollection;
-use CubaDevOps\Flexi\Domain\Entities\DummyEntity;
-use CubaDevOps\Flexi\Domain\Interfaces\CollectionInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\CriteriaInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\EntityInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\RepositoryInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ValueObjectInterface;
-use CubaDevOps\Flexi\Domain\ValueObjects\ID;
-use CubaDevOps\Flexi\Domain\ValueObjects\Version;
-use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
-use JsonException;
+use CubaDevOps\Flexi\Contracts\Classes\ObjectCollection;
+use CubaDevOps\Flexi\Contracts\Interfaces\CollectionInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\CriteriaInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\EntityInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\RepositoryInterface;
+use CubaDevOps\Flexi\Contracts\Interfaces\ValueObjectInterface;
+use CubaDevOps\Flexi\Contracts\ValueObjects\ID;
+use CubaDevOps\Flexi\Contracts\ValueObjects\Version;
+use CubaDevOps\Flexi\Modules\HealthCheck\Domain\Entities\VersionEntity;
+use CubaDevOps\Flexi\Contracts\Classes\Traits\JsonFileReader;
 
 class VersionRepository implements RepositoryInterface
 {
@@ -22,39 +21,27 @@ class VersionRepository implements RepositoryInterface
 
     /**
      * @return mixed
-     * @throws JsonException
+     *
+     * @throws \JsonException
      */
     public function retrieveValue(
         CriteriaInterface $criteria
     ): ValueObjectInterface {
         $version_string = $this->readJsonFile('composer.json')['version'];
         [$major, $minor, $patch] = array_map('intval', explode('.', $version_string));
-        return new Version($major,$minor,$patch);
+
+        return new Version($major, $minor, $patch);
     }
 
     /**
-     * @return DummyEntity
+     * @return VersionEntity
      */
     public function get(ID $id): EntityInterface
     {
-        return new DummyEntity();
+        return new VersionEntity();
     }
 
-    public function create(EntityInterface $entity): void
-    {
-    }
-
-    /**
-     * @param EntityInterface $entity
-     * @return void
-     * @throws JsonException
-     */
-    public function update(EntityInterface $entity): void
-    {
-        $this->writeJsonFileFromArray('composer.json', $entity->toArray());
-    }
-
-    public function delete(ID $entity_id): void
+    public function delete(EntityInterface $entity): void
     {
     }
 
@@ -72,5 +59,14 @@ class VersionRepository implements RepositoryInterface
     public function search(CriteriaInterface $criteria): CollectionInterface
     {
         return new ObjectCollection(__CLASS__);
+    }
+
+    public function findById($id): ?EntityInterface
+    {
+        return new VersionEntity();
+    }
+
+    public function save(EntityInterface $entity): void
+    {
     }
 }

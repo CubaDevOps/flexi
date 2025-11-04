@@ -1,0 +1,42 @@
+{
+  "name": "cubadevops/flexi-module-webhooks",
+  "description": "WebHooks module for Flexi Framework",
+  "version": "1.0.0",
+  "type": "flexi-module",
+  "license": "MIT",
+  "keywords": [
+    "flexi",
+    "module",
+    "webhooks",
+    "events"
+  ],
+  "authors": [
+    {
+      "name": "Carlos Batista",
+      "email": "info@carlosbatista.dev",
+      "homepage": "https://carlosbatista.dev"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "cubadevops/flexi-contracts": "@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "CubaDevOps\\Flexi\\Modules\\WebHooks\\": ""
+    }
+  },
+  "extra": {
+    "flexi": {
+      "module-name": "WebHooks",
+      "module-type": "infrastructure",
+      "config-files": [
+        "Config/routes.json"
+      ],
+      "provides": [
+        "webhooks",
+        "webhook-events"
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "routes": [
+    {
+      "name": "login",
+      "path": "/auth/login",
+      "method": "POST",
+      "controller": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Controllers\\LoginController",
+      "parameters": [],
+      "middlewares": [
+        "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\BasicAuthMiddleware"
+      ]
+    },
+    {
+      "name": "auth-example",
+      "path": "/auth-example",
+      "method": "GET",
+      "controller": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Controllers\\LoginController",
+      "parameters": [],
+      "middlewares": [
+        "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\AuthCheckMiddleware"
+      ]
+    }
+  ]
+}

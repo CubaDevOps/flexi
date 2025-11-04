@@ -7,12 +7,12 @@ namespace CubaDevOps\Flexi\Test\Infrastructure;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test to verify that .env.testing is loaded correctly during tests
+ * Test to verify that .env.testing is loaded correctly during tests.
  */
 class TestEnvironmentTest extends TestCase
 {
     /**
-     * Verify that TESTING_ENVIRONMENT constant is defined
+     * Verify that TESTING_ENVIRONMENT constant is defined.
      */
     public function testTestingEnvironmentIsSet(): void
     {
@@ -21,7 +21,7 @@ class TestEnvironmentTest extends TestCase
     }
 
     /**
-     * Verify that test-specific environment variables are loaded
+     * Verify that test-specific environment variables are loaded.
      */
     public function testTestEnvironmentVariablesAreLoaded(): void
     {
@@ -47,20 +47,20 @@ class TestEnvironmentTest extends TestCase
     }
 
     /**
-     * Verify that test directories are created
+     * Verify that test directories are created.
      */
     public function testTestDirectoriesExist(): void
     {
         $rootDir = dirname(__DIR__, 2);
 
-        $this->assertDirectoryExists($rootDir . '/var/logs');
-        $this->assertDirectoryExists($rootDir . '/var/cache/test');
-        $this->assertDirectoryIsWritable($rootDir . '/var/logs');
-        $this->assertDirectoryIsWritable($rootDir . '/var/cache/test');
+        $this->assertDirectoryExists($rootDir.'/var/logs');
+        $this->assertDirectoryExists($rootDir.'/var/cache/test');
+        $this->assertDirectoryIsWritable($rootDir.'/var/logs');
+        $this->assertDirectoryIsWritable($rootDir.'/var/cache/test');
     }
 
     /**
-     * Verify that environment variables are available in $_ENV
+     * Verify that environment variables are available in $_ENV.
      */
     public function testEnvironmentVariablesInEnvArray(): void
     {

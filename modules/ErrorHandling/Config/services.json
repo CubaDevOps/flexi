@@ -1,0 +1,14 @@
+{
+  "services": [
+    {
+      "name": "CubaDevOps\\Flexi\\Modules\\ErrorHandling\\Infrastructure\\Listeners\\RouteNotFoundListener",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Modules\\ErrorHandling\\Infrastructure\\Listeners\\RouteNotFoundListener",
+        "arguments": [
+          "@session",
+          "@Psr\\Http\\Message\\ResponseFactoryInterface"
+        ]
+      }
+    }
+  ]
+}

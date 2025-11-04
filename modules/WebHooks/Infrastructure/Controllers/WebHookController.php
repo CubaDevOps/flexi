@@ -1,30 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CubaDevOps\Flexi\Modules\WebHooks\Infrastructure\Controllers;
 
+use CubaDevOps\Flexi\Contracts\Classes\HttpHandler;
+use CubaDevOps\Flexi\Contracts\Interfaces\EventBusInterface;
 use CubaDevOps\Flexi\Domain\Events\Event;
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use stdClass;
 
 class WebHookController extends HttpHandler
 {
     private EventBusInterface $event_bus;
 
-    public function __construct(EventBusInterface $event_bus)
+    public function __construct(ResponseFactoryInterface $response_factory, EventBusInterface $event_bus)
     {
-        parent::__construct();
+        parent::__construct($response_factory);
         $this->event_bus = $event_bus;
     }
 
     protected function process(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            /** @var StdClass $payload */
+            /** @var \stdClass $payload */
             $payload = $request->getAttribute('payload');
-            $this->event_bus->dispatch(new Event($payload->event, $payload->fired_by, (array)($payload->data ?? null)));
+            $this->event_bus->dispatch(new Event($payload->event, $payload->fired_by, (array) ($payload->data ?? null)));
         } catch (\Exception $e) {
             return $this->createResponse(400, $e->getMessage());
         }

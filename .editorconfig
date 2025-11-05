@@ -1,0 +1,65 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+# PHP files - 4 spaces (PSR standard)
+[*.php]
+indent_style = space
+indent_size = 4
+
+# Web files - 2 spaces
+[*.{html,css,xml,yml,yaml,json}]
+indent_style = space
+indent_size = 2
+
+# Configuration files
+[*.{ini,conf,config}]
+indent_style = space
+indent_size = 4
+
+# Composer files
+[composer.json]
+indent_style = space
+indent_size = 4
+
+# SQL files
+[*.sql]
+indent_style = space
+indent_size = 2
+
+# Shell scripts
+[*.{sh,bash}]
+indent_style = space
+indent_size = 2
+
+# Docker files
+[{Dockerfile,*.dockerfile}]
+indent_style = space
+indent_size = 2
+
+# Docker Compose
+[docker-compose*.yml]
+indent_style = space
+indent_size = 2
+
+# Makefile
+[Makefile]
+indent_style = tab
+
+# Apache/Nginx configuration
+[*.{htaccess,conf}]
+indent_style = space
+indent_size = 4
+
+# Markdown
+[*.md]
+indent_style = space
+indent_size = 2

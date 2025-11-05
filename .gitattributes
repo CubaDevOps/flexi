@@ -1,0 +1,77 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# PHP files
+*.php text eol=lf
+*.phtml text eol=lf
+*.phpt text eol=lf
+
+# Configuration files
+*.ini text eol=lf
+*.conf text eol=lf
+*.config text eol=lf
+composer.json text eol=lf
+composer.lock text eol=lf
+
+# Web files
+*.html text eol=lf
+*.css text eol=lf
+*.xml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# SQL files
+*.sql text eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Windows scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Docker files
+Dockerfile text eol=lf
+*.dockerfile text eol=lf
+docker-compose*.yml text eol=lf
+.dockerignore text eol=lf
+
+# Git configuration
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.editorconfig text eol=lf
+
+# Apache/Nginx configuration
+.htaccess text eol=lf
+*.conf text eol=lf
+
+# Environment files
+*.env text eol=lf
+.env.* text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.svg binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.7z binary
+*.rar binary
+*.exe binary
+*.dll binary
+*.so binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary

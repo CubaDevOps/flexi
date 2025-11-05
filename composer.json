@@ -85,6 +85,5 @@
             "bangpound/composer-constants": true
         }
     },
-    "repositories": [
-    ]
+    "repositories": []
 }

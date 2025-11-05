@@ -36,6 +36,9 @@ class ConsoleApplication
             Debug::enable();
         }
 
+        // Suppress deprecation warnings about return types in production
+        error_reporting(E_ALL & ~E_USER_DEPRECATED);
+
         try {
             echo ErrorHandler::call(static function () use ($argv, $debugMode) {
                 return self::handle( $argv, $debugMode);

@@ -36,17 +36,15 @@ jobs:
       - name: Run tests
         run: composer run-script test
 
-  # run this job only if the tests pass
-
   release:
     needs: tests
     if: ${{ needs.tests.result == 'success' }}
     name: Release
     runs-on: ubuntu-latest
     permissions:
-      contents: write # to be able to create releases
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
+      contents: write
+      issues: write
+      pull-requests: write
 
     steps:
       - name: Checkout repository
@@ -56,43 +54,10 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Fix Git permissions and setup
-        run: |
-          echo "=== Verificando permisos iniciales ==="
-          ls -la
-          whoami
-          id
-          
-          echo "=== Corrigiendo permisos del workspace ==="
-          # Configurar propietario correcto de todo el directorio
-          sudo chown -R $(whoami):$(whoami) .
-          
-          # Permisos específicos para .git
-          chmod -R u+rwX .git
-          
-          # Permisos para archivos del proyecto
-          chmod 644 composer.json
-          [ -f .env.example ] && chmod 644 .env.example
-          
-          echo "=== Configurando Git ==="
-          # Configurar directorio seguro
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "GitHub Actions"
-          git config --local push.default simple
-          
-          echo "=== Verificando configuración ==="
-          git config --list | grep user
-          git status
-          
-          echo "=== Permisos después de corrección ==="
-          ls -la .git | head -3
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
-          github-token: ${{ secrets.GIT_TOKEN }}
 
       - name: Configure .env file
         run: |
@@ -103,7 +68,7 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: Get the next version on dry-run    # or get the current version if it's nothing to release
+      - name: Get the next version on dry-run
         id: version
         uses: huggingface/semver-release-action@latest
         with:
@@ -116,7 +81,7 @@ jobs:
         run: |
           CURRENT_VERSION=$(jq -r '.version' composer.json)
           NEXT_VERSION="${{ steps.version.outputs.version }}"
-          
+
           echo "Versión actual: $CURRENT_VERSION"
           echo "Próxima versión: $NEXT_VERSION"
 
@@ -136,62 +101,33 @@ jobs:
 
       - name: Update composer.json with next version
         if: ${{ steps.check_release.outputs.released == 'true' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
           NEXT_VERSION=${{ steps.version.outputs.version }}
-          
-          echo "Actualizando composer.json a versión $NEXT_VERSION"
-          
-          # Crear backup del archivo original
+
+          # Backup del original
           cp composer.json composer.json.backup
-          
-          # Actualizar versión usando jq con validación
+
+          # Actualizar versión
           jq --arg new_version "$NEXT_VERSION" '.version = $new_version' composer.json > composer.json.tmp
-          
-          # Verificar que el archivo temporal se creó correctamente
-          if [ ! -f composer.json.tmp ]; then
-            echo "Error: No se pudo crear composer.json.tmp"
-            exit 1
-          fi
-          
-          # Verificar que el contenido es JSON válido
-          if ! jq empty composer.json.tmp 2>/dev/null; then
-            echo "Error: composer.json.tmp no es un JSON válido"
-            cat composer.json.tmp
-            exit 1
-          fi
-          
-          # Reemplazar archivo original
           mv composer.json.tmp composer.json
-          
-          # Verificar el cambio
-          echo "=== Verificando cambio en composer.json ==="
-          git diff composer.json
-          
-          # Verificar estado de Git antes del commit
+
+          # Verificar que el archivo se actualizó correctamente
+          echo "=== Versión actualizada en composer.json ==="
+          jq -r '.version' composer.json
+
+          # Configurar Git
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "GitHub Actions"
+
+          # Mostrar estado antes del commit
           echo "=== Estado de Git antes del commit ==="
           git status
-          
-          # Añadir archivo al staging area
-          git add composer.json
-          
-          # Verificar que hay cambios para commitear
-          if git diff --cached --exit-code composer.json > /dev/null 2>&1; then
-            echo "No hay cambios en composer.json para commitear"
-            exit 0
-          fi
-          
-          # Realizar commit con información detallada
-          git commit -m "chore: Bump version to $NEXT_VERSION [skip ci]
 
-          - Previous version: $CURRENT_VERSION
-          - New version: $NEXT_VERSION
-          - Auto-generated by semver workflow
-          - Commit SHA: ${{ github.sha }}"
-          
-          # Push con verificación
-          echo "=== Realizando push ==="
+          # Agregar y commitear
+          git add composer.json
+          git commit -m "chore: bump version to $NEXT_VERSION [skip ci]"
+
+          # Push usando el token directamente
           git push origin HEAD:main
 
       - name: Format Code
@@ -211,12 +147,3 @@ jobs:
         uses: huggingface/semver-release-action@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-
-      - name: Release Summary
-        if: ${{ steps.check_release.outputs.released == 'true' }}
-        run: |
-          echo "## 🚀 Release Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- **Previous Version:** ${{ env.CURRENT_VERSION }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **New Version:** ${{ env.NEXT_VERSION }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Release URL:** ${{ steps.semver.outputs.release_url }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Tag:** v${{ env.NEXT_VERSION }}" >> $GITHUB_STEP_SUMMARY

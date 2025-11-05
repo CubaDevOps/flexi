@@ -24,8 +24,9 @@ $dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__.'/..', '.env.testing');
 try {
     $dotenv->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
-    // If .env.testing doesn't exist, use .env as fallback
-    $dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__.'/..', '.env');
+    // If .env.testing doesn't exist, copy from .env.testing.example as fallback
+    copy(__DIR__.'/../.env.testing.example', __DIR__.'/../.env.testing');
+    $dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__.'/..', '.env.testing');
     $dotenv->safeLoad();
 }
 

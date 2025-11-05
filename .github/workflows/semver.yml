@@ -55,8 +55,8 @@ jobs:
           token: ${{ secrets.GIT_TOKEN }}
           fetch-depth: 0
 
-      - name: Set correct permissions
-        run: sudo chown -R $USER:$USER .
+      #- name: Set correct permissions
+      #  run: sudo chown -R $USER:$USER .
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

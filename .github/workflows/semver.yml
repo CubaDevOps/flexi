@@ -94,10 +94,6 @@ jobs:
             echo "released=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Format Code
-        if: ${{ steps.check_release.outputs.released == 'true' }}
-        run: composer run-script format
-
       - name: Update composer.json with next version
         if: ${{ steps.check_release.outputs.released == 'true' }}
         env:
@@ -110,6 +106,10 @@ jobs:
           git add composer.json
           git commit -m "chore: Bump version to $NEXT_VERSION [skip ci]"
           git push https://${{ secrets.GIT_USER }}:${{ secrets.GIT_TOKEN }}@github.com/CubaDevOps/flexi.git HEAD:main
+
+      - name: Format Code
+        if: ${{ steps.check_release.outputs.released == 'true' }}
+        run: composer run-script format
 
       - name: Clean Dev Dependencies for Release
         if: ${{ steps.check_release.outputs.released == 'true' }}

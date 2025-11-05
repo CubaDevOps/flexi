@@ -78,7 +78,7 @@ jobs:
       - name: Clean Dev Dependencies
         run: |
           rm -rf ./vendor ./tests ./phpunit.xml ./psalm.xml ./.github
-          composer install --no-dev
+          composer install --no-dev --no-scripts
 
       - name: Get the next version on dry-run    # or get the current version if it's nothing to release
         id: version

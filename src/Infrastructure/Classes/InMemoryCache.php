@@ -43,8 +43,14 @@ class InMemoryCache implements CacheInterface
     }
 
     /**
-     * @return mixed
-     * @throws InvalidArgumentCacheException
+     * Fetches a value from the cache.
+     *
+     * @param string $key The unique key of this item in the cache.
+     * @param mixed $default Default value to return if the key does not exist.
+     *
+     * @return mixed The value of the item from the cache, or $default in case of cache miss.
+     *
+     * @throws InvalidArgumentCacheException MUST be thrown if the $key string is not a legal value.
      */
     public function get($key, $default = null)
     {

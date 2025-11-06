@@ -131,6 +131,26 @@ jobs:
           # Push usando el token directo (asegúrate de que secrets.GIT_TOKEN exista y tenga scope repo si es PAT)
           git push origin HEAD:main
 
+      - name: Sync develop branch with main
+        if: ${{ steps.check_release.outputs.released == 'true' }}
+        run: |
+          echo "=== Sincronizando rama develop con main ==="
+
+          # Fetch todas las ramas
+          git fetch origin
+
+          # Checkout a develop
+          git checkout develop
+          git pull origin develop
+
+          # Rebase main sobre develop
+          git rebase origin/main
+
+          # Push de los cambios a develop
+          git push origin develop
+
+          echo "=== Rama develop actualizada y sincronizada con main ==="
+
       - name: Format Code
         if: ${{ steps.check_release.outputs.released == 'true' }}
         run: composer run-script format

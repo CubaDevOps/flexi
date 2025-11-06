@@ -1,0 +1,3 @@
+# Este directorio está destinado a alojar módulos del framework Flexi
+# Los módulos ahora se gestionan como paquetes independientes vía Composer
+# Para más información, consulta la documentación sobre el sistema modular

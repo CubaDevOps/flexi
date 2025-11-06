@@ -2,7 +2,8 @@
 .env.testing
 vendor
 var
-modules
+modules/*
+!modules/.gitkeep
 xdebug
 *.cache
 *.log

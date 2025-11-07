@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Domain\Utils;
+namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
 
 use Flexi\Contracts\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyDTO;

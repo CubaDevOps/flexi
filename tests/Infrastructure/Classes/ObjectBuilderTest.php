@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Domain\Utils;
+namespace CubaDevOps\Flexi\Test\Infrastructure\Classes;
 
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
-use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
 use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use CubaDevOps\Flexi\Infrastructure\Classes\InMemoryCache;
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
@@ -14,15 +13,15 @@ use CubaDevOps\Flexi\Test\TestData\TestDoubles\IsNotInstantiable;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
-class ClassFactoryTest extends TestCase
+class ObjectBuilderTest extends TestCase
 {
-    private ObjectBuilder $classFactory;
+    private ObjectBuilder $objectBuilder;
     private ContainerInterface $container;
 
     public function setUp(): void
     {
         $cache = new InMemoryCache();
-        $this->classFactory = new ObjectBuilder($cache);
+        $this->objectBuilder = new ObjectBuilder($cache);
 
         $this->container = ContainerFactory::createDefault('./tests/TestData/Configurations/container-test.json');
     }
@@ -41,18 +40,18 @@ class ClassFactoryTest extends TestCase
 
     public function testBuildIsNotInstantiable(): void
     {
-        $notIstantiable = IsNotInstantiable::class;
+        $notInstantiable = IsNotInstantiable::class;
 
         $this->expectException(\RuntimeException::class);
 
-        $this->expectExceptionMessage('Class is not instantiable: '.$notIstantiable);
+        $this->expectExceptionMessage('Class is not instantiable: '.$notInstantiable);
 
-        $this->classFactory->build($this->container, $notIstantiable);
+        $this->objectBuilder->build($this->container, $notInstantiable);
     }
 
     public function testBuildHasNoConstructor(): void
     {
-        $hasNoConstructor = $this->classFactory->build($this->container, HasNoConstructor::class);
+        $hasNoConstructor = $this->objectBuilder->build($this->container, HasNoConstructor::class);
 
         $this->assertInstanceOf(HasNoConstructor::class, $hasNoConstructor);
     }
@@ -66,7 +65,7 @@ class ClassFactoryTest extends TestCase
                 'arguments' => [],
             ],
         ];
-        $container = $this->classFactory->buildFromDefinition($this->container, $factory_definition);
+        $container = $this->objectBuilder->buildFromDefinition($this->container, $factory_definition);
         $this->assertInstanceOf(ContainerInterface::class, $container);
     }
 
@@ -79,7 +78,7 @@ class ClassFactoryTest extends TestCase
             ],
         ];
 
-        $instance = $this->classFactory->buildFromDefinition($this->container, $classDefinition);
+        $instance = $this->objectBuilder->buildFromDefinition($this->container, $classDefinition);
 
         $this->assertInstanceOf(HasNoConstructor::class, $instance);
     }

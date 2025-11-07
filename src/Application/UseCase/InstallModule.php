@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Application\UseCase;
 
 use CubaDevOps\Flexi\Application\Commands\InstallModuleCommand;
+use CubaDevOps\Flexi\Application\Services\CommandExecutorInterface;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;
@@ -19,15 +20,18 @@ class InstallModule implements HandlerInterface
     private string $modules_path;
     private string $composer_json_path;
     private string $root_path;
+    private CommandExecutorInterface $commandExecutor;
 
     public function __construct(
         string $modules_path = './modules',
         string $composer_json_path = './composer.json',
-        string $root_path = '.'
+        string $root_path = '.',
+        CommandExecutorInterface $commandExecutor
     ) {
         $this->modules_path = rtrim($modules_path, '/');
         $this->composer_json_path = $composer_json_path;
         $this->root_path = rtrim($root_path, '/');
+        $this->commandExecutor = $commandExecutor;
     }
 
     /**
@@ -127,30 +131,15 @@ class InstallModule implements HandlerInterface
         $this->writeComposerJson($composer_data);
 
         // Run composer update for this package
-        $update_command = sprintf(
-            'cd %s && composer update %s 2>&1',
-            escapeshellarg($this->root_path),
-            escapeshellarg($package_name)
-        );
+        $result = $this->runComposerUpdate($module_name, $package_name);
 
-        $output = [];
-        $return_code = 0;
-        exec($update_command, $output, $return_code);
-
-        if (0 !== $return_code) {
-            throw new RuntimeException(
-                "Failed to install module '{$module_name}': ".implode("\n", $output)
-            );
-        }
-
-        $result = [
+        $result = array_merge($result, [
             'success' => true,
             'message' => "Module '{$module_name}' installed successfully",
             'package' => $package_name,
             'version' => $version,
             'action' => 'installed',
-            'output' => $output,
-        ];
+        ]);
 
         $json = json_encode($result, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
 
@@ -158,19 +147,64 @@ class InstallModule implements HandlerInterface
     }
 
     /**
+     * Run composer update command for a specific package.
+     * Separated for easier testing.
+     */
+    protected function runComposerUpdate(string $moduleName, string $packageName): array
+    {
+        $update_command = sprintf(
+            'cd %s && composer update %s 2>&1',
+            escapeshellarg($this->root_path),
+            escapeshellarg($packageName)
+        );
+
+        $output = [];
+        $return_code = 0;
+        $this->commandExecutor->execute($update_command, $output, $return_code);
+
+        if (0 !== $return_code) {
+            throw new RuntimeException(
+                "Failed to install module '{$moduleName}': ".implode("\n", $output)
+            );
+        }
+
+        return ['output' => $output];
+    }
+
+    /**
      * Write composer.json with proper formatting.
+     * Separated for easier testing.
      *
      * @param array $data
      */
-    private function writeComposerJson(array $data): void
+    protected function writeComposerJson(array $data): void
     {
-        $json = json_encode(
+        $json = $this->formatComposerJson($data);
+        $this->writeJsonToFile($this->composer_json_path, $json);
+    }
+
+    /**
+     * Format composer.json data as JSON string.
+     * Separated for easier testing.
+     */
+    protected function formatComposerJson(array $data): string
+    {
+        return json_encode(
             $data,
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
         );
+    }
 
-        if (false === file_put_contents($this->composer_json_path, $json."\n")) {
-            throw new RuntimeException('Failed to write composer.json');
+    /**
+     * Write JSON content to file.
+     * Separated for easier testing and mocking.
+     */
+    protected function writeJsonToFile(string $filePath, string $jsonContent): void
+    {
+        try {
+            file_put_contents($filePath, $jsonContent."\n");
+        } catch (\Exception $e) {
+            throw new RuntimeException('Failed to write composer.json: ' . $e->getMessage(), 0, $e);
         }
     }
 }

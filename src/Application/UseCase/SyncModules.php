@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Application\UseCase;
 
+use CubaDevOps\Flexi\Application\Services\CommandExecutorInterface;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;
@@ -18,15 +19,18 @@ class SyncModules implements HandlerInterface
     private string $modules_path;
     private string $composer_json_path;
     private string $root_path;
+    private CommandExecutorInterface $commandExecutor;
 
     public function __construct(
         string $modules_path = './modules',
         string $composer_json_path = './composer.json',
-        string $root_path = '.'
+        string $root_path = '.',
+        CommandExecutorInterface $commandExecutor
     ) {
         $this->modules_path = rtrim($modules_path, '/');
         $this->composer_json_path = $composer_json_path;
         $this->root_path = rtrim($root_path, '/');
+        $this->commandExecutor = $commandExecutor;
     }
 
     /**
@@ -105,7 +109,7 @@ class SyncModules implements HandlerInterface
             $update_command = sprintf('cd %s && composer update "cubadevops/flexi-module-*" 2>&1', escapeshellarg($this->root_path));
             $output = [];
             $return_code = 0;
-            exec($update_command, $output, $return_code);
+            $this->commandExecutor->execute($update_command, $output, $return_code);
             $result['composer_update'] = ['executed' => true, 'success' => 0 === $return_code, 'output' => $output];
         } else {
             $result['composer_update'] = ['executed' => false, 'reason' => 'No changes detected'];
@@ -144,11 +148,31 @@ class SyncModules implements HandlerInterface
         return $modules;
     }
 
-    private function writeComposerJson(array $data): void
+    protected function writeComposerJson(array $data): void
     {
-        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        if (false === file_put_contents($this->composer_json_path, $json."\n")) {
-            throw new RuntimeException('Failed to write composer.json');
+        $json = $this->formatComposerJson($data);
+        $this->writeJsonToFile($this->composer_json_path, $json);
+    }
+
+    /**
+     * Format composer.json data as JSON string.
+     * Separated for easier testing.
+     */
+    protected function formatComposerJson(array $data): string
+    {
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Write JSON content to file.
+     * Separated for easier testing and mocking.
+     */
+    protected function writeJsonToFile(string $filePath, string $jsonContent): void
+    {
+        try {
+            file_put_contents($filePath, $jsonContent."\n");
+        } catch (\Exception $e) {
+            throw new RuntimeException('Failed to write composer.json: ' . $e->getMessage(), 0, $e);
         }
     }
 }

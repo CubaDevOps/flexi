@@ -194,6 +194,63 @@ class GetModuleInfoTest extends TestCase
         $this->assertInstanceOf(GetModuleInfo::class, $useCase);
     }
 
+    public function testHandleWithDeepDirectoryStructure(): void
+    {
+        $moduleName = 'DeepModule';
+        $modulePath = $this->tempModulesPath . '/' . $moduleName;
+        mkdir($modulePath, 0755, true);
+
+        // Create deep directory structure to test depth limitation
+        mkdir($modulePath . '/level1', 0755, true);
+        mkdir($modulePath . '/level1/level2', 0755, true);
+        mkdir($modulePath . '/level1/level2/level3', 0755, true);
+        mkdir($modulePath . '/level1/level2/level3/level4', 0755, true);
+
+        // Add some files
+        file_put_contents($modulePath . '/level1/file1.php', '<?php');
+        file_put_contents($modulePath . '/level1/level2/file2.php', '<?php');
+
+        $composerData = [
+            'name' => 'cubadevops/flexi-module-deep',
+            'version' => '1.0.0'
+        ];
+
+        file_put_contents(
+            $modulePath . '/composer.json',
+            json_encode($composerData)
+        );
+
+        $dto = new ModuleInfoCommand(['module_name' => $moduleName]);
+        $result = $this->getModuleInfo->handle($dto);
+
+        $response = json_decode($result->get('body'), true);
+
+        // Verify structure is limited by depth (max depth = 2)
+        $this->assertArrayHasKey('structure', $response);
+        $this->assertArrayHasKey('level1', $response['structure']);
+        $this->assertArrayHasKey('level2', $response['structure']['level1']);
+
+        // Level 3 should exist as we're at depth 2, but level 4 should not due to depth limit
+        if (isset($response['structure']['level1']['level2']['level3'])) {
+            $this->assertEmpty($response['structure']['level1']['level2']['level3']);
+        }
+    }
+
+    public function testHandleWithInvalidJson(): void
+    {
+        $moduleName = 'InvalidJsonModule';
+        $modulePath = $this->tempModulesPath . '/' . $moduleName;
+        mkdir($modulePath);
+
+        // Create invalid JSON file
+        file_put_contents($modulePath . '/composer.json', 'invalid json content');
+
+        $dto = new ModuleInfoCommand(['module_name' => $moduleName]);
+
+        $this->expectException(\JsonException::class);
+        $this->getModuleInfo->handle($dto);
+    }
+
     private function removeDirectory(string $dir): void
     {
         if (!is_dir($dir)) {

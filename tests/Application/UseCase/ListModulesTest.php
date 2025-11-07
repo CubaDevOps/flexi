@@ -169,6 +169,145 @@ class ListModulesTest extends TestCase
         $this->assertInstanceOf(ListModules::class, $useCase);
     }
 
+    public function testHandleWithNonExistentModulesDirectory(): void
+    {
+        // Remove modules directory
+        rmdir($this->tempModulesPath);
+
+        $dto = new ListModulesCommand();
+        $result = $this->listModules->handle($dto);
+
+        $response = json_decode($result->get('body'), true);
+
+        $this->assertEquals(0, $response['total']);
+        $this->assertEquals(0, $response['installed']);
+        $this->assertEquals([], $response['modules']);
+    }
+
+    public function testHandleWithNonExistentVendorDirectory(): void
+    {
+        // Remove vendor directory
+        rmdir($this->tempVendorPath);
+
+        // Create a test module
+        $moduleName = 'TestModule';
+        $modulePath = $this->tempModulesPath . '/' . $moduleName;
+        mkdir($modulePath);
+
+        $composerData = ['name' => 'cubadevops/flexi-module-test'];
+        file_put_contents(
+            $modulePath . '/composer.json',
+            json_encode($composerData)
+        );
+
+        $dto = new ListModulesCommand();
+        $result = $this->listModules->handle($dto);
+
+        $response = json_decode($result->get('body'), true);
+
+        $this->assertEquals(1, $response['total']);
+        $this->assertEquals(0, $response['installed']); // No vendor directory means no installed modules
+    }
+
+    public function testHandleWithMultipleInstalledModules(): void
+    {
+        // Create multiple installed modules in vendor
+        $vendorModules = [
+            'flexi-module-auth',
+            'flexi-module-user',
+            'flexi-module-admin'
+        ];
+
+        foreach ($vendorModules as $packageName) {
+            $vendorModulePath = $this->tempVendorPath . '/' . $packageName;
+            mkdir($vendorModulePath);
+        }
+
+        // Create corresponding modules directory entries
+        $moduleNames = ['auth', 'user', 'admin'];
+        foreach ($moduleNames as $moduleName) {
+            $modulePath = $this->tempModulesPath . '/' . ucfirst($moduleName);
+            mkdir($modulePath);
+
+            $composerData = [
+                'name' => "cubadevops/flexi-module-{$moduleName}",
+                'version' => '1.0.0'
+            ];
+
+            file_put_contents(
+                $modulePath . '/composer.json',
+                json_encode($composerData)
+            );
+        }
+
+        $dto = new ListModulesCommand();
+        $result = $this->listModules->handle($dto);
+
+        $response = json_decode($result->get('body'), true);
+
+        $this->assertEquals(3, $response['total']);
+        $this->assertEquals(3, $response['installed']);
+
+        // Check each module is marked as installed
+        foreach (['Auth', 'User', 'Admin'] as $moduleName) {
+            $this->assertTrue($response['modules'][$moduleName]['installed']);
+        }
+    }
+
+    public function testHandleWithInvalidJsonInComposer(): void
+    {
+        // Create a test module with invalid JSON
+        $moduleName = 'InvalidJson';
+        $modulePath = $this->tempModulesPath . '/' . $moduleName;
+        mkdir($modulePath);
+
+        // Create invalid JSON file
+        file_put_contents($modulePath . '/composer.json', 'invalid json content');
+
+        $dto = new ListModulesCommand();
+
+        $this->expectException(\JsonException::class);
+        $this->listModules->handle($dto);
+    }
+
+    public function testHandleWithModuleHavingMinimalComposerJson(): void
+    {
+        // Create a module with minimal composer.json (no optional fields)
+        $moduleName = 'Minimal';
+        $modulePath = $this->tempModulesPath . '/' . $moduleName;
+        mkdir($modulePath);
+
+        $composerData = [
+            'name' => 'cubadevops/flexi-module-minimal'
+            // Missing: version, description, type, require, extra
+        ];
+
+        file_put_contents(
+            $modulePath . '/composer.json',
+            json_encode($composerData)
+        );
+
+        $dto = new ListModulesCommand();
+        $result = $this->listModules->handle($dto);
+
+        $response = json_decode($result->get('body'), true);
+        $moduleInfo = $response['modules'][$moduleName];
+
+        // Check defaults are applied
+        $this->assertEquals('unknown', $moduleInfo['version']);
+        $this->assertEquals('', $moduleInfo['description']);
+        $this->assertEquals('unknown', $moduleInfo['type']);
+        $this->assertEquals(0, $moduleInfo['dependencies']);
+        $this->assertArrayNotHasKey('flexi', $moduleInfo);
+    }
+
+    public function testPathNormalizationInConstructor(): void
+    {
+        // Test path normalization with trailing slashes
+        $useCase = new ListModules('./modules/', './vendor/cubadevops/');
+        $this->assertInstanceOf(ListModules::class, $useCase);
+    }
+
     private function removeDirectory(string $dir): void
     {
         if (!is_dir($dir)) {

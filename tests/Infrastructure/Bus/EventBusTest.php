@@ -86,4 +86,132 @@ class EventBusTest extends TestCase
     {
         $this->assertFalse($this->eventBus->hasHandler('non.existent.event'));
     }
+
+    public function testGetListenersWithExistingEvent(): void
+    {
+        $listeners = $this->eventBus->getListeners('test.event');
+        $this->assertEquals([self::TEST_LISTENER_CLASS], $listeners);
+    }
+
+    public function testGetListenersWithNonExistentEvent(): void
+    {
+        $listeners = $this->eventBus->getListeners('non.existent.event');
+        $this->assertEquals([], $listeners);
+    }
+
+    public function testRegisterMultipleListenersForSameEvent(): void
+    {
+        $this->eventBus->register('multi.event', 'FirstListener');
+        $this->eventBus->register('multi.event', 'SecondListener');
+
+        $listeners = $this->eventBus->getListeners('multi.event');
+        $this->assertEquals(['FirstListener', 'SecondListener'], $listeners);
+    }
+
+    public function testDispatchWithNoListeners(): void
+    {
+        $eventMock = $this->createMock(EventInterface::class);
+        $eventMock->method('getName')->willReturn('no.listeners.event');
+
+        $result = $this->eventBus->dispatch($eventMock);
+        $this->assertSame($eventMock, $result);
+    }
+
+    public function testDispatchWithStoppedPropagation(): void
+    {
+        $eventMock = $this->createMock(EventInterface::class);
+        $eventMock->method('getName')->willReturn('test.event');
+        $eventMock->method('isPropagationStopped')->willReturn(true);
+
+        $this->class_factory->expects($this->never())->method('build');
+
+        $result = $this->eventBus->dispatch($eventMock);
+        $this->assertSame($eventMock, $result);
+    }
+
+    public function testDispatchWithWildcardListeners(): void
+    {
+        // Register wildcard listener
+        $this->eventBus->register('*', 'WildcardListener');
+
+        $eventMock = $this->createMock(EventInterface::class);
+        $eventMock->method('getName')->willReturn('any.event');
+        $eventMock->method('isPropagationStopped')->willReturn(false);
+
+        $handlerMock = $this->createMock(EventListenerInterface::class);
+        $handlerMock->expects($this->once())->method('handle')->with($eventMock);
+
+        $this->class_factory->expects($this->once())
+            ->method('build')
+            ->with($this->container, 'WildcardListener')
+            ->willReturn($handlerMock);
+
+        $this->eventBus->dispatch($eventMock);
+    }
+
+    public function testBuildDefinitionWithMultipleListeners(): void
+    {
+        $listeners = ['FirstListener', 'SecondListener', 'ThirdListener'];
+        $this->eventBus->buildDefinition('build.test.event', $listeners);
+
+        $registeredListeners = $this->eventBus->getListeners('build.test.event');
+        $this->assertEquals($listeners, $registeredListeners);
+    }
+
+    public function testGetDtoClassFromAlias(): void
+    {
+        $result = $this->eventBus->getDtoClassFromAlias('any.alias');
+        $this->assertEquals(\CubaDevOps\Flexi\Application\Commands\NotFoundCommand::class, $result);
+    }
+
+    public function testGetHandlersDefinition(): void
+    {
+        $definition = $this->eventBus->getHandlersDefinition();
+
+        $this->assertIsArray($definition);
+        $this->assertArrayHasKey('test.event', $definition);
+        $this->assertEquals([self::TEST_LISTENER_CLASS], $definition['test.event']);
+    }
+
+    public function testGetHandlersDefinitionWithAliases(): void
+    {
+        $definition = $this->eventBus->getHandlersDefinition(true);
+
+        $this->assertIsArray($definition);
+        // Should return same result as false since EventBus doesn't use aliases differently
+        $this->assertArrayHasKey('test.event', $definition);
+    }
+
+    public function testAsyncModeDetection(): void
+    {
+        // Test async mode detection logic
+        $result = $this->eventBus->asyncMode();
+        $this->assertIsBool($result);
+    }
+
+    public function testExecuteWithEventInterface(): void
+    {
+        $eventMock = $this->createMock(EventInterface::class);
+        $eventMock->method('getName')->willReturn('test.event');
+        $eventMock->method('isPropagationStopped')->willReturn(false);
+
+        $handlerMock = $this->createMock(EventListenerInterface::class);
+        $handlerMock->expects($this->once())->method('handle');
+
+        $this->class_factory->expects($this->once())
+            ->method('build')
+            ->willReturn($handlerMock);
+
+        $this->eventBus->execute($eventMock);
+    }
+
+    public function testExecuteWithNonEventInterface(): void
+    {
+        $dtoMock = $this->createMock(\Flexi\Contracts\Interfaces\DTOInterface::class);
+
+        // Should not call dispatch since it's not an EventInterface
+        $this->class_factory->expects($this->never())->method('build');
+
+        $this->eventBus->execute($dtoMock);
+    }
 }

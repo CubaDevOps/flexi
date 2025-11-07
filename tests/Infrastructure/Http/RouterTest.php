@@ -256,4 +256,251 @@ class RouterTest extends TestCase
 
         $this->router->getByName($invalidRouteName);
     }
+
+    public function testGetByNameExistingRoute(): void
+    {
+        $route = $this->router->getByName(self::ROUTE_NAME);
+
+        $this->assertInstanceOf(Route::class, $route);
+        $this->assertEquals(self::ROUTE_NAME, $route->getName());
+        $this->assertEquals(self::ROUTE_PATH, $route->getPath());
+        $this->assertEquals(self::ROUTE_CTRL, $route->getController());
+    }
+
+    public function testGetUrlBase(): void
+    {
+        $_SERVER['REQUEST_SCHEME'] = 'https';
+        $_SERVER['HTTP_HOST'] = 'flexi-test.local';
+
+        $urlBase = Router::getUrlBase();
+
+        $this->assertEquals('https://flexi-test.local', $urlBase);
+    }
+
+    public function testGetUrlBaseHttp(): void
+    {
+        $_SERVER['REQUEST_SCHEME'] = 'http';
+        $_SERVER['HTTP_HOST'] = 'localhost:8080';
+
+        $urlBase = Router::getUrlBase();
+
+        $this->assertEquals('http://localhost:8080', $urlBase);
+    }
+
+    public function testAddRouteReturnsRouter(): void
+    {
+        $route = new Route(
+            'api-route',
+            '/api/test',
+            'ApiController',
+            'POST',
+            []
+        );
+
+        $result = $this->router->addRoute($route);
+
+        $this->assertSame($this->router, $result);
+        $this->assertEquals(2, $this->router->route_counter); // We already have one route in setUp
+    }
+
+    public function testDispatchWithMiddlewares(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
+
+        // Create route with middlewares
+        $routeWithMiddleware = new Route(
+            'middleware-route',
+            '/middleware',
+            'MiddlewareController',
+            'GET',
+            [],
+            ['AuthMiddleware', 'LoggingMiddleware']
+        );
+        $this->router->addRoute($routeWithMiddleware);
+
+        $uriInterfaceMock = $this->createMock(UriInterface::class);
+        $testHandler = new TestHttpHandler();
+        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
+        $responseInterfaceMock = $this->createMock(ResponseInterface::class);
+
+        $testHandler->setMockResponse($responseInterfaceMock);
+
+        $serverRequestMock->expects($this->exactly(2))
+            ->method('getUri')->willReturn($uriInterfaceMock);
+
+        $uriInterfaceMock->expects($this->once())
+            ->method('getPath')->willReturn('/middleware');
+
+        $serverRequestMock->expects($this->once())
+            ->method('getMethod')->willReturn('GET');
+
+        $this->event_bus->expects($this->exactly(2))
+            ->method('dispatch')->willReturnSelf();
+
+        // Handler first, then middlewares
+        $this->class_factory->expects($this->exactly(3))
+            ->method('build')
+            ->withConsecutive(
+                [$this->container, 'MiddlewareController'],
+                [$this->container, 'AuthMiddleware'],
+                [$this->container, 'LoggingMiddleware']
+            )
+            ->willReturnOnConsecutiveCalls(
+                $testHandler,
+                $this->createMock(\Psr\Http\Server\MiddlewareInterface::class),
+                $this->createMock(\Psr\Http\Server\MiddlewareInterface::class)
+            );
+
+        $response = $this->router->dispatch($serverRequestMock);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+    }
+
+    public function testDispatchWithOptionalParameters(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
+
+        // Create route with optional parameters
+        $routeWithParams = new Route(
+            'params-route',
+            '/params',
+            'ParamsController',
+            'GET',
+            [
+                [
+                    'required' => false,
+                    'name' => 'optional_param',
+                ]
+            ]
+        );
+        $this->router->addRoute($routeWithParams);
+
+        $uriInterfaceMock = $this->createMock(UriInterface::class);
+        $testHandler = new TestHttpHandler();
+        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
+        $responseInterfaceMock = $this->createMock(ResponseInterface::class);
+
+        $testHandler->setMockResponse($responseInterfaceMock);
+
+        $serverRequestMock->expects($this->exactly(2))
+            ->method('getUri')->willReturn($uriInterfaceMock);
+
+        $uriInterfaceMock->expects($this->once())
+            ->method('getPath')->willReturn('/params');
+
+        $serverRequestMock->expects($this->once())
+            ->method('getMethod')->willReturn('GET');
+
+        $this->event_bus->expects($this->exactly(2))
+            ->method('dispatch')->willReturnSelf();
+
+        $this->class_factory->expects($this->once())
+            ->method('build')->willReturn($testHandler);
+
+        $response = $this->router->dispatch($serverRequestMock);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+    }
+
+    public function testDispatchWithValidRequiredParameter(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
+        $_GET['user_id'] = '123'; // Set required parameter
+
+        $routeWithRequiredParam = new Route(
+            'user-route',
+            '/user',
+            'UserController',
+            'GET',
+            [
+                [
+                    'required' => true,
+                    'name' => 'user_id',
+                ]
+            ]
+        );
+        $this->router->addRoute($routeWithRequiredParam);
+
+        $uriInterfaceMock = $this->createMock(UriInterface::class);
+        $testHandler = new TestHttpHandler();
+        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
+        $responseInterfaceMock = $this->createMock(ResponseInterface::class);
+
+        $testHandler->setMockResponse($responseInterfaceMock);
+
+        $serverRequestMock->expects($this->exactly(2))
+            ->method('getUri')->willReturn($uriInterfaceMock);
+
+        $uriInterfaceMock->expects($this->once())
+            ->method('getPath')->willReturn('/user');
+
+        $serverRequestMock->expects($this->once())
+            ->method('getMethod')->willReturn('GET');
+
+        $this->event_bus->expects($this->exactly(2))
+            ->method('dispatch')->willReturnSelf();
+
+        $this->class_factory->expects($this->once())
+            ->method('build')->willReturn($testHandler);
+
+        $response = $this->router->dispatch($serverRequestMock);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+
+        // Cleanup
+        unset($_GET['user_id']);
+    }
+
+    public function testDispatchWithPostParameter(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'flexi';
+        $_SERVER['REQUEST_SCHEME'] = 'https';
+        $_POST['form_data'] = 'test'; // Set POST parameter
+
+        $routeWithPostParam = new Route(
+            'post-route',
+            '/submit',
+            'SubmitController',
+            'POST',
+            [
+                [
+                    'required' => true,
+                    'name' => 'form_data',
+                ]
+            ]
+        );
+        $this->router->addRoute($routeWithPostParam);
+
+        $uriInterfaceMock = $this->createMock(UriInterface::class);
+        $testHandler = new TestHttpHandler();
+        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
+        $responseInterfaceMock = $this->createMock(ResponseInterface::class);
+
+        $testHandler->setMockResponse($responseInterfaceMock);
+
+        $serverRequestMock->expects($this->exactly(2))
+            ->method('getUri')->willReturn($uriInterfaceMock);
+
+        $uriInterfaceMock->expects($this->once())
+            ->method('getPath')->willReturn('/submit');
+
+        $serverRequestMock->expects($this->once())
+            ->method('getMethod')->willReturn('POST');
+
+        $this->event_bus->expects($this->exactly(2))
+            ->method('dispatch')->willReturnSelf();
+
+        $this->class_factory->expects($this->once())
+            ->method('build')->willReturn($testHandler);
+
+        $response = $this->router->dispatch($serverRequestMock);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+
+        // Cleanup
+        unset($_POST['form_data']);
+    }
 }

@@ -1,0 +1,8 @@
+[
+  {
+    "event": "test.event",
+    "listeners": [
+      "TestEventListener"
+    ]
+  }
+]

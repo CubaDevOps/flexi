@@ -503,4 +503,420 @@ class RouterTest extends TestCase
         // Cleanup
         unset($_POST['form_data']);
     }
+
+    /**
+     * Tests loading routes from JSON file
+     * @throws \JsonException
+     */
+    public function testLoadRoutesFile(): void
+    {
+        // Create temporary routes file
+        $tempFile = tempnam(sys_get_temp_dir(), 'routes');
+        $routesData = [
+            'routes' => [
+                [
+                    'name' => 'api-users',
+                    'path' => '/api/users',
+                    'controller' => 'UsersController',
+                    'method' => 'GET',
+                    'parameters' => [['name' => 'page', 'required' => false]],
+                    'middlewares' => ['AuthMiddleware']
+                ],
+                [
+                    'name' => 'api-posts',
+                    'path' => '/api/posts',
+                    'controller' => 'PostsController',
+                    'method' => 'POST'
+                ]
+            ]
+        ];
+        file_put_contents($tempFile, json_encode($routesData, JSON_THROW_ON_ERROR));
+
+        $this->router->loadRoutesFile($tempFile);
+
+        // Verify routes were loaded
+        $usersRoute = $this->router->getByName('api-users');
+        $this->assertEquals('/api/users', $usersRoute->getPath());
+        $this->assertEquals('UsersController', $usersRoute->getController());
+
+        $postsRoute = $this->router->getByName('api-posts');
+        $this->assertEquals('/api/posts', $postsRoute->getPath());
+        $this->assertEquals('PostsController', $postsRoute->getController());
+
+        unlink($tempFile);
+    }
+
+    /**
+     * Tests loading routes with glob patterns
+     * @throws \JsonException
+     */
+    public function testLoadRoutesFileWithGlobPattern(): void
+    {
+        // Create temporary directory and route files
+        $tempDir = sys_get_temp_dir() . '/test_routes_' . uniqid();
+        mkdir($tempDir);
+
+        $routeFile1 = $tempDir . '/module1.json';
+        $routeFile2 = $tempDir . '/module2.json';
+
+        file_put_contents($routeFile1, json_encode([
+            'routes' => [
+                ['name' => 'module1-route', 'path' => '/module1', 'controller' => 'Module1Controller', 'method' => 'GET']
+            ]
+        ], JSON_THROW_ON_ERROR));
+
+        file_put_contents($routeFile2, json_encode([
+            'routes' => [
+                ['name' => 'module2-route', 'path' => '/module2', 'controller' => 'Module2Controller', 'method' => 'GET']
+            ]
+        ], JSON_THROW_ON_ERROR));
+
+        // Create main routes file with glob pattern
+        $mainFile = tempnam(sys_get_temp_dir(), 'main_routes');
+        $mainData = [
+            'routes' => [
+                ['name' => 'main-route', 'path' => '/main', 'controller' => 'MainController', 'method' => 'GET'],
+                ['glob' => $tempDir . '/*.json']
+            ]
+        ];
+        file_put_contents($mainFile, json_encode($mainData, JSON_THROW_ON_ERROR));
+
+        $this->router->loadRoutesFile($mainFile);
+
+        // Verify all routes were loaded
+        $mainRoute = $this->router->getByName('main-route');
+        $this->assertEquals('/main', $mainRoute->getPath());
+
+        $module1Route = $this->router->getByName('module1-route');
+        $this->assertEquals('/module1', $module1Route->getPath());
+
+        $module2Route = $this->router->getByName('module2-route');
+        $this->assertEquals('/module2', $module2Route->getPath());
+
+        // Cleanup
+        unlink($routeFile1);
+        unlink($routeFile2);
+        rmdir($tempDir);
+        unlink($mainFile);
+    }
+
+    /**
+     * Tests loadGlobRoutes method directly
+     * @throws \JsonException
+     */
+    public function testLoadGlobRoutes(): void
+    {
+        // Create temporary directory and route files
+        $tempDir = sys_get_temp_dir() . '/test_glob_routes_' . uniqid();
+        mkdir($tempDir);
+
+        $globFile1 = $tempDir . '/glob1.json';
+        $globFile2 = $tempDir . '/glob2.json';
+
+        file_put_contents($globFile1, json_encode([
+            'routes' => [
+                ['name' => 'glob1-route', 'path' => '/glob1', 'controller' => 'Glob1Controller', 'method' => 'GET']
+            ]
+        ], JSON_THROW_ON_ERROR));
+
+        file_put_contents($globFile2, json_encode([
+            'routes' => [
+                ['name' => 'glob2-route', 'path' => '/glob2', 'controller' => 'Glob2Controller', 'method' => 'POST']
+            ]
+        ], JSON_THROW_ON_ERROR));
+
+        $this->router->loadGlobRoutes($tempDir . '/*.json');
+
+        // Verify routes were loaded
+        $glob1Route = $this->router->getByName('glob1-route');
+        $this->assertEquals('/glob1', $glob1Route->getPath());
+
+        $glob2Route = $this->router->getByName('glob2-route');
+        $this->assertEquals('/glob2', $glob2Route->getPath());
+
+        // Cleanup
+        unlink($globFile1);
+        unlink($globFile2);
+        rmdir($tempDir);
+    }
+
+    /**
+     * Tests handleNotFound method default behavior
+     * @throws \JsonException
+     */
+    public function testHandleNotFoundDefaultBehavior(): void
+    {
+        /** @var ServerRequestInterface&\PHPUnit\Framework\MockObject\MockObject $serverRequestMock */
+        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
+        $default404Mock = $this->createMock(ResponseInterface::class);
+        $bodyMock = $this->createMock(\Psr\Http\Message\StreamInterface::class);
+        $requestedPath = '/nonexistent';
+
+        $default404Mock->method('getBody')->willReturn($bodyMock);
+        $bodyMock->expects($this->once())->method('write')->with('404 - Not Found');
+
+        // Create a new router for this test with mocked response factory
+        /** @var ResponseFactoryInterface&\PHPUnit\Framework\MockObject\MockObject $responseFactoryMock */
+        $responseFactoryMock = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactoryMock->expects($this->once())
+            ->method('createResponse')
+            ->with(404)
+            ->willReturn($default404Mock);
+
+        $testRouter = new Router(
+            $this->event_bus, $this->class_factory, $responseFactoryMock, $this->container
+        );
+
+        $this->event_bus->expects($this->once())
+            ->method('dispatch')
+            ->willReturnArgument(0); // Return event as-is (no response set)
+
+        $result = $testRouter->handleNotFound($serverRequestMock, $requestedPath);
+
+        $this->assertSame($default404Mock, $result);
+    }
+
+    /**
+     * Tests private isGlob method through behavior
+     */
+    public function testIsGlobBehavior(): void
+    {
+        // Test glob detection indirectly through loadRoutesFile behavior
+        $tempFile = tempnam(sys_get_temp_dir(), 'routes_glob_test');
+        $routesData = [
+            'routes' => [
+                ['name' => 'normal', 'path' => '/normal', 'controller' => 'NormalController', 'method' => 'GET'],
+                ['glob' => '/nonexistent/path/*.json'] // This should trigger glob logic
+            ]
+        ];
+        file_put_contents($tempFile, json_encode($routesData, JSON_THROW_ON_ERROR));
+
+        // This should not throw an exception even with nonexistent glob path
+        $this->router->loadRoutesFile($tempFile);
+
+        // Normal route should be loaded
+        $normalRoute = $this->router->getByName('normal');
+        $this->assertEquals('/normal', $normalRoute->getPath());
+
+        unlink($tempFile);
+    }
+
+    /**
+     * Tests assertMethodIsAllowedForRoute through processRequest
+     * @throws ContainerExceptionInterface
+     * @throws \JsonException
+     * @throws NotFoundExceptionInterface
+     * @throws \ReflectionException
+     */
+    public function testProcessRequestMethodValidation(): void
+    {
+        $route = new Route('test-route', '/test', 'TestController', 'PUT', []);
+
+        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
+        $serverRequestMock->method('getMethod')->willReturn('GET'); // Wrong method
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Method GET is not allowed for this route');
+
+        $reflection = new \ReflectionClass($this->router);
+        $method = $reflection->getMethod('processRequest');
+        $method->setAccessible(true);
+        $method->invoke($this->router, $serverRequestMock, $route);
+    }
+
+    /**
+     * Tests checkRequiredParamsWereSend through processRequest
+     * @throws ContainerExceptionInterface
+     * @throws \JsonException
+     * @throws NotFoundExceptionInterface
+     * @throws \ReflectionException
+     */
+    public function testProcessRequestParameterValidation(): void
+    {
+        $route = new Route('test-route', '/test', 'TestController', 'GET', [
+            ['name' => 'required_param', 'required' => true]
+        ]);
+
+        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
+        $serverRequestMock->method('getMethod')->willReturn('GET');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Parameter 'required_param' is required");
+
+        $reflection = new \ReflectionClass($this->router);
+        $method = $reflection->getMethod('processRequest');
+        $method->setAccessible(true);
+        $method->invoke($this->router, $serverRequestMock, $route);
+    }
+
+    /**
+     * Tests executeStack method through reflection
+     * @throws ContainerExceptionInterface
+     * @throws \JsonException
+     * @throws NotFoundExceptionInterface
+     * @throws \ReflectionException
+     */
+    public function testExecuteStackWithoutMiddlewares(): void
+    {
+        $route = new Route('test-route', '/test', 'TestController', 'GET', []);
+        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
+        $handlerMock = $this->createMock(\Psr\Http\Server\RequestHandlerInterface::class);
+        $responseMock = $this->createMock(ResponseInterface::class);
+
+        $this->class_factory->expects($this->once())
+            ->method('build')
+            ->with($this->container, 'TestController')
+            ->willReturn($handlerMock);
+
+        $handlerMock->expects($this->once())
+            ->method('handle')
+            ->with($serverRequestMock)
+            ->willReturn($responseMock);
+
+        $reflection = new \ReflectionClass($this->router);
+        $method = $reflection->getMethod('executeStack');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($this->router, $route, $serverRequestMock);
+
+        $this->assertSame($responseMock, $result);
+    }
+
+    /**
+     * Tests configureMiddlewares with HttpHandler
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws \ReflectionException
+     */
+    public function testConfigureMiddlewaresWithHttpHandler(): void
+    {
+        $route = new Route('test-route', '/test', 'TestController', 'GET', [], ['TestMiddleware']);
+
+        $httpHandlerMock = $this->createMock(\Flexi\Contracts\Classes\HttpHandler::class);
+        $middlewareMock = $this->createMock(\Psr\Http\Server\MiddlewareInterface::class);
+
+        $this->class_factory->expects($this->once())
+            ->method('build')
+            ->with($this->container, 'TestMiddleware')
+            ->willReturn($middlewareMock);
+
+        $httpHandlerMock->expects($this->once())
+            ->method('setMiddlewares')
+            ->with([$middlewareMock]);
+
+        $reflection = new \ReflectionClass($this->router);
+        $method = $reflection->getMethod('configureMiddlewares');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($this->router, $httpHandlerMock, $route);
+
+        $this->assertSame($httpHandlerMock, $result);
+    }
+
+    /**
+     * Tests configureMiddlewares with non-HttpHandler
+     * @throws \ReflectionException
+     */
+    public function testConfigureMiddlewaresWithNonHttpHandler(): void
+    {
+        $route = new Route('test-route', '/test', 'TestController', 'GET', [], ['TestMiddleware']);
+        $regularHandlerMock = $this->createMock(\Psr\Http\Server\RequestHandlerInterface::class);
+
+        // Should not call class_factory since it's not an HttpHandler
+        $this->class_factory->expects($this->never())->method('build');
+
+        $reflection = new \ReflectionClass($this->router);
+        $method = $reflection->getMethod('configureMiddlewares');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($this->router, $regularHandlerMock, $route);
+
+        $this->assertSame($regularHandlerMock, $result);
+    }
+
+    /**
+     * Tests assertThatRouteCollectionIsNotEmpty method
+     * @throws \ReflectionException
+     */
+    public function testAssertThatRouteCollectionIsNotEmpty(): void
+    {
+        // Create a router without routes
+        $emptyRouter = new Router(
+            $this->event_bus, $this->class_factory, $this->response_factory, $this->container
+        );
+
+        $reflection = new \ReflectionClass($emptyRouter);
+        $method = $reflection->getMethod('assertThatRouteCollectionIsNotEmpty');
+        $method->setAccessible(true);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Define at least one route');
+
+        $method->invoke($emptyRouter);
+    }
+
+    /**
+     * Tests assertRouteNameExist method
+     * @throws \ReflectionException
+     */
+    public function testAssertRouteNameExist(): void
+    {
+        $reflection = new \ReflectionClass($this->router);
+        $method = $reflection->getMethod('assertRouteNameExist');
+        $method->setAccessible(true);
+
+        // Should not throw for existing route
+        $method->invoke($this->router, self::ROUTE_NAME);
+
+        // Should throw for non-existing route
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Route 'nonexistent' not found");
+
+        $method->invoke($this->router, 'nonexistent');
+    }
+
+    /**
+     * Tests handleNotFound with custom response from event listener
+     * This covers the line: return $event->getResponse();
+     * @throws \JsonException
+     */
+    public function testHandleNotFoundWithCustomEventResponse(): void
+    {
+        // Create separate mocks for this test
+        /** @var EventBusInterface&\PHPUnit\Framework\MockObject\MockObject $eventBusMock */
+        $eventBusMock = $this->createMock(EventBusInterface::class);
+        /** @var ResponseFactoryInterface&\PHPUnit\Framework\MockObject\MockObject $responseFactoryMock */
+        $responseFactoryMock = $this->createMock(ResponseFactoryInterface::class);
+
+        $testRouter = new Router(
+            $eventBusMock,
+            $this->class_factory,
+            $responseFactoryMock,
+            $this->container
+        );
+
+        /** @var ServerRequestInterface&\PHPUnit\Framework\MockObject\MockObject $serverRequestMock */
+        $serverRequestMock = $this->createMock(ServerRequestInterface::class);
+        /** @var ResponseInterface&\PHPUnit\Framework\MockObject\MockObject $customResponseMock */
+        $customResponseMock = $this->createMock(ResponseInterface::class);
+        $requestedPath = '/custom-404';
+
+        // Mock event bus to capture and modify the dispatched event
+        $eventBusMock->expects($this->once())
+            ->method('dispatch')
+            ->willReturnCallback(function($event) use ($customResponseMock) {
+                // Simulate event listener setting a custom response
+                /** @var \CubaDevOps\Flexi\Domain\Events\RouteNotFoundEvent $event */
+                $event->setResponse($customResponseMock);
+                return $event;
+            });
+
+        // Response factory should NOT be called since we use custom response
+        $responseFactoryMock->expects($this->never())->method('createResponse');
+
+        $result = $testRouter->handleNotFound($serverRequestMock, $requestedPath);
+
+        // Should return the custom response from event, not the default 404
+        $this->assertSame($customResponseMock, $result);
+    }
 }

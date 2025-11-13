@@ -222,4 +222,40 @@ class InMemoryCacheTest extends TestCase
         $this->assertTrue($this->cache->has(''));
         $this->assertTrue($this->cache->delete(''));
     }
+
+    /**
+     * Test getMultiple with non-iterable values throws exception
+     */
+    public function testGetMultipleWithNonIterableThrowsException(): void
+    {
+        $this->expectException(InvalidArgumentCacheException::class);
+        $this->expectExceptionMessage('Values must be an iterable');
+
+        // Pass a non-iterable (string) instead of array/iterable
+        $this->cache->getMultiple('not_an_iterable');
+    }
+
+    /**
+     * Test setMultiple with non-iterable values throws exception
+     */
+    public function testSetMultipleWithNonIterableThrowsException(): void
+    {
+        $this->expectException(InvalidArgumentCacheException::class);
+        $this->expectExceptionMessage('Values must be an iterable');
+
+        // Pass a non-iterable (string) instead of array/iterable
+        $this->cache->setMultiple('not_an_iterable');
+    }
+
+    /**
+     * Test deleteMultiple with non-iterable values throws exception
+     */
+    public function testDeleteMultipleWithNonIterableThrowsException(): void
+    {
+        $this->expectException(InvalidArgumentCacheException::class);
+        $this->expectExceptionMessage('Values must be an iterable');
+
+        // Pass a non-iterable (integer) instead of array/iterable
+        $this->cache->deleteMultiple(123);
+    }
 }

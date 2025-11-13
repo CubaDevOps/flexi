@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
 
 use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Application\Commands\ModuleInfoCommand;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Infrastructure\Ui\Cli\CliInput;
 use CubaDevOps\Flexi\Infrastructure\Ui\Cli\QueryHandler;
@@ -142,5 +143,24 @@ class QueryHandlerTest extends TestCase
 
         $this->assertIsString($result);
         $this->assertEquals('Empty args query', $result);
+    }
+
+    public function testQueryHandlerWithCliDTOAndHelpFlag(): void
+    {
+        // Test the usage() return path when dto instanceof CliDTOInterface && input->showHelp()
+        $queryBusMock = $this->createMock(QueryBus::class);
+
+        // Mock that ModuleInfoCommand has a handler and will be returned
+        $queryBusMock->method('hasHandler')->willReturn(true);
+        $queryBusMock->method('getDtoClassFromAlias')->willReturn(\CubaDevOps\Flexi\Application\Commands\ModuleInfoCommand::class);
+
+        $handler = new QueryHandler($queryBusMock);
+        $input = new CliInput('module:info', ['module' => 'test'], 'query', true); // help flag = true
+
+        $result = $handler->handle($input);
+
+        // Should return usage string from ModuleInfoCommand->usage()
+        $this->assertIsString($result);
+        $this->assertStringContainsString('Usage:', $result);
     }
 }

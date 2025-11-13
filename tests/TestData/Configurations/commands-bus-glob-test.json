@@ -1,0 +1,11 @@
+{
+  "handlers": [
+    {
+      "id": "CubaDevOps\\Flexi\\Test\\TestData\\Commands\\TestCommand",
+      "handler": "CubaDevOps\\Flexi\\Test\\TestData\\Handlers\\TestCommandHandler"
+    },
+    {
+      "glob": "tests/TestData/Configurations/extra-commands/commands.json"
+    }
+  ]
+}

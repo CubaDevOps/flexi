@@ -102,6 +102,13 @@
       }
     },
     {
+      "name": "CubaDevOps\\Flexi\\Application\\Services\\CommandExecutorInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Services\\CommandExecutor",
+        "arguments": []
+      }
+    },
+    {
       "glob": "./modules/*/Config/services.json"
     }
   ]

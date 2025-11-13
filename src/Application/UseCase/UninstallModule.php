@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Application\UseCase;
 
+use CubaDevOps\Flexi\Application\Services\CommandExecutorInterface;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;
@@ -18,15 +19,18 @@ class UninstallModule implements HandlerInterface
     private string $modules_path;
     private string $composer_json_path;
     private string $root_path;
+    private CommandExecutorInterface $commandExecutor;
 
     public function __construct(
         string $modules_path = './modules',
         string $composer_json_path = './composer.json',
-        string $root_path = '.'
+        string $root_path = '.',
+        CommandExecutorInterface $commandExecutor
     ) {
         $this->modules_path = rtrim($modules_path, '/');
         $this->composer_json_path = $composer_json_path;
         $this->root_path = rtrim($root_path, '/');
+        $this->commandExecutor = $commandExecutor;
     }
 
     /**
@@ -89,7 +93,7 @@ class UninstallModule implements HandlerInterface
 
         $output = [];
         $return_code = 0;
-        exec($remove_command, $output, $return_code);
+        $this->commandExecutor->execute($remove_command, $output, $return_code);
 
         if (0 !== $return_code) {
             throw new RuntimeException("Failed to uninstall module '{$module_name}': ".implode("\n", $output));
@@ -109,7 +113,9 @@ class UninstallModule implements HandlerInterface
     private function writeComposerJson(array $data): void
     {
         $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        if (false === file_put_contents($this->composer_json_path, $json."\n")) {
+        try {
+            file_put_contents($this->composer_json_path, $json."\n");
+        } catch (\Throwable $th) {
             throw new RuntimeException('Failed to write composer.json');
         }
     }

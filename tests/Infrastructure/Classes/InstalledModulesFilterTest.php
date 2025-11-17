@@ -5,15 +5,111 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Test\Infrastructure\Classes;
 
 use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
+use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
+use CubaDevOps\Flexi\Infrastructure\Factories\ModuleDetectorInterface;
 use PHPUnit\Framework\TestCase;
 
 class InstalledModulesFilterTest extends TestCase
 {
     private InstalledModulesFilter $filter;
+    private $stateManager; // Untyped for mock
+    private $moduleDetector; // Untyped for mock
 
     public function setUp(): void
     {
-        $this->filter = new InstalledModulesFilter();
+        // Create mocks for dependencies
+        $this->stateManager = $this->createMock(ModuleStateManagerInterface::class);
+        $this->moduleDetector = $this->createMock(ModuleDetectorInterface::class);
+
+        // Configure basic mock behavior for module path detection
+        $authModule = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            'Auth',
+            'cubadevops/flexi-module-auth',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            '/path/to/modules/Auth',
+            '1.0.0',
+            false,
+            []
+        );
+
+        $cacheModule = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            'Cache',
+            'cubadevops/flexi-module-cache',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            './modules/Cache',
+            '1.0.0',
+            false,
+            []
+        );
+
+        $sessionModule = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            'Session',
+            'cubadevops/flexi-module-session',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            '/modules/Session',
+            '1.0.0',
+            false,
+            []
+        );
+
+        $sessionHandlerModule = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            'session-handler',
+            'cubadevops/flexi-module-session-handler',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            '/modules/session-handler',
+            '1.0.0',
+            false,
+            []
+        );
+
+        // Additional modules for complex path testing
+        $authComplexModule = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            'AuthComplex',
+            'cubadevops/flexi-module-auth-complex',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            '/var/www/html/modules/Auth',
+            '1.0.0',
+            false,
+            []
+        );
+
+        $multiWordModule = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            'multi-word-module',
+            'cubadevops/flexi-module-multi-word',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            './modules/multi-word-module',
+            '1.0.0',
+            false,
+            []
+        );
+
+        $camelCaseModule = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            'CamelCase',
+            'cubadevops/flexi-module-camelcase',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            '/absolute/path/modules/CamelCase',
+            '1.0.0',
+            false,
+            []
+        );
+
+        $lowercaseModule = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            'lowercase',
+            'cubadevops/flexi-module-lowercase',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            'relative/modules/lowercase',
+            '1.0.0',
+            false,
+            []
+        );
+
+        $this->moduleDetector->method('getAllModules')
+            ->willReturn([
+                $authModule, $cacheModule, $sessionModule, $sessionHandlerModule,
+                $authComplexModule, $multiWordModule, $camelCaseModule, $lowercaseModule
+            ]);
+
+        $this->filter = new InstalledModulesFilter($this->stateManager, $this->moduleDetector);
     }
 
     public function testIsModuleFile(): void
@@ -119,7 +215,7 @@ class InstalledModulesFilterTest extends TestCase
         $this->assertTrue($this->filter->isModuleFile($files[2]));
         $this->assertTrue($this->filter->isModuleFile($files[3]));
 
-        $this->assertEquals('Auth', $this->filter->extractModuleName($files[0]));
+        $this->assertEquals('AuthComplex', $this->filter->extractModuleName($files[0]));
         $this->assertEquals('multi-word-module', $this->filter->extractModuleName($files[1]));
         $this->assertEquals('CamelCase', $this->filter->extractModuleName($files[2]));
         $this->assertEquals('lowercase', $this->filter->extractModuleName($files[3]));

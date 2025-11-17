@@ -7,6 +7,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Factories;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Classes\InMemoryCache;
 use Flexi\Contracts\Interfaces\CacheInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Default cache factory implementation with module-aware cache creation
@@ -14,12 +15,12 @@ use Flexi\Contracts\Interfaces\CacheInterface;
 class DefaultCacheFactory implements CacheFactoryInterface
 {
     private ModuleDetectorInterface $moduleDetector;
-    private Configuration $configuration;
+    private ContainerInterface $container;
 
-    public function __construct(ModuleDetectorInterface $moduleDetector, Configuration $configuration)
+    public function __construct(ModuleDetectorInterface $moduleDetector, ContainerInterface $container)
     {
         $this->moduleDetector = $moduleDetector;
-        $this->configuration = $configuration;
+        $this->container = $container;
     }
 
     public function createCache(): CacheInterface
@@ -29,10 +30,7 @@ class DefaultCacheFactory implements CacheFactoryInterface
         }
 
         try {
-            $cacheFactoryClass = 'CubaDevOps\\Flexi\\Modules\\Cache\\Infrastructure\\Factories\\CacheFactory';
-            /** @var \CubaDevOps\Flexi\Modules\Cache\Infrastructure\Factories\CacheFactory $cacheFactory */
-            $cacheFactory = new $cacheFactoryClass($this->configuration);
-            return $cacheFactory->getInstance();
+            return $this->container->get(CacheInterface::class);
         } catch (\Throwable $e) {
             // If Cache module fails to load, fall back to InMemoryCache
             return new InMemoryCache();

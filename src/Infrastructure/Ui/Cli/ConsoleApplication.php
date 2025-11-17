@@ -57,7 +57,7 @@ class ConsoleApplication
      */
     private static function handle(array $argv, bool $debugMode): string
     {
-        $container = ContainerFactory::createDefault('./src/Config/services.json');
+        $container = ContainerFactory::createDefault();
 
         try {
             $input = CliInputParser::parse($argv);

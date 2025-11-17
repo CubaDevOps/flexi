@@ -16,22 +16,19 @@
       "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ValidateModules"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\InstallModuleCommand",
-      "cli_alias": "modules:install",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\InstallModule"
+      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ActivateModuleCommand",
+      "cli_alias": "modules:activate",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ActivateModule"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\UninstallModuleCommand",
-      "cli_alias": "modules:uninstall",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\UninstallModule"
+      "id": "CubaDevOps\\Flexi\\Application\\Commands\\DeactivateModuleCommand",
+      "cli_alias": "modules:deactivate",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\DeactivateModule"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\SyncModulesCommand",
-      "cli_alias": "modules:sync",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\SyncModules"
-    },
-    {
-      "glob": "./modules/*/Config/commands.json"
+      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ModuleStatusCommand",
+      "cli_alias": "modules:status",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\GetModuleStatus"
     }
   ]
 }

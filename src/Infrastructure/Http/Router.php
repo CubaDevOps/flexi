@@ -51,51 +51,6 @@ class Router
         $this->routes_indexed_by_path = new ObjectCollection(Route::class);
     }
 
-    /**
-     * @throws \JsonException
-     */
-    public function loadRoutesFile(string $routesFilePath): void
-    {
-        $routes = $this->readJsonFile($routesFilePath);
-
-        foreach ($routes['routes'] as $defined_route) {
-            if ($this->isGlob($defined_route)) {
-                $this->loadGlobRoutes($defined_route['glob']);
-                continue;
-            }
-            $this->addRoute(
-                new Route(
-                    $defined_route['name'],
-                    $defined_route['path'],
-                    $defined_route['controller'],
-                    $defined_route['method'],
-                    $defined_route['parameters'] ?? [],
-                    $defined_route['middlewares'] ?? []
-                )
-            );
-        }
-    }
-
-    protected function isGlob($definition): bool
-    {
-        return isset($definition['glob']);
-    }
-
-    /**
-     * @throws \JsonException
-     */
-    public function loadGlobRoutes(string $glob_path): void
-    {
-        $routes_files = $this->readGlob($glob_path);
-
-        // Filter files to only include installed modules
-        $filter = new InstalledModulesFilter();
-        $routes_files = $filter->filterFiles($routes_files);
-
-        foreach ($routes_files as $file) {
-            $this->loadRoutesFile($file);
-        }
-    }
 
     /**
      * @return static

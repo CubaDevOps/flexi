@@ -1,5 +1,3 @@
 [
-  {
-    "glob": "./modules/*/Config/listeners.json"
-  }
+
 ]

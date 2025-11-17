@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Application\UseCase;
 
-use CubaDevOps\Flexi\Application\Commands\ModuleInfoCommand;
+use CubaDevOps\Flexi\Infrastructure\Factories\ModuleDetectorInterface;
+use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;
@@ -12,95 +13,141 @@ use Flexi\Contracts\Interfaces\MessageInterface;
 use RuntimeException;
 
 /**
- * Use case for showing detailed information about a specific module.
+ * UseCase for getting detailed information about a specific module.
+ *
+ * Returns comprehensive module information including metadata, state,
+ * configuration files, and dependency information.
  */
 class GetModuleInfo implements HandlerInterface
 {
-    private string $modules_path;
+    /**
+     * Module state manager for activation status.
+     */
+    private ModuleStateManagerInterface $stateManager;
 
-    public function __construct(string $modules_path = './modules')
-    {
-        $this->modules_path = rtrim($modules_path, '/');
+    /**
+     * Module detector for discovering modules.
+     */
+    private ModuleDetectorInterface $moduleDetector;
+
+    /**
+     * Constructor.
+     */
+    public function __construct(
+        ModuleStateManagerInterface $stateManager,
+        ModuleDetectorInterface $moduleDetector
+    ) {
+        $this->stateManager = $stateManager;
+        $this->moduleDetector = $moduleDetector;
     }
 
     /**
      * Handle the module info command.
      *
-     * @param ModuleInfoCommand $dto
-     *
+     * @param DTOInterface $dto
      * @return MessageInterface
-     *
      * @throws \JsonException
      */
     public function handle(DTOInterface $dto): MessageInterface
     {
         $module_name = $dto->get('module_name');
 
-        $module_path = $this->modules_path.'/'.$module_name;
+        // Find module using detector
+        $moduleInfo = $this->moduleDetector->getModuleInfo($module_name);
 
-        if (!is_dir($module_path)) {
-            throw new RuntimeException("Module '{$module_name}' not found");
+        if ($moduleInfo === null) {
+            return new PlainTextMessage("Module '{$module_name}' not found");
         }
-
-        $composer_json = $module_path.'/composer.json';
-
-        if (!file_exists($composer_json)) {
-            throw new RuntimeException("Module '{$module_name}' has no composer.json");
-        }
-
-        $composer_data = json_decode(
-            file_get_contents($composer_json),
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
 
         $info = [
-            'name' => $module_name,
-            'package' => $composer_data['name'] ?? 'unknown',
-            'version' => $composer_data['version'] ?? 'unknown',
-            'description' => $composer_data['description'] ?? '',
-            'type' => $composer_data['type'] ?? 'unknown',
-            'license' => $composer_data['license'] ?? 'unknown',
-            'authors' => $composer_data['authors'] ?? [],
-            'keywords' => $composer_data['keywords'] ?? [],
-            'path' => $module_path,
+            'name' => $moduleInfo->getName(),
+            'package' => $moduleInfo->getPackage(),
+            'version' => $moduleInfo->getVersion(),
+            'type' => 'unknown', // Will be updated with composer.json type if available
+            'path' => $moduleInfo->getPath(),
+            'active' => $this->stateManager->isModuleActive($module_name),
+            'installation_type' => $moduleInfo->getType()->getValue(), // Keep installation type separate
         ];
 
-        // Dependencies
-        if (isset($composer_data['require'])) {
-            $info['dependencies'] = $composer_data['require'];
+        // Add module state information
+        $moduleState = $this->stateManager->getModuleState($module_name);
+        if ($moduleState) {
+            $info['state_info'] = [
+                'last_modified' => $moduleState->getLastModified()->format('Y-m-d H:i:s'),
+                'modified_by' => $moduleState->getModifiedBy(),
+            ];
         }
 
-        // Dev Dependencies
-        if (isset($composer_data['require-dev'])) {
-            $info['dev_dependencies'] = $composer_data['require-dev'];
+        // Add conflict information if present
+        if ($moduleInfo->hasConflict()) {
+            $info['conflict'] = [
+                'has_conflict' => true,
+                'local_path' => $moduleInfo->getMetadataValue('local_path'),
+                'vendor_path' => $moduleInfo->getMetadataValue('vendor_path'),
+                'resolution_strategy' => $moduleInfo->getMetadataValue('resolution_strategy'),
+            ];
         }
 
-        // Autoload
-        if (isset($composer_data['autoload'])) {
-            $info['autoload'] = $composer_data['autoload'];
+        // Add metadata
+        $metadata = $moduleInfo->getMetadata();
+        if (!empty($metadata)) {
+            $info['metadata'] = $metadata;
         }
 
-        // Flexi metadata
-        if (isset($composer_data['extra']['flexi'])) {
-            $info['flexi'] = $composer_data['extra']['flexi'];
+        // Read composer.json for additional details
+        $composer_json = $moduleInfo->getPath() . '/composer.json';
+        if (file_exists($composer_json)) {
+            $composer_data = json_decode(
+                file_get_contents($composer_json),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            );
 
-            // Check if config files exist
-            if (isset($composer_data['extra']['flexi']['config-files'])) {
-                $info['config_files_status'] = [];
-                foreach ($composer_data['extra']['flexi']['config-files'] as $config_file) {
-                    $config_path = $module_path.'/'.$config_file;
-                    $info['config_files_status'][$config_file] = file_exists($config_path);
+            // Update type with composer.json type if available
+            $info['type'] = $composer_data['type'] ?? 'unknown';
+
+            // Add additional composer information
+            $info['description'] = $composer_data['description'] ?? '';
+            $info['license'] = $composer_data['license'] ?? 'unknown';
+            $info['authors'] = $composer_data['authors'] ?? [];
+            $info['keywords'] = $composer_data['keywords'] ?? [];
+
+            // Dependencies
+            if (isset($composer_data['require'])) {
+                $info['dependencies'] = $composer_data['require'];
+            }
+
+            // Dev Dependencies
+            if (isset($composer_data['require-dev'])) {
+                $info['dev_dependencies'] = $composer_data['require-dev'];
+            }
+
+            // Autoload
+            if (isset($composer_data['autoload'])) {
+                $info['autoload'] = $composer_data['autoload'];
+            }
+
+            // Flexi metadata
+            if (isset($composer_data['extra']['flexi'])) {
+                $info['flexi'] = $composer_data['extra']['flexi'];
+
+                // Check if config files exist
+                if (isset($composer_data['extra']['flexi']['config-files'])) {
+                    $info['config_files_status'] = [];
+                    foreach ($composer_data['extra']['flexi']['config-files'] as $config_file) {
+                        $config_path = $moduleInfo->getPath() . '/' . $config_file;
+                        $info['config_files_status'][$config_file] = file_exists($config_path);
+                    }
                 }
             }
         }
 
         // Directory structure
-        $info['structure'] = $this->getDirectoryStructure($module_path);
+        $info['structure'] = $this->getDirectoryStructure($moduleInfo->getPath());
 
         // Statistics
-        $info['statistics'] = $this->getModuleStatistics($module_path);
+        $info['statistics'] = $this->getModuleStatistics($moduleInfo->getPath());
 
         $json = json_encode($info, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
 

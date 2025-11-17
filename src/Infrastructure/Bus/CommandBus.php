@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Bus;
 
-use Flexi\Contracts\Classes\Traits\GlobFileReader;
-use Flexi\Contracts\Classes\Traits\JsonFileReader;
 use Flexi\Contracts\Interfaces\BusInterface;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use Flexi\Contracts\Interfaces\EventBusInterface;
@@ -14,15 +12,12 @@ use Flexi\Contracts\Interfaces\MessageInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Domain\Events\Event;
-use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class CommandBus implements BusInterface
 {
-    use JsonFileReader;
-    use GlobFileReader;
 
     private array $commands = [];
     private array $aliases = [];
@@ -40,62 +35,15 @@ class CommandBus implements BusInterface
         $this->class_factory = $class_factory;
     }
 
-    /**
-     * @throws \JsonException
-     * @throws \ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function loadHandlersFromJsonFile(string $file): void
-    {
-        $handlers = $this->readJsonFile($file);
-
-        foreach ($handlers['handlers'] as $entry) {
-            if ($this->isGlob($entry)) {
-                $this->loadGlobHandlers($entry['glob']);
-                continue;
-            }
-            $this->addEntry($entry);
-        }
-    }
-
-    private function isGlob(array $definition): bool
-    {
-        return isset($definition['glob']);
-    }
-
-    /**
-     * @throws NotFoundExceptionInterface
-     * @throws \ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws \JsonException
-     */
-    private function loadGlobHandlers(string $glob_path): void
-    {
-        $handlers = $this->readGlob($glob_path);
-
-        // Filter files to only include installed modules
-        $filter = new InstalledModulesFilter();
-        $handlers = $filter->filterFiles($handlers);
-
-        foreach ($handlers as $handler) {
-            $this->loadHandlersFromJsonFile($handler);
-        }
-    }
-
-    private function addEntry(array $entry): void
-    {
-        $this->register($entry['id'], $entry['handler']);
-        if (isset($entry['cli_alias'])) {
-            $this->registerCliAlias($entry['cli_alias'], $entry['handler']);
-        }
-    }
-
     public function register(
         string $identifier,
-        string $handler
+        string $handler,
+        ?string $cli_alias = null
     ): void {
         $this->commands[$identifier] = $handler;
+        if ($cli_alias !== null) {
+            $this->registerCliAlias($cli_alias, $handler);
+        }
     }
 
     public function registerCliAlias(string $alias, string $handler): void
@@ -146,7 +94,7 @@ class CommandBus implements BusInterface
 
     public function hasHandler(string $identifier): bool
     {
-        return isset($this->commands[$identifier]) || isset($this->aliases[$identifier]);
+       return isset($this->commands[$identifier]) || isset($this->aliases[$identifier]);
     }
 
     public function getHandlersDefinition(bool $with_aliases = false): array

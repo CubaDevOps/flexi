@@ -6,6 +6,8 @@ namespace CubaDevOps\Flexi\Test\Application\UseCase;
 
 use CubaDevOps\Flexi\Application\Commands\ModuleInfoCommand;
 use CubaDevOps\Flexi\Application\UseCase\GetModuleInfo;
+use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
+use CubaDevOps\Flexi\Infrastructure\Factories\ModuleDetectorInterface;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\HandlerInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;
@@ -16,12 +18,19 @@ class GetModuleInfoTest extends TestCase
 {
     private GetModuleInfo $getModuleInfo;
     private string $tempModulesPath;
+    private $stateManager;
+    private $moduleDetector;
 
     public function setUp(): void
     {
         $this->tempModulesPath = sys_get_temp_dir() . '/test_modules_info_' . uniqid();
         mkdir($this->tempModulesPath);
-        $this->getModuleInfo = new GetModuleInfo($this->tempModulesPath);
+
+        // Create mocks for dependencies
+        $this->stateManager = $this->createMock(ModuleStateManagerInterface::class);
+        $this->moduleDetector = $this->createMock(ModuleDetectorInterface::class);
+
+        $this->getModuleInfo = new GetModuleInfo($this->stateManager, $this->moduleDetector);
     }
 
     public function tearDown(): void
@@ -38,24 +47,12 @@ class GetModuleInfoTest extends TestCase
     {
         $dto = new ModuleInfoCommand(['module_name' => 'NonExistentModule']);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("Module 'NonExistentModule' not found");
+        $this->moduleDetector->method('getModuleInfo')
+            ->with('NonExistentModule')
+            ->willReturn(null);
 
-        $this->getModuleInfo->handle($dto);
-    }
-
-    public function testHandleThrowsExceptionWhenComposerJsonNotFound(): void
-    {
-        $moduleName = 'BrokenModule';
-        $modulePath = $this->tempModulesPath . '/' . $moduleName;
-        mkdir($modulePath);
-
-        $dto = new ModuleInfoCommand(['module_name' => $moduleName]);
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("Module 'BrokenModule' has no composer.json");
-
-        $this->getModuleInfo->handle($dto);
+        $result = $this->getModuleInfo->handle($dto);
+        $this->assertEquals("Module 'NonExistentModule' not found", $result->get('body'));
     }
 
     public function testHandleWithValidModule(): void
@@ -108,6 +105,43 @@ class GetModuleInfoTest extends TestCase
         // Create config file to test config files status
         file_put_contents($modulePath . '/config.json', '{}');
 
+        // Configure mock to return module info
+        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            $moduleName,
+            'cubadevops/flexi-module-test',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            $modulePath,
+            '1.0.0',
+            true,
+            [
+                'description' => 'Test module for unit testing',
+                'license' => 'MIT',
+                'authors' => [[
+                    'name' => 'Test Author',
+                    'email' => 'test@example.com'
+                ]],
+                'keywords' => ['flexi', 'module', 'test'],
+                'require' => ['php' => '^8.0'],
+                'require-dev' => ['phpunit/phpunit' => '^9.0'],
+                'autoload' => ['psr-4' => ['TestModule\\' => 'src/']],
+                'extra' => ['flexi' => ['name' => $moduleName, 'version' => '1.0.0']]
+            ]
+        );
+
+        $this->moduleDetector->method('getModuleInfo')
+            ->with($moduleName)
+            ->willReturn($moduleInfo);
+
+        // Configure state manager mock
+        $this->stateManager->method('isModuleActive')
+            ->with($moduleName)
+            ->willReturn(true);
+
+        $mockModuleState = $this->createMock(\CubaDevOps\Flexi\Domain\ValueObjects\ModuleState::class);
+        $this->stateManager->method('getModuleState')
+            ->with($moduleName)
+            ->willReturn($mockModuleState);
+
         $dto = new ModuleInfoCommand(['module_name' => $moduleName]);
         $result = $this->getModuleInfo->handle($dto);
 
@@ -121,7 +155,8 @@ class GetModuleInfoTest extends TestCase
         $this->assertEquals('cubadevops/flexi-module-test', $response['package']);
         $this->assertEquals('1.0.0', $response['version']);
         $this->assertEquals('Test module for unit testing', $response['description']);
-        $this->assertEquals('flexi-module', $response['type']);
+        $this->assertEquals('flexi-module', $response['type']); // Type from composer.json
+        $this->assertEquals('local', $response['installation_type']); // Installation type from ModuleType
         $this->assertEquals('MIT', $response['license']);
         $this->assertEquals($modulePath, $response['path']);
 
@@ -170,6 +205,30 @@ class GetModuleInfoTest extends TestCase
             json_encode($composerData)
         );
 
+        // Configure mock to return module info
+        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            $moduleName,
+            'cubadevops/flexi-module-minimal',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            $modulePath,
+            'unknown',
+            false,
+            []
+        );
+
+        $this->moduleDetector->method('getModuleInfo')
+            ->with($moduleName)
+            ->willReturn($moduleInfo);
+
+        // Configure state manager mock
+        $this->stateManager->method('isModuleActive')
+            ->with($moduleName)
+            ->willReturn(false);
+
+        $this->stateManager->method('getModuleState')
+            ->with($moduleName)
+            ->willReturn(null);
+
         $dto = new ModuleInfoCommand(['module_name' => $moduleName]);
         $result = $this->getModuleInfo->handle($dto);
 
@@ -180,7 +239,8 @@ class GetModuleInfoTest extends TestCase
         $this->assertEquals('cubadevops/flexi-module-minimal', $response['package']);
         $this->assertEquals('unknown', $response['version']);
         $this->assertEquals('', $response['description']);
-        $this->assertEquals('unknown', $response['type']);
+        $this->assertEquals('unknown', $response['type']); // No type in composer.json
+        $this->assertEquals('local', $response['installation_type']); // Installation type
         $this->assertEquals('unknown', $response['license']);
         $this->assertEquals([], $response['authors']);
         $this->assertEquals([], $response['keywords']);
@@ -189,7 +249,11 @@ class GetModuleInfoTest extends TestCase
     public function testConstructorWithCustomPath(): void
     {
         $customPath = '/custom/modules';
-        $useCase = new GetModuleInfo($customPath);
+        // Test that constructor accepts proper types
+        $mockStateManager = $this->createMock(ModuleStateManagerInterface::class);
+        $mockModuleDetector = $this->createMock(ModuleDetectorInterface::class);
+
+        $useCase = new GetModuleInfo($mockStateManager, $mockModuleDetector);
 
         $this->assertInstanceOf(GetModuleInfo::class, $useCase);
     }
@@ -220,6 +284,30 @@ class GetModuleInfoTest extends TestCase
             json_encode($composerData)
         );
 
+        // Configure mock to return module info
+        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            $moduleName,
+            'cubadevops/flexi-module-deep',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            $modulePath,
+            '1.0.0',
+            false,
+            []
+        );
+
+        $this->moduleDetector->method('getModuleInfo')
+            ->with($moduleName)
+            ->willReturn($moduleInfo);
+
+        // Configure state manager mock
+        $this->stateManager->method('isModuleActive')
+            ->with($moduleName)
+            ->willReturn(false);
+
+        $this->stateManager->method('getModuleState')
+            ->with($moduleName)
+            ->willReturn(null);
+
         $dto = new ModuleInfoCommand(['module_name' => $moduleName]);
         $result = $this->getModuleInfo->handle($dto);
 
@@ -244,6 +332,21 @@ class GetModuleInfoTest extends TestCase
 
         // Create invalid JSON file
         file_put_contents($modulePath . '/composer.json', 'invalid json content');
+
+        // Configure mock to return module info
+        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            $moduleName,
+            'cubadevops/flexi-module-invalid',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            $modulePath,
+            'unknown',
+            false,
+            []
+        );
+
+        $this->moduleDetector->method('getModuleInfo')
+            ->with($moduleName)
+            ->willReturn($moduleInfo);
 
         $dto = new ModuleInfoCommand(['module_name' => $moduleName]);
 

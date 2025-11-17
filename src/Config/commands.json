@@ -29,6 +29,11 @@
       "id": "CubaDevOps\\Flexi\\Application\\Commands\\ModuleStatusCommand",
       "cli_alias": "modules:status",
       "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\GetModuleStatus"
+    },
+    {
+      "id": "CubaDevOps\\Flexi\\Application\\Commands\\UpdateModuleEnvironmentCommand",
+      "cli_alias": "modules:env-update",
+      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\UpdateModuleEnvironment"
     }
   ]
 }

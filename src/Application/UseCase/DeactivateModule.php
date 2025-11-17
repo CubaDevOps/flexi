@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Application\UseCase;
 
 use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
+use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleEnvironmentManagerInterface;
 use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\DTOInterface;
@@ -21,13 +22,16 @@ class DeactivateModule implements HandlerInterface
 {
     private ModuleStateManagerInterface $stateManager;
     private HybridModuleDetector $moduleDetector;
+    private ModuleEnvironmentManagerInterface $envManager;
 
     public function __construct(
         ModuleStateManagerInterface $stateManager,
-        HybridModuleDetector $moduleDetector
+        HybridModuleDetector $moduleDetector,
+        ModuleEnvironmentManagerInterface $envManager
     ) {
         $this->stateManager = $stateManager;
         $this->moduleDetector = $moduleDetector;
+        $this->envManager = $envManager;
     }
 
     /**
@@ -81,6 +85,15 @@ class DeactivateModule implements HandlerInterface
             ]));
         }
 
+        // Handle module environment variables removal
+        $envWarnings = [];
+        if ($this->envManager->hasModuleEnvironment($moduleName)) {
+            $envSuccess = $this->envManager->removeModuleEnvironment($moduleName);
+            if (!$envSuccess) {
+                $envWarnings[] = "Failed to remove module environment variables from main .env file";
+            }
+        }
+
         // Get updated state for response
         $moduleState = $this->stateManager->getModuleState($moduleName);
 
@@ -95,9 +108,16 @@ class DeactivateModule implements HandlerInterface
                 'package' => $moduleInfo->getPackage(),
                 'version' => $moduleInfo->getVersion(),
                 'last_modified' => $moduleState ? $moduleState->getLastModified()->format('Y-m-d H:i:s') : null,
-                'modified_by' => $modifiedBy
+                'modified_by' => $modifiedBy,
+                'had_env_file' => $this->envManager->hasModuleEnvFile($moduleInfo->getPath()),
+                'env_vars_removed' => !$this->envManager->hasModuleEnvironment($moduleName)
             ]
         ];
+
+        // Add environment warnings if any
+        if (!empty($envWarnings)) {
+            $response['env_warnings'] = $envWarnings;
+        }
 
         // Add conflict info if applicable
         if ($moduleInfo->hasConflict()) {

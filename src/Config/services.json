@@ -175,12 +175,26 @@
       }
     },
     {
+      "name": "CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleEnvironmentManagerInterface",
+      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager"
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager",
+        "arguments": [
+          "@Flexi\\Contracts\\Interfaces\\ConfigurationInterface"
+        ]
+      }
+    },
+    {
       "name": "CubaDevOps\\Flexi\\Application\\UseCase\\ActivateModule",
       "class": {
         "name": "CubaDevOps\\Flexi\\Application\\UseCase\\ActivateModule",
         "arguments": [
           "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface",
-          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
+          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleEnvironmentManagerInterface"
         ]
       }
     },
@@ -190,7 +204,8 @@
         "name": "CubaDevOps\\Flexi\\Application\\UseCase\\DeactivateModule",
         "arguments": [
           "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface",
-          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
+          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleEnvironmentManagerInterface"
         ]
       }
     },
@@ -201,6 +216,17 @@
         "arguments": [
           "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface",
           "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Application\\UseCase\\UpdateModuleEnvironment",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Application\\UseCase\\UpdateModuleEnvironment",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleEnvironmentManagerInterface",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface"
         ]
       }
     },

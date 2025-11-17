@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Application\UseCase;
 
 use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
+use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleEnvironmentManagerInterface;
 use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\DTOInterface;
@@ -21,13 +22,16 @@ class ActivateModule implements HandlerInterface
 {
     private ModuleStateManagerInterface $stateManager;
     private HybridModuleDetector $moduleDetector;
+    private ModuleEnvironmentManagerInterface $envManager;
 
     public function __construct(
         ModuleStateManagerInterface $stateManager,
-        HybridModuleDetector $moduleDetector
+        HybridModuleDetector $moduleDetector,
+        ModuleEnvironmentManagerInterface $envManager
     ) {
         $this->stateManager = $stateManager;
         $this->moduleDetector = $moduleDetector;
+        $this->envManager = $envManager;
     }
 
     /**
@@ -81,6 +85,26 @@ class ActivateModule implements HandlerInterface
             ]));
         }
 
+        // Handle module environment variables if present
+        $envWarnings = [];
+        if ($this->envManager->hasModuleEnvFile($moduleInfo->getPath())) {
+            $moduleEnvVars = $this->envManager->readModuleEnvironment($moduleInfo->getPath(), $moduleName);
+            if (!empty($moduleEnvVars)) {
+                // Check if the module already has environment variables integrated
+                if ($this->envManager->hasModuleEnvironment($moduleName)) {
+                    // Update existing environment variables, preserving user modifications
+                    $envSuccess = $this->envManager->updateModuleEnvironment($moduleName, $moduleEnvVars);
+                } else {
+                    // Add new environment variables
+                    $envSuccess = $this->envManager->addModuleEnvironment($moduleName, $moduleEnvVars);
+                }
+
+                if (!$envSuccess) {
+                    $envWarnings[] = "Failed to integrate module environment variables with main .env file";
+                }
+            }
+        }
+
         // Get updated state for response
         $moduleState = $this->stateManager->getModuleState($moduleName);
 
@@ -95,9 +119,16 @@ class ActivateModule implements HandlerInterface
                 'package' => $moduleInfo->getPackage(),
                 'version' => $moduleInfo->getVersion(),
                 'last_modified' => $moduleState ? $moduleState->getLastModified()->format('Y-m-d H:i:s') : null,
-                'modified_by' => $modifiedBy
+                'modified_by' => $modifiedBy,
+                'has_env_file' => $this->envManager->hasModuleEnvFile($moduleInfo->getPath()),
+                'env_vars_integrated' => $this->envManager->hasModuleEnvironment($moduleName)
             ]
         ];
+
+        // Add environment warnings if any
+        if (!empty($envWarnings)) {
+            $response['env_warnings'] = $envWarnings;
+        }
 
         // Add conflict warning if applicable
         if ($moduleInfo->hasConflict()) {

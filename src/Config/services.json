@@ -165,16 +165,6 @@
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\InstalledModulesFilter",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\InstalledModulesFilter",
-        "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface",
-          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
-        ]
-      }
-    },
-    {
       "name": "CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleEnvironmentManagerInterface",
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager"
     },

@@ -15,7 +15,6 @@ use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Domain\Events\Event;
 use CubaDevOps\Flexi\Domain\Events\RouteNotFoundEvent;
 use Flexi\Contracts\Classes\HttpHandler;
-use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
 use CubaDevOps\Flexi\Infrastructure\Http\Route;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

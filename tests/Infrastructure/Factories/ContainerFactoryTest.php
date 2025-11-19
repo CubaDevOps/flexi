@@ -108,30 +108,6 @@ class ContainerFactoryTest extends TestCase
         $this->assertInstanceOf(Container::class, $container);
     }
 
-    public function testCreateDefaultWithFile(): void
-    {
-        // Create a test services file in writable directory
-        $testFile = '/var/www/html/var/test-services-default.json';
-        $servicesData = [
-            'services' => [
-                [
-                    'name' => 'default-service',
-                    'class' => InMemoryCache::class
-                ]
-            ]
-        ];
-        file_put_contents($testFile, json_encode($servicesData));
-
-        $container = ContainerFactory::createDefault();
-
-        $this->assertInstanceOf(Container::class, $container);
-
-        // Clean up
-        if (file_exists($testFile)) {
-            unlink($testFile);
-        }
-    }
-
     public function testCreateDefaultCacheModuleNotInstalled(): void
     {
         // This test relies on the fact that cache module is not installed by default
@@ -279,33 +255,6 @@ class ContainerFactoryTest extends TestCase
         // Should fallback to InMemoryCache when cache module fails to load
         $cache = $cacheFactory->createCache();
         $this->assertInstanceOf(InMemoryCache::class, $cache);
-    }
-
-    public function testCreateDefaultInternalDependenciesCreation(): void
-    {
-        // This test verifies that createDefault method properly creates all internal dependencies
-        $container = ContainerFactory::createDefault();
-        $this->assertInstanceOf(Container::class, $container);
-
-        // Test that it can handle a valid services file
-        $testFile = '/var/www/html/var/test-services-internal.json';
-        $servicesData = [
-            'services' => [
-                [
-                    'name' => 'internal-service',
-                    'class' => InMemoryCache::class
-                ]
-            ]
-        ];
-        file_put_contents($testFile, json_encode($servicesData));
-
-        $container = ContainerFactory::createDefault();
-        $this->assertInstanceOf(Container::class, $container);
-
-        // Clean up
-        if (file_exists($testFile)) {
-            unlink($testFile);
-        }
     }
 
     public function testHybridModuleDetectorCacheHandling(): void

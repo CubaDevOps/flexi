@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Http;
+namespace Flexi\Infrastructure\Http;
 
 class Route
 {

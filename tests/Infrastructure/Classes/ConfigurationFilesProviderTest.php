@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Tests\Infrastructure\Classes;
+namespace Flexi\Tests\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
-use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationFilesProvider;
-use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use Flexi\Domain\ValueObjects\ConfigurationType;
+use Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Infrastructure\Classes\ConfigurationFilesProvider;
+use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

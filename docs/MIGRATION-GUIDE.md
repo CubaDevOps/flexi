@@ -29,7 +29,7 @@ El autoloader de módulos en el composer.json principal ya fue removido:
 
 ```json
 // REMOVIDO:
-"CubaDevOps\\Flexi\\Modules\\": "modules/"
+"Flexi\\Modules\\": "modules/"
 ```
 
 ### 3. Reinstalar Dependencias
@@ -202,7 +202,7 @@ cat > modules/MyNewModule/composer.json << 'EOF'
   },
   "autoload": {
     "psr-4": {
-      "CubaDevOps\\Flexi\\Modules\\MyNewModule\\": ""
+      "Flexi\\Modules\\MyNewModule\\": ""
     }
   },
   "extra": {

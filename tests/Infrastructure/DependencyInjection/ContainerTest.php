@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
+namespace Flexi\Test\Infrastructure\DependencyInjection;
 
 use Flexi\Contracts\Interfaces\CacheInterface;
 use Flexi\Contracts\Interfaces\ConfigurationInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Service;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServiceClassDefinition;
-use CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException;
-use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
-use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
-use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyCache;
+use Flexi\Infrastructure\DependencyInjection\Service;
+use Flexi\Infrastructure\DependencyInjection\ServiceClassDefinition;
+use Flexi\Domain\Exceptions\ServiceNotFoundException;
+use Flexi\Domain\ValueObjects\ServiceType;
+use Flexi\Infrastructure\Bus\CommandBus;
+use Flexi\Infrastructure\Bus\EventBus;
+use Flexi\Infrastructure\Bus\QueryBus;
+use Flexi\Infrastructure\Classes\Configuration;
+use Flexi\Infrastructure\DependencyInjection\Container;
+use Flexi\Infrastructure\Factories\ContainerFactory;
+use Flexi\Test\TestData\TestDoubles\DummyCache;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -203,7 +203,7 @@ class ContainerTest extends TestCase
         $property->setValue($this->container, $definitions);
 
         // The actual exception thrown is ServiceNotFoundException
-        $this->expectException(\CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException::class);
+        $this->expectException(\Flexi\Domain\Exceptions\ServiceNotFoundException::class);
         $this->container->get('invalid_alias');
     }
 

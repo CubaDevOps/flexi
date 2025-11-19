@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Interfaces;
+namespace Flexi\Domain\Interfaces;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
+use Flexi\Domain\ValueObjects\ConfigurationType;
 
 /**
  * Interface for providing configuration files from active modules

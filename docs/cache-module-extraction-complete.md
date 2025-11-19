@@ -75,9 +75,9 @@ Todos los componentes ahora usan el namespace `Modules\Cache\`:
 
 ```php
 // Antes
-namespace CubaDevOps\Flexi\Infrastructure\Cache;
-namespace CubaDevOps\Flexi\Infrastructure\Factories;
-namespace CubaDevOps\Flexi\Domain\Exceptions;
+namespace Flexi\Infrastructure\Cache;
+namespace Flexi\Infrastructure\Factories;
+namespace Flexi\Domain\Exceptions;
 
 // Después
 namespace Modules\Cache\Infrastructure\Cache;
@@ -92,7 +92,7 @@ namespace Modules\Cache\Domain\Exceptions;
 {
   "name": "Flexi\\Contracts\\Interfaces\\CacheInterface",
   "factory": {
-    "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\CacheFactory",
+    "class": "Flexi\\Infrastructure\\Factories\\CacheFactory",
     "method": "createDefault",
     "arguments": ["@Flexi\\Contracts\\Interfaces\\ConfigurationInterface"]
   }
@@ -170,7 +170,7 @@ Se actualizó `tests/Domain/Utils/ClassFactoryTest.php`:
 
 ```php
 // Antes
-use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
+use Flexi\Infrastructure\Factories\CacheFactory;
 
 // Después
 use Modules\Cache\Infrastructure\Factories\CacheFactory;
@@ -183,8 +183,8 @@ Se actualizó `composer.json` para incluir el namespace `Modules\`:
 ```json
 "autoload": {
   "psr-4": {
-    "CubaDevOps\\Flexi\\": "src/",
-    "CubaDevOps\\Flexi\\Modules\\": "modules/",
+    "Flexi\\": "src/",
+    "Flexi\\Modules\\": "modules/",
     "Modules\\": "modules/"  // ← Nuevo
   }
 }
@@ -242,8 +242,8 @@ Si tienes código que dependía directamente de las clases del core:
 
 ### ❌ Antes (acoplado al core)
 ```php
-use CubaDevOps\Flexi\Infrastructure\Cache\FileCache;
-use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactory;
+use Flexi\Infrastructure\Cache\FileCache;
+use Flexi\Infrastructure\Factories\CacheFactory;
 
 $cache = new FileCache('/path/to/cache');
 ```

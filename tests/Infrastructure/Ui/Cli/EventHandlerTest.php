@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
+namespace Flexi\Test\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Domain\Events\Event;
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\CliInput;
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\EventHandler;
+use Flexi\Domain\Events\Event;
+use Flexi\Infrastructure\Ui\Cli\CliInput;
+use Flexi\Infrastructure\Ui\Cli\EventHandler;
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use PHPUnit\Framework\TestCase;
 

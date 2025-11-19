@@ -58,9 +58,9 @@ Interface: contracts/src/Interfaces/LogRepositoryInterface.php
 ```php
 // In src/Config/services.json
 {
-  "name": "CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
+  "name": "Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
   "class": {
-    "name": "CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
+    "name": "Flexi\\Infrastructure\\Persistence\\InFileLogRepository",
     "arguments": [
       "ENV.log_file_path",
       "ENV.log_format"
@@ -117,9 +117,9 @@ Interface: contracts/src/Interfaces/SessionStorageInterface.php
 ```php
 // In src/Config/services.json
 {
-  "name": "CubaDevOps\\Flexi\\Infrastructure\\Session\\NativeSessionStorage",
+  "name": "Flexi\\Infrastructure\\Session\\NativeSessionStorage",
   "class": {
-    "name": "CubaDevOps\\Flexi\\Infrastructure\\Session\\NativeSessionStorage",
+    "name": "Flexi\\Infrastructure\\Session\\NativeSessionStorage",
     "arguments": [
       "@logger",
       {
@@ -269,7 +269,7 @@ modules/Logging/
     {
       "name": "Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Modules\\Logging\\Infrastructure\\Persistence\\InFileLogRepository",
+        "name": "Flexi\\Modules\\Logging\\Infrastructure\\Persistence\\InFileLogRepository",
         "arguments": ["ENV.log_file_path", "ENV.log_format"]
       }
     }
@@ -296,7 +296,7 @@ modules/Session/
     {
       "name": "Flexi\\Contracts\\Interfaces\\SessionStorageInterface",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Modules\\Session\\Infrastructure\\Session\\NativeSessionStorage",
+        "name": "Flexi\\Modules\\Session\\Infrastructure\\Session\\NativeSessionStorage",
         "arguments": [
           "@logger",
           { /* session options */ }

@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Factories;
+namespace Flexi\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Infrastructure\Classes\ModuleCacheManager;
-use CubaDevOps\Flexi\Infrastructure\Classes\ModuleStateRepository;
+use Flexi\Infrastructure\Classes\ModuleCacheManager;
+use Flexi\Infrastructure\Classes\ModuleStateRepository;
 use Flexi\Contracts\Interfaces\CacheInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServicesDefinitionParser;
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
-use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
-use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
-use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
-use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationFilesProvider;
-use CubaDevOps\Flexi\Infrastructure\Classes\ModuleStateManager;
+use Flexi\Infrastructure\DependencyInjection\ServicesDefinitionParser;
+use Flexi\Infrastructure\Classes\Configuration;
+use Flexi\Infrastructure\Classes\ConfigurationRepository;
+use Flexi\Infrastructure\Classes\ObjectBuilder;
+use Flexi\Infrastructure\DependencyInjection\Container;
+use Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
+use Flexi\Domain\ValueObjects\ConfigurationType;
+use Flexi\Infrastructure\Classes\ConfigurationFilesProvider;
+use Flexi\Infrastructure\Classes\ModuleStateManager;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

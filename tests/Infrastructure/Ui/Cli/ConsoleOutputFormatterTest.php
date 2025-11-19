@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
+namespace Flexi\Test\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\ConsoleOutputFormatter;
+use Flexi\Infrastructure\Ui\Cli\ConsoleOutputFormatter;
 use PHPUnit\Framework\TestCase;
 
 final class ConsoleOutputFormatterTest extends TestCase

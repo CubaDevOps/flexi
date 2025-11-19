@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Factories;
+namespace Flexi\Test\Infrastructure\Factories;
 
 use Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
-use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Infrastructure\Factories\BusFactory;
-use CubaDevOps\Flexi\Infrastructure\Classes\InMemoryCache;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\HandlersDefinitionParser;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ListenersDefinitionParser;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
+use Flexi\Infrastructure\Bus\CommandBus;
+use Flexi\Infrastructure\Bus\EventBus;
+use Flexi\Infrastructure\Bus\QueryBus;
+use Flexi\Infrastructure\Factories\BusFactory;
+use Flexi\Infrastructure\Classes\InMemoryCache;
+use Flexi\Infrastructure\DependencyInjection\HandlersDefinitionParser;
+use Flexi\Infrastructure\DependencyInjection\ListenersDefinitionParser;
+use Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;

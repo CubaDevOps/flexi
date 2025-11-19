@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Application\UseCase;
+namespace Flexi\Test\Application\UseCase;
 
-use CubaDevOps\Flexi\Application\Commands\ModuleInfoCommand;
-use CubaDevOps\Flexi\Application\UseCase\GetModuleInfo;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
+use Flexi\Application\Commands\ModuleInfoCommand;
+use Flexi\Application\UseCase\GetModuleInfo;
+use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use Flexi\Domain\Interfaces\ModuleDetectorInterface;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\HandlerInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;
@@ -106,10 +106,10 @@ class GetModuleInfoTest extends TestCase
         file_put_contents($modulePath . '/config.json', '{}');
 
         // Configure mock to return module info
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             $moduleName,
             'cubadevops/flexi-module-test',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $modulePath,
             '1.0.0',
             true,
@@ -137,7 +137,7 @@ class GetModuleInfoTest extends TestCase
             ->with($moduleName)
             ->willReturn(true);
 
-        $mockModuleState = $this->createMock(\CubaDevOps\Flexi\Domain\ValueObjects\ModuleState::class);
+        $mockModuleState = $this->createMock(\Flexi\Domain\ValueObjects\ModuleState::class);
         $this->stateManager->method('getModuleState')
             ->with($moduleName)
             ->willReturn($mockModuleState);
@@ -206,10 +206,10 @@ class GetModuleInfoTest extends TestCase
         );
 
         // Configure mock to return module info
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             $moduleName,
             'cubadevops/flexi-module-minimal',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $modulePath,
             'unknown',
             false,
@@ -285,10 +285,10 @@ class GetModuleInfoTest extends TestCase
         );
 
         // Configure mock to return module info
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             $moduleName,
             'cubadevops/flexi-module-deep',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $modulePath,
             '1.0.0',
             false,
@@ -334,10 +334,10 @@ class GetModuleInfoTest extends TestCase
         file_put_contents($modulePath . '/composer.json', 'invalid json content');
 
         // Configure mock to return module info
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             $moduleName,
             'cubadevops/flexi-module-invalid',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $modulePath,
             'unknown',
             false,

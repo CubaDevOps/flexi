@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Factories;
+namespace Flexi\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
-use CubaDevOps\Flexi\Infrastructure\Classes\InMemoryCache;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
+use Flexi\Infrastructure\Classes\Configuration;
+use Flexi\Infrastructure\Classes\InMemoryCache;
+use Flexi\Domain\Interfaces\ModuleDetectorInterface;
 use Flexi\Contracts\Interfaces\CacheInterface;
 use Psr\Container\ContainerInterface;
 

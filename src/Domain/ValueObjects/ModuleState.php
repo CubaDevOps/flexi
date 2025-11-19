@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\ValueObjects;
+namespace Flexi\Domain\ValueObjects;
 
 use DateTimeImmutable;
 

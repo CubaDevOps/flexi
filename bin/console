@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 ob_start();
 
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\ConsoleApplication;
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\ConsoleOutputFormatter;
+use Flexi\Infrastructure\Ui\Cli\ConsoleApplication;
+use Flexi\Infrastructure\Ui\Cli\ConsoleOutputFormatter;
 
 require_once dirname(__DIR__) . "/vendor/autoload.php";
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
+namespace Flexi\Infrastructure\Ui\Cli;
 
 class CliInput
 {

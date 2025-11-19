@@ -86,7 +86,7 @@ Tests automatically benefit from the testing environment. No special configurati
 ```php
 <?php
 
-namespace CubaDevOps\Flexi\Test\YourNamespace;
+namespace Flexi\Test\YourNamespace;
 
 use PHPUnit\Framework\TestCase;
 

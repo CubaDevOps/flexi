@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Factories;
+namespace Flexi\Infrastructure\Factories;
 
 use Flexi\Contracts\Interfaces\CacheInterface;
 

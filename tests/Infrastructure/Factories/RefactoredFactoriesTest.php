@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Tests\Infrastructure\Factories;
+namespace Flexi\Tests\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Infrastructure\Factories\BusFactory;
-use CubaDevOps\Flexi\Infrastructure\Factories\RouterFactory;
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
+use Flexi\Infrastructure\Factories\BusFactory;
+use Flexi\Infrastructure\Factories\RouterFactory;
+use Flexi\Infrastructure\Bus\CommandBus;
+use Flexi\Infrastructure\Bus\QueryBus;
+use Flexi\Infrastructure\Bus\EventBus;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 

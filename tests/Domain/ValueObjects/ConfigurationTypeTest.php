@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Tests\Domain\ValueObjects;
+namespace Flexi\Tests\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
+use Flexi\Domain\ValueObjects\ConfigurationType;
 use PHPUnit\Framework\TestCase;
 
 class ConfigurationTypeTest extends TestCase

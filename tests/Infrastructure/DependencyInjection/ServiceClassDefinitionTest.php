@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
+namespace Flexi\Test\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServiceClassDefinition;
+use Flexi\Infrastructure\DependencyInjection\ServiceClassDefinition;
 use PHPUnit\Framework\TestCase;
 
 class ServiceClassDefinitionTest extends TestCase

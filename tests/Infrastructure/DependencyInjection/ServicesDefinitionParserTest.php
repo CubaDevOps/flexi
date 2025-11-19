@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
+namespace Flexi\Test\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServicesDefinitionParser;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\ServicesArrayCache;
+use Flexi\Infrastructure\DependencyInjection\ServicesDefinitionParser;
+use Flexi\Test\TestData\TestDoubles\ServicesArrayCache;
 use PHPUnit\Framework\TestCase;
 
 final class ServicesDefinitionParserTest extends TestCase

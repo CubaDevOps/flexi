@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Domain\ValueObjects;
+namespace Flexi\Test\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ModuleType;
 use PHPUnit\Framework\TestCase;
 
 class ModuleInfoTest extends TestCase

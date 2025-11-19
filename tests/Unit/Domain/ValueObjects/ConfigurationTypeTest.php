@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
+use Flexi\Domain\ValueObjects\ConfigurationType;
 use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
 

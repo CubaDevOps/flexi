@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Interfaces;
+namespace Flexi\Domain\Interfaces;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ModuleInfo;
 
 /**
  * Interface for managing module discovery cache.

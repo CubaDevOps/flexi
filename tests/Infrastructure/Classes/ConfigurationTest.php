@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Classes;
+namespace Flexi\Test\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
+use Flexi\Infrastructure\Classes\Configuration;
 use Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
 use PHPUnit\Framework\TestCase;
 

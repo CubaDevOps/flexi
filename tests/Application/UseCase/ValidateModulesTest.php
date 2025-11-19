@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Application\UseCase;
+namespace Flexi\Test\Application\UseCase;
 
-use CubaDevOps\Flexi\Application\Commands\ValidateModulesCommand;
-use CubaDevOps\Flexi\Application\UseCase\ValidateModules;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
+use Flexi\Application\Commands\ValidateModulesCommand;
+use Flexi\Application\UseCase\ValidateModules;
+use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use Flexi\Domain\Interfaces\ModuleDetectorInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;
 use PHPUnit\Framework\TestCase;
@@ -92,7 +92,7 @@ class ValidateModulesTest extends TestCase
             ],
             'autoload' => [
                 'psr-4' => [
-                    "CubaDevOps\\Flexi\\Modules\\{$moduleName}\\" => '/'
+                    "Flexi\\Modules\\{$moduleName}\\" => '/'
                 ]
             ],
             'extra' => [
@@ -153,7 +153,7 @@ class ValidateModulesTest extends TestCase
             } else {
                 $composerData['autoload'] = [
                     'psr-4' => [
-                        "CubaDevOps\\Flexi\\Modules\\{$moduleName}\\" => '/'
+                        "Flexi\\Modules\\{$moduleName}\\" => '/'
                     ]
                 ];
             }
@@ -258,19 +258,19 @@ class ValidateModulesTest extends TestCase
 
         // Create ModuleInfo objects for the modules
         $modules = [
-            new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            new \Flexi\Domain\ValueObjects\ModuleInfo(
                 'testmodule1',
                 'cubadevops/flexi-module-testmodule1',
-                \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+                \Flexi\Domain\ValueObjects\ModuleType::local(),
                 $this->tempModulesPath . '/testmodule1',
                 '1.0.0',
                 false,
                 []
             ),
-            new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            new \Flexi\Domain\ValueObjects\ModuleInfo(
                 'testmodule2',
                 'cubadevops/flexi-module-testmodule2',
-                \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+                \Flexi\Domain\ValueObjects\ModuleType::local(),
                 $this->tempModulesPath . '/testmodule2',
                 '1.0.0',
                 false,
@@ -305,10 +305,10 @@ class ValidateModulesTest extends TestCase
         $this->createInvalidModule('badmodule', ['no_composer_json']);
 
         // Create ModuleInfo object for the module
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             'badmodule',
             'cubadevops/flexi-module-badmodule',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $this->tempModulesPath . '/badmodule',
             '1.0.0',
             false,
@@ -341,10 +341,10 @@ class ValidateModulesTest extends TestCase
         $this->createInvalidModule('invalidjson', ['invalid_json']);
 
         // Create ModuleInfo object for the module
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             'invalidjson',
             'cubadevops/flexi-module-invalidjson',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $this->tempModulesPath . '/invalidjson',
             '1.0.0',
             false,
@@ -378,10 +378,10 @@ class ValidateModulesTest extends TestCase
         $this->createInvalidModule('incomplete', ['missing_name', 'missing_version', 'missing_type', 'missing_autoload']);
 
         // Create ModuleInfo object for the module
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             'incomplete',
             'cubadevops/flexi-module-incomplete',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $this->tempModulesPath . '/incomplete',
             '1.0.0',
             false,
@@ -424,10 +424,10 @@ class ValidateModulesTest extends TestCase
         $this->createInvalidModule('nodep', ['missing_flexi_dependency']);
 
         // Create ModuleInfo object for the module
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             'nodep',
             'cubadevops/flexi-module-nodep',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $this->tempModulesPath . '/nodep',
             '1.0.0',
             false,
@@ -464,10 +464,10 @@ class ValidateModulesTest extends TestCase
         ]);
 
         // Create ModuleInfo object for the module
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             'warnings',
             'cubadevops/flexi-module-warnings',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $this->tempModulesPath . '/warnings',
             '1.0.0',
             false,
@@ -513,10 +513,10 @@ class ValidateModulesTest extends TestCase
         ]);
 
         // Create ModuleInfo object for the module
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             'metawarn',
             'cubadevops/flexi-module-metawarn',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $this->tempModulesPath . '/metawarn',
             '1.0.0',
             false,
@@ -560,7 +560,7 @@ class ValidateModulesTest extends TestCase
             'require' => ['cubadevops/flexi-contracts' => '*'],
             'autoload' => [
                 'psr-4' => [
-                    'CubaDevOps\\Flexi\\Modules\\nometa\\' => '/'
+                    'Flexi\\Modules\\nometa\\' => '/'
                 ]
             ]
             // Missing 'extra' section
@@ -569,10 +569,10 @@ class ValidateModulesTest extends TestCase
         file_put_contents($moduleDir . '/composer.json', json_encode($composerData, JSON_PRETTY_PRINT));
 
         // Create ModuleInfo object for the module
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             'nometa',
             'cubadevops/flexi-module-nometa',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $moduleDir,
             '1.0.0',
             false,
@@ -608,7 +608,7 @@ class ValidateModulesTest extends TestCase
             'require' => ['cubadevops/flexi-contracts' => '*'],
             'autoload' => [
                 'psr-4' => [
-                    'CubaDevOps\\Flexi\\Modules\\nodirs\\' => '/'
+                    'Flexi\\Modules\\nodirs\\' => '/'
                 ]
             ]
         ];
@@ -616,10 +616,10 @@ class ValidateModulesTest extends TestCase
         file_put_contents($moduleDir . '/composer.json', json_encode($composerData, JSON_PRETTY_PRINT));
 
         // Create ModuleInfo object for the test module
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             'nodirs',
             'cubadevops/flexi-module-nodirs',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $moduleDir,
             '1.0.0',
             false,
@@ -663,10 +663,10 @@ class ValidateModulesTest extends TestCase
             'resolution_strategy' => 'local_priority',
         ];
 
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             'hybrid',
             'cubadevops/flexi-module-hybrid',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::mixed(),
+            \Flexi\Domain\ValueObjects\ModuleType::mixed(),
             $this->tempModulesPath . '/hybrid',
             '1.0.0',
             true,
@@ -675,10 +675,10 @@ class ValidateModulesTest extends TestCase
 
         $this->moduleDetector->method('getAllModules')->willReturn([$moduleInfo]);
 
-        $moduleState = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleState(
+        $moduleState = new \Flexi\Domain\ValueObjects\ModuleState(
             'hybrid',
             true,
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::mixed(),
+            \Flexi\Domain\ValueObjects\ModuleType::mixed(),
             new \DateTimeImmutable('2025-01-15T09:45:00+00:00'),
             'platform'
         );
@@ -721,37 +721,37 @@ class ValidateModulesTest extends TestCase
 
         // Create ModuleInfo objects for all modules
         $modules = [
-            new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            new \Flexi\Domain\ValueObjects\ModuleInfo(
                 'good1',
                 'cubadevops/flexi-module-good1',
-                \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+                \Flexi\Domain\ValueObjects\ModuleType::local(),
                 $this->tempModulesPath . '/good1',
                 '1.0.0',
                 false,
                 []
             ),
-            new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            new \Flexi\Domain\ValueObjects\ModuleInfo(
                 'bad1',
                 'cubadevops/flexi-module-bad1',
-                \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+                \Flexi\Domain\ValueObjects\ModuleType::local(),
                 $this->tempModulesPath . '/bad1',
                 '1.0.0',
                 false,
                 []
             ),
-            new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            new \Flexi\Domain\ValueObjects\ModuleInfo(
                 'bad2',
                 'cubadevops/flexi-module-bad2',
-                \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+                \Flexi\Domain\ValueObjects\ModuleType::local(),
                 $this->tempModulesPath . '/bad2',
                 '1.0.0',
                 false,
                 []
             ),
-            new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            new \Flexi\Domain\ValueObjects\ModuleInfo(
                 'good2',
                 'cubadevops/flexi-module-good2',
-                \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+                \Flexi\Domain\ValueObjects\ModuleType::local(),
                 $this->tempModulesPath . '/good2',
                 '1.0.0',
                 false,

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Services;
+namespace Flexi\Infrastructure\Services;
 
-use CubaDevOps\Flexi\Application\Services\CommandExecutorInterface;
+use Flexi\Application\Services\CommandExecutorInterface;
 
 /**
  * Service for executing system commands.

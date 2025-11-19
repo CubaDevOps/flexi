@@ -22,7 +22,7 @@ contracts/src/Classes/HttpHandler.php
 ```
 
 **Cambios:**
-- Namespace: `CubaDevOps\Flexi\Infrastructure\Classes` → `Flexi\Contracts\Classes`
+- Namespace: `Flexi\Infrastructure\Classes` → `Flexi\Contracts\Classes`
 - Actualizado import en Router.php
 - Actualizado import en TestHttpHandler.php
 - Eliminado original del core
@@ -83,17 +83,17 @@ $key = $this->secret_provider->getSecret();  // ✅ 95% genérica
 {
   "name": "Flexi\\Contracts\\Interfaces\\SecretProviderInterface",
   "class": {
-    "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Adapters\\ConfigurationSecretProvider",
-    "arguments": ["@CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration"]
+    "name": "Flexi\\Modules\\Auth\\Infrastructure\\Adapters\\ConfigurationSecretProvider",
+    "arguments": ["@Flexi\\Infrastructure\\Classes\\Configuration"]
   }
 },
 {
   "name": "auth_check_middleware",
-  "class": { "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\AuthCheckMiddleware", ... }
+  "class": { "name": "Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\AuthCheckMiddleware", ... }
 },
 {
   "name": "jwt_auth_middleware",
-  "class": { "name": "CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\JWTAuthMiddleware", ... }
+  "class": { "name": "Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\JWTAuthMiddleware", ... }
 }
 ```
 
@@ -259,7 +259,7 @@ class OAuth2Middleware implements MiddlewareInterface { ... }
 { "name": "oauth2_middleware", "class": { ... } }
 
 // 3. Usar en rutas
-{ "middlewares": ["CubaDevOps\\Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\OAuth2Middleware"] }
+{ "middlewares": ["Flexi\\Modules\\Auth\\Infrastructure\\Middlewares\\OAuth2Middleware"] }
 ```
 
 ### Cambiar fuente de secretos

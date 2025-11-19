@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Factories;
+namespace Flexi\Test\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
-use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactoryInterface;
-use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
-use CubaDevOps\Flexi\Infrastructure\Factories\LocalModuleDetector;
-use CubaDevOps\Flexi\Infrastructure\Factories\VendorModuleDetector;
-use CubaDevOps\Flexi\Infrastructure\Factories\DefaultCacheFactory;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ServicesDefinitionParser;
-use CubaDevOps\Flexi\Infrastructure\Classes\InMemoryCache;
-use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
-use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
+use Flexi\Infrastructure\Factories\ContainerFactory;
+use Flexi\Domain\Interfaces\ModuleDetectorInterface;
+use Flexi\Infrastructure\Factories\CacheFactoryInterface;
+use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Infrastructure\Factories\LocalModuleDetector;
+use Flexi\Infrastructure\Factories\VendorModuleDetector;
+use Flexi\Infrastructure\Factories\DefaultCacheFactory;
+use Flexi\Infrastructure\DependencyInjection\Container;
+use Flexi\Infrastructure\DependencyInjection\ServicesDefinitionParser;
+use Flexi\Infrastructure\Classes\InMemoryCache;
+use Flexi\Infrastructure\Classes\ObjectBuilder;
+use Flexi\Infrastructure\Classes\Configuration;
+use Flexi\Infrastructure\Classes\ConfigurationRepository;
+use Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
 use Flexi\Contracts\Interfaces\CacheInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use PHPUnit\Framework\TestCase;
@@ -88,7 +88,7 @@ class ContainerFactoryTest extends TestCase
 
         // Mock the services parser to return test services when called
         $testServices = [
-            'test-service' => $this->createMock(\CubaDevOps\Flexi\Infrastructure\DependencyInjection\Service::class)
+            'test-service' => $this->createMock(\Flexi\Infrastructure\DependencyInjection\Service::class)
         ];
 
         $this->servicesDefinitionParser
@@ -201,7 +201,7 @@ class ContainerFactoryTest extends TestCase
     public function testGetInstanceWithFileAndMockedDependencies(): void
     {
         // Mock the services parser to return test services
-        $mockService = $this->createMock(\CubaDevOps\Flexi\Infrastructure\DependencyInjection\Service::class);
+        $mockService = $this->createMock(\Flexi\Infrastructure\DependencyInjection\Service::class);
         $testServices = [
             'test-service-mocked' => $mockService
         ];

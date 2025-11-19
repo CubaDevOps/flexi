@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 ob_start();
 
-use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
-use CubaDevOps\Flexi\Infrastructure\Ui\Web\Application;
+use Flexi\Infrastructure\Factories\ContainerFactory;
+use Flexi\Infrastructure\Ui\Web\Application;
 
 require_once __DIR__.'/../vendor/autoload.php';
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Classes;
+namespace Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
+use Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ModuleType;
 
 /**
  * Manages module discovery cache based on composer.lock changes.

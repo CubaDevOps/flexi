@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Application\Commands;
+namespace Flexi\Application\Commands;
 
 use Flexi\Contracts\Interfaces\CliDTOInterface;
 

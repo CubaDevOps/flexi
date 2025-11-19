@@ -50,7 +50,7 @@ contracts/src/Classes/Criteria/
 
 **Module: HealthCheck**
 - File: `modules/HealthCheck/Application/UseCase/Health.php`
-- Old: `use CubaDevOps\Flexi\Domain\Criteria\AnyCriteria;`
+- Old: `use Flexi\Domain\Criteria\AnyCriteria;`
 - New: `use Flexi\Contracts\Classes\Criteria\AnyCriteria;`
 
 ## Verification

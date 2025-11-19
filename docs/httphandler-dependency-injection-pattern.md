@@ -83,7 +83,7 @@ abstract class HttpHandler implements RequestHandlerInterface
 All controllers extending `HttpHandler` must pass the dependency to parent constructor:
 
 ```php
-namespace CubaDevOps\Flexi\Modules\Home\Infrastructure\Controllers;
+namespace Flexi\Modules\Home\Infrastructure\Controllers;
 
 use Flexi\Contracts\Classes\HttpHandler;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -260,8 +260,8 @@ $controller = new MyNewController($factory);
 Use DummyResponseFactory for pure PSR testing without external dependencies:
 
 ```php
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyResponseFactory;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\TestHttpHandler;
+use Flexi\Test\TestData\TestDoubles\DummyResponseFactory;
+use Flexi\Test\TestData\TestDoubles\TestHttpHandler;
 
 $factory = new DummyResponseFactory();
 $handler = new TestHttpHandler($factory);

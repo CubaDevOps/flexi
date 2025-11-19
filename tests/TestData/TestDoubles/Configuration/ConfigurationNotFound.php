@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\TestData\TestDoubles\Configuration;
+namespace Flexi\Test\TestData\TestDoubles\Configuration;
 
 use Psr\Container\NotFoundExceptionInterface;
 

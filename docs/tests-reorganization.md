@@ -130,18 +130,18 @@ Todos los archivos movidos fueron actualizados con sus nuevos namespaces:
 
 | Nuevo Namespace | Archivos Afectados |
 |-----------------|-------------------|
-| `CubaDevOps\Flexi\Test\Domain\Events` | EventTest.php |
-| `CubaDevOps\Flexi\Test\Domain\Collections` | CollectionTest.php, ObjectCollectionTest.php |
-| `CubaDevOps\Flexi\Test\Domain\ValueObjects` | PlainTextMessageTest.php |
-| `CubaDevOps\Flexi\Test\Domain\Entities` | LogTest.php |
-| `CubaDevOps\Flexi\Test\Infrastructure\Bus` | CommandBusTest.php, EventBusTest.php, QueryBusTest.php |
-| `CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection` | 4 files |
-| `CubaDevOps\Flexi\Test\Infrastructure\Http` | RouterTest.php, RouteTest.php |
-| `CubaDevOps\Flexi\Test\Infrastructure\Ui` | HtmlRenderTest.php, TemplateTest.php |
-| `CubaDevOps\Flexi\Test\Infrastructure\Persistence` | 2 files |
-| `CubaDevOps\Flexi\Test\Infrastructure\Session` | NativeSessionStorageTest.php |
-| `CubaDevOps\Flexi\Test\Application\Commands` | ListCommandsCommandTest.php |
-| `CubaDevOps\Flexi\Test\Application\Queries` | ListQueriesQueryTest.php |
+| `Flexi\Test\Domain\Events` | EventTest.php |
+| `Flexi\Test\Domain\Collections` | CollectionTest.php, ObjectCollectionTest.php |
+| `Flexi\Test\Domain\ValueObjects` | PlainTextMessageTest.php |
+| `Flexi\Test\Domain\Entities` | LogTest.php |
+| `Flexi\Test\Infrastructure\Bus` | CommandBusTest.php, EventBusTest.php, QueryBusTest.php |
+| `Flexi\Test\Infrastructure\DependencyInjection` | 4 files |
+| `Flexi\Test\Infrastructure\Http` | RouterTest.php, RouteTest.php |
+| `Flexi\Test\Infrastructure\Ui` | HtmlRenderTest.php, TemplateTest.php |
+| `Flexi\Test\Infrastructure\Persistence` | 2 files |
+| `Flexi\Test\Infrastructure\Session` | NativeSessionStorageTest.php |
+| `Flexi\Test\Application\Commands` | ListCommandsCommandTest.php |
+| `Flexi\Test\Application\Queries` | ListQueriesQueryTest.php |
 
 ---
 

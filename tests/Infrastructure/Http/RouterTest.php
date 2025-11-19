@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Http;
+namespace Flexi\Test\Infrastructure\Http;
 
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use Flexi\Contracts\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Infrastructure\Classes\Collection;
-use CubaDevOps\Flexi\Infrastructure\Http\Route;
-use CubaDevOps\Flexi\Infrastructure\Http\Router;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouterMock;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\TestHttpHandler;
+use Flexi\Infrastructure\Classes\Collection;
+use Flexi\Infrastructure\Http\Route;
+use Flexi\Infrastructure\Http\Router;
+use Flexi\Test\TestData\TestDoubles\RouterMock;
+use Flexi\Test\TestData\TestDoubles\TestHttpHandler;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
@@ -931,7 +931,7 @@ class RouterTest extends TestCase
             ->method('dispatch')
             ->willReturnCallback(function($event) use ($customResponseMock) {
                 // Simulate event listener setting a custom response
-                /** @var \CubaDevOps\Flexi\Domain\Events\RouteNotFoundEvent $event */
+                /** @var \Flexi\Domain\Events\RouteNotFoundEvent $event */
                 $event->setResponse($customResponseMock);
                 return $event;
             });

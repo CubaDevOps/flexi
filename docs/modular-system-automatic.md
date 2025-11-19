@@ -250,7 +250,7 @@ cat > modules/Payment/composer.json << 'EOF'
   },
   "autoload": {
     "psr-4": {
-      "CubaDevOps\\Flexi\\Modules\\Payment\\": ""
+      "Flexi\\Modules\\Payment\\": ""
     }
   },
   "extra": {

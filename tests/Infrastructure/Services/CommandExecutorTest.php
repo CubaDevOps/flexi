@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Services;
+namespace Flexi\Test\Infrastructure\Services;
 
-use CubaDevOps\Flexi\Infrastructure\Services\CommandExecutor;
-use CubaDevOps\Flexi\Application\Services\CommandExecutorInterface;
+use Flexi\Infrastructure\Services\CommandExecutor;
+use Flexi\Application\Services\CommandExecutorInterface;
 use PHPUnit\Framework\TestCase;
 
 class CommandExecutorTest extends TestCase

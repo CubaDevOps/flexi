@@ -248,7 +248,7 @@ Mover Traits de Utils
 Mover ValueObjects de DI
 ├─ src/Infrastructure/DependencyInjection/ServicesDefinitionParser.php
 │  ├─ usa: ServiceType
-│  └─ update: use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ValueObjects\ServiceType;
+│  └─ update: use Flexi\Infrastructure\DependencyInjection\ValueObjects\ServiceType;
 ├─ Posiblemente: Container, Service, ServiceClassDefinition
 └─ Necesita: verificar que no hay imports en módulos
 
@@ -305,9 +305,9 @@ podman exec flexi vendor/bin/phpunit tests/ -v
 
 ```bash
 # Buscar imports antiguos
-grep -r "use CubaDevOps\\Flexi\\Domain\\ValueObjects\\Operator" src/
-grep -r "use CubaDevOps\\Flexi\\Domain\\Events\\EventListener" src/
-grep -r "use CubaDevOps\\Flexi\\Infrastructure\\Utils\\.*Trait" src/
+grep -r "use Flexi\\Domain\\ValueObjects\\Operator" src/
+grep -r "use Flexi\\Domain\\Events\\EventListener" src/
+grep -r "use Flexi\\Infrastructure\\Utils\\.*Trait" src/
 ```
 
 ---

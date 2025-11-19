@@ -1,9 +1,9 @@
 {
   "handlers": [
     {
-      "id": "CubaDevOps\\Flexi\\Test\\TestData\\Commands\\ExtraTestCommand",
+      "id": "Flexi\\Test\\TestData\\Commands\\ExtraTestCommand",
       "cli_alias": "extra-test",
-      "handler": "CubaDevOps\\Flexi\\Test\\TestData\\Handlers\\ExtraTestCommandHandler"
+      "handler": "Flexi\\Test\\TestData\\Handlers\\ExtraTestCommandHandler"
     }
   ]
 }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Domain\Exceptions;
+namespace Flexi\Test\Domain\Exceptions;
 
-use CubaDevOps\Flexi\Domain\Exceptions\ContainerException;
+use Flexi\Domain\Exceptions\ContainerException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\NotFoundExceptionInterface;
 

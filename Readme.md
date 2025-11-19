@@ -105,7 +105,7 @@ cat > modules/MyModule/composer.json << 'EOF'
   },
   "autoload": {
     "psr-4": {
-      "CubaDevOps\\Flexi\\Modules\\MyModule\\": ""
+      "Flexi\\Modules\\MyModule\\": ""
     }
   }
 }
@@ -145,23 +145,23 @@ should be instantiated, either directly or via factory methods.
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
+      "name": "Flexi\\Infrastructure\\Classes\\Configuration",
       "factory": {
-        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\ConfigurationFactory",
+        "class": "Flexi\\Infrastructure\\Factories\\ConfigurationFactory",
         "method": "getInstance",
         "arguments": []
       }
     },
     {
       "name": "session",
-      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Session\\NativeSessionStorage"
+      "alias": "Flexi\\Infrastructure\\Session\\NativeSessionStorage"
     },
     {
       "name": "logger",
       "class": {
         "name": "Flexi\\Contracts\\Classes\\PsrLogger",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Persistence\\InFileLogRepository"
+          "@Flexi\\Infrastructure\\Persistence\\InFileLogRepository"
         ]
       }
     },
@@ -195,17 +195,17 @@ handle the request.
       "name": "health",
       "path": "/health",
       "method": "GET",
-      "controller": "CubaDevOps\\Flexi\\Infrastructure\\Controllers\\HealthController",
+      "controller": "Flexi\\Infrastructure\\Controllers\\HealthController",
       "parameters": [],
       "middlewares": [
-        "CubaDevOps\\Flexi\\Infrastructure\\Middlewares\\AuthCheckMiddleware"
+        "Flexi\\Infrastructure\\Middlewares\\AuthCheckMiddleware"
       ]
     },
     {
       "name": "404",
       "path": "/not-found",
       "method": "GET",
-      "controller": "CubaDevOps\\Flexi\\Infrastructure\\Controllers\\NotFoundController"
+      "controller": "Flexi\\Infrastructure\\Controllers\\NotFoundController"
     },
     {
       "glob": "/modules/*/Config/routes.json"
@@ -232,7 +232,7 @@ Events and listeners are defined in the `listeners.json` file. This file maps ev
   {
     "event": "*",
     "listeners": [
-      "CubaDevOps\\Flexi\\Application\\EventListeners\\LoggerEventListener"
+      "Flexi\\Application\\EventListeners\\LoggerEventListener"
     ]
   },
   {
@@ -244,7 +244,7 @@ Events and listeners are defined in the `listeners.json` file. This file maps ev
 __Note:__
 
 - The `event` key can be a specific event name or a wildcard `*` to listen to all events.
-- The listener class should implement the `CubaDevOps\Flexi\Domain\Interfaces\EventListenerInterface` interface.
+- The listener class should implement the `Flexi\Domain\Interfaces\EventListenerInterface` interface.
 
 ### Queries
 
@@ -257,9 +257,9 @@ alias.
 {
   "handlers": [
     {
-      "id": "CubaDevOps\\Flexi\\Domain\\DTO\\EmptyVersionDTO",
+      "id": "Flexi\\Domain\\DTO\\EmptyVersionDTO",
       "cli_alias": "version",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\Health"
+      "handler": "Flexi\\Application\\UseCase\\Health"
     },
     {
       "glob": "/modules/*/Config/queries.json"
@@ -270,7 +270,7 @@ alias.
 
 __Note:__
 
-- Handlers should implement the `CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface` interface.
+- Handlers should implement the `Flexi\Domain\Interfaces\HandlerInterface` interface.
 
 ### Commands
 
@@ -290,7 +290,7 @@ Commands are defined similarly to queries in the `commands.json` file.
 
 __Note:__
 
-- Handlers should implement the `CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface` interface.
+- Handlers should implement the `Flexi\Domain\Interfaces\HandlerInterface` interface.
 
 ## Usage
 
@@ -301,9 +301,9 @@ The `Router` class is responsible for managing routes and dispatching requests t
 #### Example Usage
 
 ```php
-use CubaDevOps\Flexi\Domain\Classes\Router;
+use Flexi\Domain\Classes\Router;
 use Psr\Http\Message\ServerRequestInterface;
-use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
+use Flexi\Infrastructure\Factories\ContainerFactory;
 
 /** @var Router $router */
 $router = ContainerFactory::getInstance()->get(Router::class); // or use router alias
@@ -319,11 +319,11 @@ accordingly.
 #### Example
 
 ```php
-use CubaDevOps\Flexi\Domain\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Classes\Event;
-use CubaDevOps\Flexi\Application\UseCase\Health;
-use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
-use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
+use Flexi\Domain\Interfaces\EventBusInterface;
+use Flexi\Domain\Classes\Event;
+use Flexi\Application\UseCase\Health;
+use Flexi\Infrastructure\Factories\ContainerFactory;
+use Flexi\Infrastructure\Bus\EventBus;
 
 $eventBus = ContainerFactory::getInstance()->get(EventBus::class);
 $event = new Event('health-check', Health::class, ['from' => $_SERVER['REMOTE_ADDR']);
@@ -337,7 +337,7 @@ Flexi implements the CQRS pattern with separate handling for commands and querie
 #### Command Example
 
 ```php
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
+use Flexi\Infrastructure\Bus\CommandBus;
 
 // Assume $command is a class that implements the DTOInterface
 $commandBus->execute($command);
@@ -346,7 +346,7 @@ $commandBus->execute($command);
 #### Query Example
 
 ```php
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
+use Flexi\Infrastructure\Bus\QueryBus;
 
 // Assume $query is a class that implements the DTOInterface
 $result = $queryBus->execute($query);
@@ -354,16 +354,16 @@ $result = $queryBus->execute($query);
 
 ### Controllers and Response
 
-The response is a PSR-7 response object that can be returned from a controller or middleware. Controllers that extend the `CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler` have an easy way to build responses using the `createResponse` method. If you don't extend the `HttpHandler` you can use a factory that implements `Psr\Http\Message\ResponseFactoryInterface` interface to build the response. Flexi uses the `GuzzleHttp\Psr7\HttpFactory` as default factory.
+The response is a PSR-7 response object that can be returned from a controller or middleware. Controllers that extend the `Flexi\Infrastructure\Classes\HttpHandler` have an easy way to build responses using the `createResponse` method. If you don't extend the `HttpHandler` you can use a factory that implements `Psr\Http\Message\ResponseFactoryInterface` interface to build the response. Flexi uses the `GuzzleHttp\Psr7\HttpFactory` as default factory.
 
 The `HttpHandler` abstract class implements a Template Method pattern that automatically manages the middleware chain execution. Controllers only need to implement the `process()` method with their specific business logic, while the framework handles middleware orchestration automatically.
 
 #### Basic Controller Example
 
 ```php
-namespace CubaDevOps\Flexi\Modules\Home\Infrastructure\Controllers;
+namespace Flexi\Modules\Home\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
+use Flexi\Infrastructure\Classes\HttpHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -383,11 +383,11 @@ class AuthenticatedController extends HttpHandler
 #### Controller with Dependencies and Business Logic
 
 ```php
-namespace CubaDevOps\Flexi\Infrastructure\Controllers;
+namespace Flexi\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Application\Queries\GetVersionQuery;
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
+use Flexi\Infrastructure\Bus\QueryBus;
+use Flexi\Application\Queries\GetVersionQuery;
+use Flexi\Infrastructure\Classes\HttpHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -417,10 +417,10 @@ class HealthController extends HttpHandler
 #### Controller with Template Rendering
 
 ```php
-namespace CubaDevOps\Flexi\Infrastructure\Controllers;
+namespace Flexi\Infrastructure\Controllers;
 
-use CubaDevOps\Flexi\Domain\Interfaces\TemplateEngineInterface;
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler;
+use Flexi\Domain\Interfaces\TemplateEngineInterface;
+use Flexi\Infrastructure\Classes\HttpHandler;
 use Flexi\Contracts\Classes\Traits\FileHandlerTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -468,7 +468,7 @@ Middlewares are classes that can be executed before the controller. They can mod
 #### Middleware Implementation Example
 
 ```php
-namespace CubaDevOps\Flexi\Infrastructure\Middlewares;
+namespace Flexi\Infrastructure\Middlewares;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -525,7 +525,7 @@ For more details, see [tests/README.md](tests/README.md).
 ```php
 <?php
 
-namespace CubaDevOps\Flexi\Test\YourNamespace;
+namespace Flexi\Test\YourNamespace;
 
 use PHPUnit\Framework\TestCase;
 

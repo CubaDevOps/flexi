@@ -40,7 +40,7 @@ src/Infrastructure/Utils/JsonFileReader.php             → contracts/src/Classe
 
 ```php
 // ANTES:
-namespace CubaDevOps\Flexi\Infrastructure\Utils;
+namespace Flexi\Infrastructure\Utils;
 
 // DESPUÉS:
 namespace Flexi\Contracts\Classes\Traits;
@@ -57,8 +57,8 @@ namespace Flexi\Contracts\Classes\Traits;
 
 ```php
 // ANTES:
-use CubaDevOps\Flexi\Infrastructure\Utils\GlobFileReader;
-use CubaDevOps\Flexi\Infrastructure\Utils\JsonFileReader;
+use Flexi\Infrastructure\Utils\GlobFileReader;
+use Flexi\Infrastructure\Utils\JsonFileReader;
 
 // DESPUÉS:
 use Flexi\Contracts\Classes\Traits\GlobFileReader;
@@ -102,7 +102,7 @@ git commit -m "refactor: move utility traits to contracts"
 
 ```php
 // ANTES:
-namespace CubaDevOps\Flexi\Domain\Events;
+namespace Flexi\Domain\Events;
 
 // DESPUÉS:
 namespace Flexi\Contracts\Classes;
@@ -117,7 +117,7 @@ namespace Flexi\Contracts\Classes;
 
 ```php
 // ANTES:
-use CubaDevOps\Flexi\Domain\Events\EventListener;
+use Flexi\Domain\Events\EventListener;
 
 // DESPUÉS:
 use Flexi\Contracts\Classes\EventListener;
@@ -173,10 +173,10 @@ mv src/Domain/ValueObjects/ServiceType.php \
 
 ```php
 // ANTES:
-namespace CubaDevOps\Flexi\Domain\ValueObjects;
+namespace Flexi\Domain\ValueObjects;
 
 // DESPUÉS:
-namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection\ValueObjects;
+namespace Flexi\Infrastructure\DependencyInjection\ValueObjects;
 ```
 
 ### Paso 3.4: Buscar y actualizar todos los imports
@@ -192,14 +192,14 @@ grep -r "use CubaDevOps\\\\Flexi\\\\Domain\\\\ValueObjects\\\\ServiceType" /User
 
 ```php
 // ANTES:
-use CubaDevOps\Flexi\Domain\ValueObjects\Operator;
-use CubaDevOps\Flexi\Domain\ValueObjects\Order;
-use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
+use Flexi\Domain\ValueObjects\Operator;
+use Flexi\Domain\ValueObjects\Order;
+use Flexi\Domain\ValueObjects\ServiceType;
 
 // DESPUÉS:
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ValueObjects\Operator;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ValueObjects\Order;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ValueObjects\ServiceType;
+use Flexi\Infrastructure\DependencyInjection\ValueObjects\Operator;
+use Flexi\Infrastructure\DependencyInjection\ValueObjects\Order;
+use Flexi\Infrastructure\DependencyInjection\ValueObjects\ServiceType;
 ```
 
 ### Paso 3.5: Actualizar composer autoload
@@ -253,10 +253,10 @@ cp src/Infrastructure/Middlewares/JWTAuthMiddleware.php \
 
 ```php
 // ANTES (AuthCheckMiddleware.php):
-namespace CubaDevOps\Flexi\Infrastructure\Middlewares;
+namespace Flexi\Infrastructure\Middlewares;
 
 // DESPUÉS:
-namespace CubaDevOps\Flexi\Modules\Auth\Infrastructure\Middlewares;
+namespace Flexi\Modules\Auth\Infrastructure\Middlewares;
 ```
 
 ### Paso 4.4: Crear composer.json para el módulo (opcional)
@@ -267,7 +267,7 @@ namespace CubaDevOps\Flexi\Modules\Auth\Infrastructure\Middlewares;
   "description": "Authentication module for Flexi Framework",
   "autoload": {
     "psr-4": {
-      "CubaDevOps\\Flexi\\Modules\\Auth\\": "."
+      "Flexi\\Modules\\Auth\\": "."
     }
   }
 }
@@ -285,10 +285,10 @@ grep -r "AuthCheckMiddleware" /Users/cbatista8a/Sites/flexi/
 
 ```php
 // ANTES:
-use CubaDevOps\Flexi\Infrastructure\Middlewares\AuthCheckMiddleware;
+use Flexi\Infrastructure\Middlewares\AuthCheckMiddleware;
 
 // DESPUÉS:
-use CubaDevOps\Flexi\Modules\Auth\Infrastructure\Middlewares\AuthCheckMiddleware;
+use Flexi\Modules\Auth\Infrastructure\Middlewares\AuthCheckMiddleware;
 ```
 
 ### Paso 4.6: Actualizar composer autoload

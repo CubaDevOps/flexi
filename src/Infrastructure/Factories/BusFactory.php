@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Factories;
+namespace Flexi\Infrastructure\Factories;
 
 use Flexi\Contracts\Interfaces\BusInterface;
 use Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
-use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\HandlersDefinitionParser;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ListenersDefinitionParser;
-use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
+use Flexi\Infrastructure\Bus\CommandBus;
+use Flexi\Infrastructure\Bus\EventBus;
+use Flexi\Infrastructure\Bus\QueryBus;
+use Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
+use Flexi\Infrastructure\DependencyInjection\HandlersDefinitionParser;
+use Flexi\Infrastructure\DependencyInjection\ListenersDefinitionParser;
+use Flexi\Domain\ValueObjects\ConfigurationType;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

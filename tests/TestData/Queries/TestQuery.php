@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\TestData\Queries;
+namespace Flexi\Test\TestData\Queries;
 
 use Flexi\Contracts\Interfaces\DTOInterface;
 

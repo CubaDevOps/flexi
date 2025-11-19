@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
+namespace Flexi\Test\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\RoutesDefinitionParser;
-use CubaDevOps\Flexi\Infrastructure\Http\Route;
+use Flexi\Infrastructure\DependencyInjection\RoutesDefinitionParser;
+use Flexi\Infrastructure\Http\Route;
 use Flexi\Contracts\Interfaces\CacheInterface;
 use PHPUnit\Framework\TestCase;
 

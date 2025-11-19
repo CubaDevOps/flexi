@@ -66,7 +66,7 @@ Cada módulo tiene su propio `composer.json` con la siguiente estructura:
   },
   "autoload": {
     "psr-4": {
-      "CubaDevOps\\Flexi\\Modules\\{Nombre}\\": ""
+      "Flexi\\Modules\\{Nombre}\\": ""
     }
   },
   "extra": {
@@ -297,7 +297,7 @@ mkdir -p modules/MyModule/{Domain,Infrastructure,Config}
   },
   "autoload": {
     "psr-4": {
-      "CubaDevOps\\Flexi\\Modules\\MyModule\\": ""
+      "Flexi\\Modules\\MyModule\\": ""
     }
   }
 }

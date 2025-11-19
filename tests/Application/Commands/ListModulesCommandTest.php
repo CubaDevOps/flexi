@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Application\Commands;
+namespace Flexi\Test\Application\Commands;
 
-use CubaDevOps\Flexi\Application\Commands\ListModulesCommand;
+use Flexi\Application\Commands\ListModulesCommand;
 use Flexi\Contracts\Interfaces\CliDTOInterface;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use PHPUnit\Framework\TestCase;

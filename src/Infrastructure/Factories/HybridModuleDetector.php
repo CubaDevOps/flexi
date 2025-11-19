@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Factories;
+namespace Flexi\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
+use Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Domain\Interfaces\ModuleDetectorInterface;
 
 /**
  * Hybrid module detector that combines local and vendor module detection.

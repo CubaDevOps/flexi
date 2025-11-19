@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
+namespace Flexi\Test\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Application\Commands\ModuleInfoCommand;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\CliInput;
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\QueryHandler;
+use Flexi\Application\Commands\ModuleInfoCommand;
+use Flexi\Infrastructure\Bus\QueryBus;
+use Flexi\Infrastructure\Ui\Cli\CliInput;
+use Flexi\Infrastructure\Ui\Cli\QueryHandler;
 use Flexi\Contracts\Interfaces\CliDTOInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;
 use PHPUnit\Framework\TestCase;
@@ -105,7 +105,7 @@ class QueryHandlerTest extends TestCase
     {
         $queryBusMock = $this->createMock(QueryBus::class);
         $queryBusMock->method('hasHandler')->willReturn(true);
-        $queryBusMock->method('getDtoClassFromAlias')->willReturn('CubaDevOps\\Flexi\\Test\\TestData\\Queries\\TestQuery');
+        $queryBusMock->method('getDtoClassFromAlias')->willReturn('Flexi\\Test\\TestData\\Queries\\TestQuery');
 
         $messageMock = $this->createMock(MessageInterface::class);
         $messageMock->method('__toString')->willReturn('Complex query response');
@@ -151,7 +151,7 @@ class QueryHandlerTest extends TestCase
 
         // Mock that ModuleInfoCommand has a handler and will be returned
         $queryBusMock->method('hasHandler')->willReturn(true);
-        $queryBusMock->method('getDtoClassFromAlias')->willReturn(\CubaDevOps\Flexi\Application\Commands\ModuleInfoCommand::class);
+        $queryBusMock->method('getDtoClassFromAlias')->willReturn(\Flexi\Application\Commands\ModuleInfoCommand::class);
 
         $handler = new QueryHandler($queryBusMock);
         $input = new CliInput('module:info', ['module' => 'test'], 'query', true); // help flag = true

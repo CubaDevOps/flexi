@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Tests\Infrastructure\DependencyInjection;
+namespace Flexi\Tests\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\RoutesDefinitionParser;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\HandlersDefinitionParser;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ListenersDefinitionParser;
-use CubaDevOps\Flexi\Infrastructure\Classes\InMemoryCache;
+use Flexi\Infrastructure\DependencyInjection\RoutesDefinitionParser;
+use Flexi\Infrastructure\DependencyInjection\HandlersDefinitionParser;
+use Flexi\Infrastructure\DependencyInjection\ListenersDefinitionParser;
+use Flexi\Infrastructure\Classes\InMemoryCache;
 use PHPUnit\Framework\TestCase;
 
 class ConfigurationParsersTest extends TestCase

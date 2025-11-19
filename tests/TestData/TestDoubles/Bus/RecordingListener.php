@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\TestData\TestDoubles\Bus;
+namespace Flexi\Test\TestData\TestDoubles\Bus;
 
 use Flexi\Contracts\Interfaces\DTOInterface;
 use Flexi\Contracts\Interfaces\EventInterface;

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Factories;
+namespace Flexi\Test\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\RoutesDefinitionParser;
-use CubaDevOps\Flexi\Infrastructure\Factories\RouterFactory;
-use CubaDevOps\Flexi\Infrastructure\Http\Route;
-use CubaDevOps\Flexi\Infrastructure\Http\Router;
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
+use Flexi\Domain\ValueObjects\ConfigurationType;
+use Flexi\Infrastructure\DependencyInjection\RoutesDefinitionParser;
+use Flexi\Infrastructure\Factories\RouterFactory;
+use Flexi\Infrastructure\Http\Route;
+use Flexi\Infrastructure\Http\Router;
+use Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;

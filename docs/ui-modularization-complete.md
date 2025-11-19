@@ -22,20 +22,20 @@ Trasladar el sistema de renderizado de templates del core hacia un módulo dedic
 src/Infrastructure/Ui/Template.php
   ↓ MOVED TO
 modules/Ui/Infrastructure/Ui/Template.php
-  Namespace: CubaDevOps\Flexi\Infrastructure\Ui
-          → CubaDevOps\Flexi\Modules\Ui\Infrastructure\Ui
+  Namespace: Flexi\Infrastructure\Ui
+          → Flexi\Modules\Ui\Infrastructure\Ui
 
 src/Infrastructure/Ui/TemplateLocator.php
   ↓ MOVED TO
 modules/Ui/Infrastructure/Ui/TemplateLocator.php
-  Namespace: CubaDevOps\Flexi\Infrastructure\Ui
-          → CubaDevOps\Flexi\Modules\Ui\Infrastructure\Ui
+  Namespace: Flexi\Infrastructure\Ui
+          → Flexi\Modules\Ui\Infrastructure\Ui
 
 src/Infrastructure/Ui/HtmlRender.php
   ↓ MOVED TO
 modules/Ui/Infrastructure/Ui/HtmlRender.php
-  Namespace: CubaDevOps\Flexi\Infrastructure\Ui
-          → CubaDevOps\Flexi\Modules\Ui\Infrastructure\Ui
+  Namespace: Flexi\Infrastructure\Ui
+          → Flexi\Modules\Ui\Infrastructure\Ui
 ```
 
 #### Tests Movidos (2)
@@ -43,14 +43,14 @@ modules/Ui/Infrastructure/Ui/HtmlRender.php
 tests/Infrastructure/Ui/TemplateTest.php
   ↓ MOVED TO
 modules/Ui/tests/Infrastructure/Ui/TemplateTest.php
-  Namespace: CubaDevOps\Flexi\Test\Infrastructure\Ui
-          → CubaDevOps\Flexi\Test\Modules\Ui\Infrastructure\Ui
+  Namespace: Flexi\Test\Infrastructure\Ui
+          → Flexi\Test\Modules\Ui\Infrastructure\Ui
 
 tests/Infrastructure/Ui/HtmlRenderTest.php
   ↓ MOVED TO
 modules/Ui/tests/Infrastructure/Ui/HtmlRenderTest.php
-  Namespace: CubaDevOps\Flexi\Test\Infrastructure\Ui
-          → CubaDevOps\Flexi\Test\Modules\Ui\Infrastructure\Ui
+  Namespace: Flexi\Test\Infrastructure\Ui
+          → Flexi\Test\Modules\Ui\Infrastructure\Ui
 ```
 
 ### 2. Configuración del Módulo
@@ -62,14 +62,14 @@ modules/Ui/tests/Infrastructure/Ui/HtmlRenderTest.php
     {
       "name": "html_render",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Modules\\Ui\\Infrastructure\\Ui\\HtmlRender",
+        "name": "Flexi\\Modules\\Ui\\Infrastructure\\Ui\\HtmlRender",
         "arguments": ["@Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface"]
       }
     },
     {
       "name": "Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Modules\\Ui\\Infrastructure\\Ui\\TemplateLocator",
+        "name": "Flexi\\Modules\\Ui\\Infrastructure\\Ui\\TemplateLocator",
         "arguments": []
       }
     }
@@ -84,14 +84,14 @@ modules/Ui/tests/Infrastructure/Ui/HtmlRenderTest.php
 - {
 -   "name": "html_render",
 -   "class": {
--     "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\HtmlRender",
+-     "name": "Flexi\\Infrastructure\\Ui\\HtmlRender",
 -     "arguments": ["@Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface"]
 -   }
 - },
 - {
 -   "name": "Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface",
 -   "class": {
--     "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\TemplateLocator",
+-     "name": "Flexi\\Infrastructure\\Ui\\TemplateLocator",
 -     "arguments": []
 -   }
 - },
@@ -107,8 +107,8 @@ modules/Ui/tests/Infrastructure/Ui/HtmlRenderTest.php
 
 #### `tests/Infrastructure/DependencyInjection/ContainerTest.php`
 ```diff
-- use CubaDevOps\Flexi\Infrastructure\Ui\HtmlRender;
-+ use CubaDevOps\Flexi\Modules\Ui\Infrastructure\Ui\HtmlRender;
+- use Flexi\Infrastructure\Ui\HtmlRender;
++ use Flexi\Modules\Ui\Infrastructure\Ui\HtmlRender;
 ```
 
 #### Otros Archivos

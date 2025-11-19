@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Factories;
+namespace Flexi\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
+use Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
+use Flexi\Domain\Interfaces\ModuleDetectorInterface;
 use Flexi\Contracts\Interfaces\LoggerInterface;
 
 /**

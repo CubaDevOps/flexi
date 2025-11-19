@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Application\Commands;
+namespace Flexi\Test\Application\Commands;
 
-use CubaDevOps\Flexi\Application\Commands\DeactivateModuleCommand;
+use Flexi\Application\Commands\DeactivateModuleCommand;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use PHPUnit\Framework\TestCase;
 

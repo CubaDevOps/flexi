@@ -233,7 +233,7 @@ use Flexi\Contracts\ValueObjects\Operator;
 use Flexi\Contracts\ValueObjects\Order;
 
 // Sin necesidad de importar del core!
-// No más: use CubaDevOps\Flexi\Infrastructure\Utils\...
+// No más: use Flexi\Infrastructure\Utils\...
 ```
 
 ---

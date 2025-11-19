@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Application\UseCase;
+namespace Flexi\Test\Application\UseCase;
 
-use CubaDevOps\Flexi\Application\Commands\InstallModuleCommand;
-use CubaDevOps\Flexi\Application\UseCase\InstallModule;
+use Flexi\Application\Commands\InstallModuleCommand;
+use Flexi\Application\UseCase\InstallModule;
 use Flexi\Contracts\Interfaces\HandlerInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;
 use PHPUnit\Framework\TestCase;

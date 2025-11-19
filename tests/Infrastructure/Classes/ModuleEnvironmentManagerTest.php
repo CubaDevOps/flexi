@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Tests\Infrastructure\Classes;
+namespace Flexi\Tests\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Infrastructure\Classes\ModuleEnvironmentManager;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\Configuration\ArrayConfiguration;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\Modules\ModuleEnvironmentManagerAlwaysHas;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\Modules\ModuleEnvironmentManagerRemovalFails;
+use Flexi\Infrastructure\Classes\ModuleEnvironmentManager;
+use Flexi\Test\TestData\TestDoubles\Configuration\ArrayConfiguration;
+use Flexi\Test\TestData\TestDoubles\Modules\ModuleEnvironmentManagerAlwaysHas;
+use Flexi\Test\TestData\TestDoubles\Modules\ModuleEnvironmentManagerRemovalFails;
 use PHPUnit\Framework\TestCase;
 
 class ModuleEnvironmentManagerTest extends TestCase

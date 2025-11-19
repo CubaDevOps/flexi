@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
+namespace Flexi\Test\Infrastructure\DependencyInjection;
 
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ListenersDefinitionParser;
+use Flexi\Infrastructure\DependencyInjection\ListenersDefinitionParser;
 use Flexi\Contracts\Interfaces\CacheInterface;
 use PHPUnit\Framework\TestCase;
 

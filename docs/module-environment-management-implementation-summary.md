@@ -153,13 +153,13 @@ AUTH_SESSION_COOKIE_SECURE=false
 ### Servicios Agregados (`services.json`)
 ```json
 {
-  "name": "CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleEnvironmentManagerInterface",
-  "alias": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager"
+  "name": "Flexi\\Infrastructure\\Interfaces\\ModuleEnvironmentManagerInterface",
+  "alias": "Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager"
 },
 {
-  "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager",
+  "name": "Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager",
   "class": {
-    "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager",
+    "name": "Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager",
     "arguments": ["@Flexi\\Contracts\\Interfaces\\ConfigurationInterface"]
   }
 }
@@ -168,9 +168,9 @@ AUTH_SESSION_COOKIE_SECURE=false
 ### Comandos Agregados (`commands.json`)
 ```json
 {
-  "id": "CubaDevOps\\Flexi\\Application\\Commands\\UpdateModuleEnvironmentCommand",
+  "id": "Flexi\\Application\\Commands\\UpdateModuleEnvironmentCommand",
   "cli_alias": "modules:env-update",
-  "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\UpdateModuleEnvironment"
+  "handler": "Flexi\\Application\\UseCase\\UpdateModuleEnvironment"
 }
 ```
 

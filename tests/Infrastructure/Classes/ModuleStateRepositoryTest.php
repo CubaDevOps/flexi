@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Classes;
+namespace Flexi\Test\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleState;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
-use CubaDevOps\Flexi\Infrastructure\Classes\ModuleStateRepository;
+use Flexi\Domain\ValueObjects\ModuleState;
+use Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Infrastructure\Classes\ModuleStateRepository;
 use PHPUnit\Framework\TestCase;
 
 final class ModuleStateRepositoryTest extends TestCase

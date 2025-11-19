@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Classes;
+namespace Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
-use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
-use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
+use Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
+use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ConfigurationType;
 use Flexi\Contracts\Classes\Traits\FileHandlerTrait;
 
 /**

@@ -385,7 +385,7 @@ modules/Auth/
 Si `EventListener.php` se mueve a Contracts:
 ```php
 // Antes
-use CubaDevOps\Flexi\Domain\Events\EventListener;
+use Flexi\Domain\Events\EventListener;
 
 // Después
 use Flexi\Contracts\Classes\EventListener;
@@ -402,10 +402,10 @@ use Flexi\Contracts\Classes\EventListener;
 Si ValueObjects de DI se mueven:
 ```php
 // Antes
-use CubaDevOps\Flexi\Domain\ValueObjects\Operator;
+use Flexi\Domain\ValueObjects\Operator;
 
 // Después
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ValueObjects\Operator;
+use Flexi\Infrastructure\DependencyInjection\ValueObjects\Operator;
 ```
 
 **Archivos a actualizar:**

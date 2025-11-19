@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Domain\Events;
+namespace Flexi\Test\Domain\Events;
 
-use CubaDevOps\Flexi\Domain\Events\RouteNotFoundEvent;
+use Flexi\Domain\Events\RouteNotFoundEvent;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

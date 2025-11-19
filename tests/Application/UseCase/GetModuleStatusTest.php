@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Application\UseCase;
+namespace Flexi\Test\Application\UseCase;
 
-use CubaDevOps\Flexi\Application\Commands\ModuleStatusCommand;
-use CubaDevOps\Flexi\Application\UseCase\GetModuleStatus;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleState;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use Flexi\Application\Commands\ModuleStatusCommand;
+use Flexi\Application\UseCase\GetModuleStatus;
+use Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ModuleState;
+use Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Domain\Interfaces\ModuleDetectorInterface;
+use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
 use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

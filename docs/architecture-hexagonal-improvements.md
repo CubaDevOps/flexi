@@ -193,16 +193,16 @@ Infrastructure/
 
 Si algún módulo externo estaba importando:
 ```php
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
-use CubaDevOps\Flexi\Infrastructure\Factories\ModuleDetectorInterface;
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
+use Flexi\Infrastructure\Factories\ModuleDetectorInterface;
+use Flexi\Application\Commands\NotFoundCommand;
 ```
 
 Debe actualizar a:
 ```php
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
-use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
+use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use Flexi\Domain\Interfaces\ModuleDetectorInterface;
+use Flexi\Domain\Commands\NotFoundCommand;
 ```
 
 ## Conclusión

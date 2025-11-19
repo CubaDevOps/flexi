@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Classes;
+namespace Flexi\Test\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
-use CubaDevOps\Flexi\Infrastructure\Classes\ModuleCacheManager;
+use Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Infrastructure\Classes\ModuleCacheManager;
 use PHPUnit\Framework\TestCase;
 
 final class ModuleCacheManagerTest extends TestCase

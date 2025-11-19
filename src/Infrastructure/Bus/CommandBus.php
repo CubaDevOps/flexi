@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Bus;
+namespace Flexi\Infrastructure\Bus;
 
 use Flexi\Contracts\Interfaces\BusInterface;
 use Flexi\Contracts\Interfaces\DTOInterface;
@@ -10,8 +10,8 @@ use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
-use CubaDevOps\Flexi\Domain\Events\Event;
+use Flexi\Domain\Commands\NotFoundCommand;
+use Flexi\Domain\Events\Event;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

@@ -8,9 +8,9 @@ In the previous implementation, the `Route` class (domain) had the responsibilit
 
 ```php
 // src/Domain/Classes/Route.php
-namespace CubaDevOps\Flexi\Domain\Classes;
+namespace Flexi\Domain\Classes;
 
-use CubaDevOps\Flexi\Infrastructure\Classes\HttpHandler; // ❌ Domain depends on Infrastructure
+use Flexi\Infrastructure\Classes\HttpHandler; // ❌ Domain depends on Infrastructure
 use Psr\Container\ContainerInterface;
 
 class Route
@@ -54,7 +54,7 @@ class Route
 
 ```php
 // src/Domain/Classes/Route.php
-namespace CubaDevOps\Flexi\Domain\Classes;
+namespace Flexi\Domain\Classes;
 
 class Route // ✅ No infrastructure dependencies
 {

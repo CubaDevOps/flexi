@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Classes;
+namespace Flexi\Infrastructure\Classes;
 
 use Flexi\Contracts\Interfaces\ConfigurationInterface;
 use Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;

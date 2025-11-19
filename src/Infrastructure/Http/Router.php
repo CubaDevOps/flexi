@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Http;
+namespace Flexi\Infrastructure\Http;
 
 use Flexi\Contracts\Classes\ObjectCollection;
 use Flexi\Contracts\Classes\Traits\CacheKeyGeneratorTrait;
@@ -12,10 +12,10 @@ use Flexi\Contracts\Interfaces\CacheInterface;
 use Flexi\Contracts\Interfaces\CollectionInterface;
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Events\Event;
-use CubaDevOps\Flexi\Domain\Events\RouteNotFoundEvent;
+use Flexi\Domain\Events\Event;
+use Flexi\Domain\Events\RouteNotFoundEvent;
 use Flexi\Contracts\Classes\HttpHandler;
-use CubaDevOps\Flexi\Infrastructure\Http\Route;
+use Flexi\Infrastructure\Http\Route;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

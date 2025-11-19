@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Application\UseCase;
+namespace Flexi\Test\Application\UseCase;
 
-use CubaDevOps\Flexi\Application\Commands\ListModulesCommand;
-use CubaDevOps\Flexi\Application\UseCase\ListModules;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
+use Flexi\Application\Commands\ListModulesCommand;
+use Flexi\Application\UseCase\ListModules;
+use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use Flexi\Domain\Interfaces\ModuleDetectorInterface;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\HandlerInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;
@@ -98,10 +98,10 @@ class ListModulesTest extends TestCase
         );
 
         // Create ModuleInfo mock
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             $moduleName,
             'cubadevops/flexi-module-test',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $modulePath,
             '1.0.0',
             false,
@@ -169,10 +169,10 @@ class ListModulesTest extends TestCase
         mkdir($vendorModulePath);
 
         // Create ModuleInfo mock
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             $moduleName,
             'cubadevops/flexi-module-auth',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::vendor(), // Vendor type for installed module
+            \Flexi\Domain\ValueObjects\ModuleType::vendor(), // Vendor type for installed module
             $modulePath,
             '2.0.0',
             false,
@@ -213,10 +213,10 @@ class ListModulesTest extends TestCase
         mkdir($modulePath);
 
         // Create ModuleInfo mock for broken module (no composer.json)
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             $moduleName,
             'unknown',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $modulePath,
             'unknown',
             false,
@@ -298,10 +298,10 @@ class ListModulesTest extends TestCase
         $moduleNames = ['Auth', 'Cache', 'Logging'];
 
         foreach ($moduleNames as $name) {
-            $modules[] = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            $modules[] = new \Flexi\Domain\ValueObjects\ModuleInfo(
                 $name,
                 'cubadevops/flexi-module-' . strtolower($name),
-                \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::vendor(),
+                \Flexi\Domain\ValueObjects\ModuleType::vendor(),
                 '/vendor/cubadevops/flexi-module-' . strtolower($name),
                 '1.0.0',
                 false,
@@ -365,10 +365,10 @@ class ListModulesTest extends TestCase
         );
 
         // Create ModuleInfo mock for minimal module
-        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $moduleInfo = new \Flexi\Domain\ValueObjects\ModuleInfo(
             $moduleName,
             'cubadevops/flexi-module-minimal',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            \Flexi\Domain\ValueObjects\ModuleType::local(),
             $modulePath,
             'unknown',
             false,
@@ -416,10 +416,10 @@ class ListModulesTest extends TestCase
 
     public function testHandleIncludesConflictDetailsAndStatistics(): void
     {
-        $analytics = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+        $analytics = new \Flexi\Domain\ValueObjects\ModuleInfo(
             'analytics',
             'cubadevops/flexi-analytics',
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::mixed(),
+            \Flexi\Domain\ValueObjects\ModuleType::mixed(),
             '/modules/analytics',
             '3.0.0',
             true,
@@ -444,10 +444,10 @@ class ListModulesTest extends TestCase
             ->method('getModuleStatistics')
             ->willReturn(['local_only' => 0, 'conflicts' => 1]);
 
-        $moduleState = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleState(
+        $moduleState = new \Flexi\Domain\ValueObjects\ModuleState(
             'analytics',
             false,
-            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::mixed(),
+            \Flexi\Domain\ValueObjects\ModuleType::mixed(),
             new \DateTimeImmutable('2025-01-10T11:30:00+00:00'),
             'ops'
         );

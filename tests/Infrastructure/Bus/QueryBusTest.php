@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
+namespace Flexi\Test\Infrastructure\Bus;
 
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
-use CubaDevOps\Flexi\Test\TestData\Queries\TestQuery;
-use CubaDevOps\Flexi\Test\TestData\Handlers\TestQueryHandler;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
+use Flexi\Domain\Commands\NotFoundCommand;
+use Flexi\Test\TestData\Queries\TestQuery;
+use Flexi\Test\TestData\Handlers\TestQueryHandler;
+use Flexi\Infrastructure\Bus\QueryBus;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

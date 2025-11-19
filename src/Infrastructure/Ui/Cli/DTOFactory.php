@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
+namespace Flexi\Infrastructure\Ui\Cli;
 
 use Flexi\Contracts\Interfaces\BusInterface;
 use Flexi\Contracts\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
+use Flexi\Domain\Commands\NotFoundCommand;
 
 class DTOFactory
 {

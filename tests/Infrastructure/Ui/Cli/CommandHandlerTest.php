@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
+namespace Flexi\Test\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\DTOFactory;
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\CommandHandler;
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\CliInput;
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
+use Flexi\Domain\Commands\NotFoundCommand;
+use Flexi\Infrastructure\Ui\Cli\DTOFactory;
+use Flexi\Infrastructure\Ui\Cli\CommandHandler;
+use Flexi\Infrastructure\Ui\Cli\CliInput;
+use Flexi\Infrastructure\Bus\CommandBus;
 use Flexi\Contracts\Interfaces\BusInterface;
 use Flexi\Contracts\Interfaces\CliDTOInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;
@@ -109,7 +109,7 @@ class CommandHandlerTest extends TestCase
         /** @var CommandBus|MockObject $commandBus */
         $commandBus = $this->createMock(CommandBus::class);
         $commandBus->method('hasHandler')->willReturn(true);
-        $commandBus->method('getDtoClassFromAlias')->willReturn('CubaDevOps\Flexi\Test\TestData\Commands\TestCommand');
+        $commandBus->method('getDtoClassFromAlias')->willReturn('Flexi\Test\TestData\Commands\TestCommand');
         $commandBus->method('execute')->willReturn($message);
 
         $input = new CliInput('test-command', ['param' => 'value']);
@@ -187,7 +187,7 @@ class CommandHandlerTest extends TestCase
         /** @var CommandBus|MockObject $commandBus */
         $commandBus = $this->createMock(CommandBus::class);
         $commandBus->method('hasHandler')->willReturn(true);
-        $commandBus->method('getDtoClassFromAlias')->willReturn('CubaDevOps\\Flexi\\Test\\TestData\\Commands\\TestCommand');
+        $commandBus->method('getDtoClassFromAlias')->willReturn('Flexi\\Test\\TestData\\Commands\\TestCommand');
         $commandBus->method('execute')->willReturn($message);
 
         $complexArgs = [
@@ -258,7 +258,7 @@ class CommandHandlerTest extends TestCase
         /** @var CommandBus&MockObject $commandBus1 */
         $commandBus1 = $this->createMock(CommandBus::class);
         $commandBus1->method('hasHandler')->willReturn(true);
-        $commandBus1->method('getDtoClassFromAlias')->willReturn('CubaDevOps\Flexi\Test\TestData\Commands\TestCommand');
+        $commandBus1->method('getDtoClassFromAlias')->willReturn('Flexi\Test\TestData\Commands\TestCommand');
         $commandBus1->method('execute')->willReturn($message1);
 
         $input1 = new CliInput('numeric-command', ['count' => 42, 'timeout' => 30]);
@@ -275,7 +275,7 @@ class CommandHandlerTest extends TestCase
         /** @var CommandBus&MockObject $commandBus2 */
         $commandBus2 = $this->createMock(CommandBus::class);
         $commandBus2->method('hasHandler')->willReturn(true);
-        $commandBus2->method('getDtoClassFromAlias')->willReturn('CubaDevOps\Flexi\Test\TestData\Commands\TestCommand');
+        $commandBus2->method('getDtoClassFromAlias')->willReturn('Flexi\Test\TestData\Commands\TestCommand');
         $commandBus2->method('execute')->willReturn($message2);
 
         $input2 = new CliInput('flag-command', ['verbose' => true, 'debug' => false]);
@@ -298,7 +298,7 @@ class CommandHandlerTest extends TestCase
         /** @var CommandBus&MockObject $commandBus */
         $commandBus = $this->createMock(CommandBus::class);
         $commandBus->method('hasHandler')->willReturn(true);
-        $commandBus->method('getDtoClassFromAlias')->willReturn('CubaDevOps\Flexi\Test\TestData\Commands\TestCommand');
+        $commandBus->method('getDtoClassFromAlias')->willReturn('Flexi\Test\TestData\Commands\TestCommand');
         $commandBus->method('execute')->willReturn($emptyMessage);
 
         $input = new CliInput('empty-return-command', []);
@@ -393,7 +393,7 @@ class CommandHandlerTest extends TestCase
         /** @var CommandBus&MockObject $commandBus */
         $commandBus = $this->createMock(CommandBus::class);
         $commandBus->method('hasHandler')->willReturn(true);
-        $commandBus->method('getDtoClassFromAlias')->willReturn('CubaDevOps\Flexi\Test\TestData\Commands\TestCommand');
+        $commandBus->method('getDtoClassFromAlias')->willReturn('Flexi\Test\TestData\Commands\TestCommand');
         $commandBus->method('execute')->willReturn($message);
 
         // Create CommandHandler instance - this should cover constructor
@@ -419,7 +419,7 @@ class CommandHandlerTest extends TestCase
 
         // Mock that handler exists for 'module-info' command
         $commandBus->method('hasHandler')->with('module-info')->willReturn(true);
-        $commandBus->method('getDtoClassFromAlias')->with('module-info')->willReturn('CubaDevOps\\Flexi\\Application\\Commands\\ModuleInfoCommand');
+        $commandBus->method('getDtoClassFromAlias')->with('module-info')->willReturn('Flexi\\Application\\Commands\\ModuleInfoCommand');
 
         // Create input with help flag enabled
         $input = new CliInput('module-info', ['module' => 'test-module'], 'command', true);

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Tests\Infrastructure\Classes;
+namespace Flexi\Tests\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
+use Flexi\Infrastructure\Classes\ConfigurationRepository;
 use PHPUnit\Framework\TestCase;
 
 class ConfigurationRepositoryTest extends TestCase

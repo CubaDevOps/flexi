@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
+namespace Flexi\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
+use Flexi\Domain\Commands\NotFoundCommand;
 use Flexi\Contracts\Interfaces\CliDTOInterface;
 use Flexi\Contracts\Interfaces\BusInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;
 use Psr\Container\ContainerInterface;
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
+use Flexi\Infrastructure\Bus\CommandBus;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

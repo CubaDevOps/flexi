@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Factories;
+namespace Flexi\Test\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
-use CubaDevOps\Flexi\Infrastructure\Factories\VendorModuleDetector;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
+use Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Infrastructure\Factories\VendorModuleDetector;
+use Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 final class VendorModuleDetectorTest extends TestCase

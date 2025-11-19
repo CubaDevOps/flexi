@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Domain\ValueObjects;
+namespace Flexi\Test\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleState;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Domain\ValueObjects\ModuleState;
+use Flexi\Domain\ValueObjects\ModuleType;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 

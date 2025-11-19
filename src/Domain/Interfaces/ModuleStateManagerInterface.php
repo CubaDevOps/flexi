@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Domain\Interfaces;
+namespace Flexi\Domain\Interfaces;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleState;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Domain\ValueObjects\ModuleState;
+use Flexi\Domain\ValueObjects\ModuleType;
 
 /**
  * Interface for managing the activation state of modules.

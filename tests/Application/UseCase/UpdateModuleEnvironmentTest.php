@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Application\UseCase;
+namespace Flexi\Test\Application\UseCase;
 
-use CubaDevOps\Flexi\Application\Commands\UpdateModuleEnvironmentCommand;
-use CubaDevOps\Flexi\Application\UseCase\UpdateModuleEnvironment;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
-use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleEnvironmentManagerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use Flexi\Application\Commands\UpdateModuleEnvironmentCommand;
+use Flexi\Application\UseCase\UpdateModuleEnvironment;
+use Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Domain\Interfaces\ModuleEnvironmentManagerInterface;
+use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

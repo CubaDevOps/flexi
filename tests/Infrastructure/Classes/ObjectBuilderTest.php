@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Classes;
+namespace Flexi\Test\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
-use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
-use CubaDevOps\Flexi\Infrastructure\Classes\InMemoryCache;
-use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\HasNoConstructor;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\HasUnresolvableParameter;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\IsNotInstantiable;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\HasUnresolvableDependency;
+use Flexi\Infrastructure\Classes\Configuration;
+use Flexi\Infrastructure\Classes\ObjectBuilder;
+use Flexi\Infrastructure\Classes\InMemoryCache;
+use Flexi\Infrastructure\Factories\ContainerFactory;
+use Flexi\Test\TestData\TestDoubles\HasNoConstructor;
+use Flexi\Test\TestData\TestDoubles\HasUnresolvableParameter;
+use Flexi\Test\TestData\TestDoubles\IsNotInstantiable;
+use Flexi\Test\TestData\TestDoubles\HasUnresolvableDependency;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 

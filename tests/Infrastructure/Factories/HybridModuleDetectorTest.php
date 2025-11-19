@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Factories;
+namespace Flexi\Test\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
-use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
-use CubaDevOps\Flexi\Infrastructure\Factories\LocalModuleDetector;
-use CubaDevOps\Flexi\Infrastructure\Factories\VendorModuleDetector;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
+use Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Infrastructure\Factories\LocalModuleDetector;
+use Flexi\Infrastructure\Factories\VendorModuleDetector;
+use Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 final class HybridModuleDetectorTest extends TestCase
@@ -184,7 +184,7 @@ final class HybridModuleDetectorTest extends TestCase
 final class NullCacheManager implements ModuleCacheManagerInterface
 {
     public bool $valid = false;
-    /** @var array<int, \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo> */
+    /** @var array<int, \Flexi\Domain\ValueObjects\ModuleInfo> */
     public array $modules = [];
 
     public function getCachedModules(): array

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Domain\ValueObjects;
+namespace Flexi\Test\Domain\ValueObjects;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
+use Flexi\Domain\ValueObjects\ServiceType;
 use Flexi\Contracts\Interfaces\ValueObjectInterface;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;

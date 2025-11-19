@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Application\Services;
+namespace Flexi\Application\Services;
 
 /**
  * Interface for executing system commands.

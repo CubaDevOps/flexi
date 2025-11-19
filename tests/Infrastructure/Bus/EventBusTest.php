@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Bus;
+namespace Flexi\Infrastructure\Bus;
 
 final class EventBusTestOverrides
 {
@@ -62,15 +62,15 @@ function fclose($resource): bool
     return true;
 }
 
-namespace CubaDevOps\Flexi\Tests\Infrastructure\Bus;
+namespace Flexi\Tests\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
-use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
-use CubaDevOps\Flexi\Infrastructure\Bus\EventBusTestOverrides;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\Bus\GenericMessage;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\Bus\RecordingListener;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\Bus\SampleEvent;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\Bus\SecondaryListener;
+use Flexi\Domain\Commands\NotFoundCommand;
+use Flexi\Infrastructure\Bus\EventBus;
+use Flexi\Infrastructure\Bus\EventBusTestOverrides;
+use Flexi\Test\TestData\TestDoubles\Bus\GenericMessage;
+use Flexi\Test\TestData\TestDoubles\Bus\RecordingListener;
+use Flexi\Test\TestData\TestDoubles\Bus\SampleEvent;
+use Flexi\Test\TestData\TestDoubles\Bus\SecondaryListener;
 use Flexi\Contracts\Interfaces\ConfigurationRepositoryInterface;
 use Flexi\Contracts\Interfaces\EventInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;

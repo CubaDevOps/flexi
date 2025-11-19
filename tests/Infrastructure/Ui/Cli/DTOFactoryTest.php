@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
+namespace Flexi\Test\Infrastructure\Ui\Cli;
 
 use Flexi\Contracts\Interfaces\BusInterface;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyDTO;
-use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\DTOFactory;
+use Flexi\Test\TestData\TestDoubles\DummyDTO;
+use Flexi\Domain\Commands\NotFoundCommand;
+use Flexi\Infrastructure\Ui\Cli\DTOFactory;
 use PHPUnit\Framework\TestCase;
 
 class DTOFactoryTest extends TestCase

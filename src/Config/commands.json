@@ -1,39 +1,39 @@
 {
   "handlers": [
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ListModulesCommand",
+      "id": "Flexi\\Application\\Commands\\ListModulesCommand",
       "cli_alias": "modules:list",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ListModules"
+      "handler": "Flexi\\Application\\UseCase\\ListModules"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ModuleInfoCommand",
+      "id": "Flexi\\Application\\Commands\\ModuleInfoCommand",
       "cli_alias": "modules:info",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\GetModuleInfo"
+      "handler": "Flexi\\Application\\UseCase\\GetModuleInfo"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ValidateModulesCommand",
+      "id": "Flexi\\Application\\Commands\\ValidateModulesCommand",
       "cli_alias": "modules:validate",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ValidateModules"
+      "handler": "Flexi\\Application\\UseCase\\ValidateModules"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ActivateModuleCommand",
+      "id": "Flexi\\Application\\Commands\\ActivateModuleCommand",
       "cli_alias": "modules:activate",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ActivateModule"
+      "handler": "Flexi\\Application\\UseCase\\ActivateModule"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\DeactivateModuleCommand",
+      "id": "Flexi\\Application\\Commands\\DeactivateModuleCommand",
       "cli_alias": "modules:deactivate",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\DeactivateModule"
+      "handler": "Flexi\\Application\\UseCase\\DeactivateModule"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ModuleStatusCommand",
+      "id": "Flexi\\Application\\Commands\\ModuleStatusCommand",
       "cli_alias": "modules:status",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\GetModuleStatus"
+      "handler": "Flexi\\Application\\UseCase\\GetModuleStatus"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\UpdateModuleEnvironmentCommand",
+      "id": "Flexi\\Application\\Commands\\UpdateModuleEnvironmentCommand",
       "cli_alias": "modules:env-update",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\UpdateModuleEnvironment"
+      "handler": "Flexi\\Application\\UseCase\\UpdateModuleEnvironment"
     }
   ]
 }

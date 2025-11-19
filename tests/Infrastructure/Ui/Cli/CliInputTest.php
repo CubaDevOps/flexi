@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
+namespace Flexi\Test\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\CliInput;
+use Flexi\Infrastructure\Ui\Cli\CliInput;
 use PHPUnit\Framework\TestCase;
 
 class CliInputTest extends TestCase

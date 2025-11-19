@@ -188,16 +188,16 @@ In `src/Config/services.json`:
 {
   "name": "html_render",
   "class": {
-    "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\HtmlRender",
+    "name": "Flexi\\Infrastructure\\Ui\\HtmlRender",
     "arguments": [
-      "@CubaDevOps\\Flexi\\Domain\\Interfaces\\TemplateLocatorInterface"
+      "@Flexi\\Domain\\Interfaces\\TemplateLocatorInterface"
     ]
   }
 },
 {
-  "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\TemplateLocatorInterface",
+  "name": "Flexi\\Domain\\Interfaces\\TemplateLocatorInterface",
   "class": {
-    "name": "CubaDevOps\\Flexi\\Infrastructure\\Ui\\TemplateLocator",
+    "name": "Flexi\\Infrastructure\\Ui\\TemplateLocator",
     "arguments": []
   }
 }
@@ -230,7 +230,7 @@ Then register in `services.json`:
 
 ```json
 {
-  "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\TemplateLocatorInterface",
+  "name": "Flexi\\Domain\\Interfaces\\TemplateLocatorInterface",
   "class": {
     "name": "YourNamespace\\CustomTemplateLocator",
     "arguments": []

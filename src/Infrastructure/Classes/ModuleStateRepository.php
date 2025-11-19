@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Classes;
+namespace Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Domain\ValueObjects\ModuleState;
+use Flexi\Domain\ValueObjects\ModuleState;
 use DateTimeImmutable;
 
 /**

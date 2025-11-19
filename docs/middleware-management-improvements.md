@@ -99,7 +99,7 @@ Implement the Template Method pattern in `HttpHandler` to automatically manage t
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Classes;
+namespace Flexi\Infrastructure\Classes;
 
 use GuzzleHttp\Psr7\HttpFactory;
 use Psr\Http\Message\RequestFactoryInterface;

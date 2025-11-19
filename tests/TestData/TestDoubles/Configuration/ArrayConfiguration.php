@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\TestData\TestDoubles\Configuration;
+namespace Flexi\Test\TestData\TestDoubles\Configuration;
 
 use Flexi\Contracts\Interfaces\ConfigurationInterface;
 use function sprintf;
-use CubaDevOps\Flexi\Test\TestData\TestDoubles\Configuration\ConfigurationNotFound;
+use Flexi\Test\TestData\TestDoubles\Configuration\ConfigurationNotFound;
 
 final class ArrayConfiguration implements ConfigurationInterface
 {

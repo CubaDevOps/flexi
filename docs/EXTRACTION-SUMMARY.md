@@ -20,7 +20,7 @@ modules/Logging/
 ```
 
 **Purpose:** Generic file-based log persistence
-- Namespace: `CubaDevOps\Flexi\Modules\Logging\Infrastructure\Persistence`
+- Namespace: `Flexi\Modules\Logging\Infrastructure\Persistence`
 - Service binding: `LogRepositoryInterface` → `InFileLogRepository`
 - Used by: `PsrLogger` in Contracts
 - Extensible: Add `DatabaseLogRepository`, `S3LogRepository`, etc.
@@ -35,7 +35,7 @@ modules/Session/
 ```
 
 **Purpose:** PHP native session storage wrapper
-- Namespace: `CubaDevOps\Flexi\Modules\Session\Infrastructure\Session`
+- Namespace: `Flexi\Modules\Session\Infrastructure\Session`
 - Service binding: `SessionStorageInterface` → `NativeSessionStorage`
 - Alias: `session` (for backwards compatibility)
 - Features: ArrayAccess interface, error handling, PSR-3 logging

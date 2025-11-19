@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Application\UseCase;
+namespace Flexi\Application\UseCase;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\ModuleEnvironmentManagerInterface;
-use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use Flexi\Domain\Interfaces\ModuleEnvironmentManagerInterface;
+use Flexi\Infrastructure\Factories\HybridModuleDetector;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;

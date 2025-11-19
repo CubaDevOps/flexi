@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Factories;
+namespace Flexi\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\RoutesDefinitionParser;
-use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
+use Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
+use Flexi\Infrastructure\DependencyInjection\RoutesDefinitionParser;
+use Flexi\Domain\ValueObjects\ConfigurationType;
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Infrastructure\Http\Router;
+use Flexi\Infrastructure\Http\Router;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 

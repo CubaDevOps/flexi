@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\DependencyInjection;
+namespace Flexi\Infrastructure\DependencyInjection;
 
 use Flexi\Contracts\Classes\Traits\FileHandlerTrait;
 use Flexi\Contracts\Classes\Traits\JsonFileReader;
 use Flexi\Contracts\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Infrastructure\Http\Route;
+use Flexi\Infrastructure\Http\Route;
 
 class RoutesDefinitionParser
 {

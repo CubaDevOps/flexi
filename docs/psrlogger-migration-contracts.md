@@ -55,7 +55,7 @@ Created new file: `contracts/src/Classes/PsrLogger.php`
 **a) Dependency Injection (src/Config/services.json)**
 ```json
 BEFORE:
-"name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\PsrLogger"
+"name": "Flexi\\Infrastructure\\Classes\\PsrLogger"
 
 AFTER:
 "name": "Flexi\\Contracts\\Classes\\PsrLogger"

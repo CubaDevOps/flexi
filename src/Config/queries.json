@@ -1,7 +1,5 @@
 {
   "handlers": [
-    {
-      "glob": "./modules/*/Config/queries.json"
-    }
+
   ]
 }

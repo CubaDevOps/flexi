@@ -28,8 +28,8 @@ composer update  # Para instalar el paquete contracts
 #### Antes (actual):
 ```php
 // modules/Home/Application/RenderHome.php
-use CubaDevOps\Flexi\Domain\Interfaces\DTOInterface;
-use CubaDevOps\Flexi\Domain\Interfaces\HandlerInterface;
+use Flexi\Domain\Interfaces\DTOInterface;
+use Flexi\Domain\Interfaces\HandlerInterface;
 
 class RenderHome implements HandlerInterface
 {
@@ -62,9 +62,9 @@ class RenderHome implements HandlerInterface
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Modules\\Home\\Application\\RenderHome",
+      "name": "Flexi\\Modules\\Home\\Application\\RenderHome",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Modules\\Home\\Application\\RenderHome",
+        "name": "Flexi\\Modules\\Home\\Application\\RenderHome",
         "arguments": ["@template_engine"]
       }
     }
@@ -77,8 +77,8 @@ class RenderHome implements HandlerInterface
 {
   "handlers": [
     {
-      "id": "CubaDevOps\\Flexi\\Modules\\Home\\Domain\\HomePageDTO",
-      "handler": "CubaDevOps\\Flexi\\Modules\\Home\\Application\\RenderHome"
+      "id": "Flexi\\Modules\\Home\\Domain\\HomePageDTO",
+      "handler": "Flexi\\Modules\\Home\\Application\\RenderHome"
     }
   ]
 }

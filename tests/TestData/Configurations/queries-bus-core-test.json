@@ -1,9 +1,9 @@
 {
   "handlers": [
     {
-      "id": "CubaDevOps\\Flexi\\Test\\TestData\\Queries\\TestQuery",
+      "id": "Flexi\\Test\\TestData\\Queries\\TestQuery",
       "cli_alias": "test-query",
-      "handler": "CubaDevOps\\Flexi\\Test\\TestData\\Handlers\\TestQueryHandler"
+      "handler": "Flexi\\Test\\TestData\\Handlers\\TestQueryHandler"
     }
   ]
 }

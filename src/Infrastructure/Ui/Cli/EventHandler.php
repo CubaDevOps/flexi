@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
+namespace Flexi\Infrastructure\Ui\Cli;
 
 use Flexi\Contracts\Interfaces\EventBusInterface;
-use CubaDevOps\Flexi\Domain\Events\Event;
+use Flexi\Domain\Events\Event;
 
 class EventHandler
 {

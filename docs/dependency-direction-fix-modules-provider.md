@@ -164,7 +164,7 @@ class EventBus
 }
 
 // DESPUÉS
-use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
+use Flexi\Infrastructure\Classes\InstalledModulesFilter;
 
 class EventBus
 {
@@ -193,7 +193,7 @@ class EventBus
 Los módulos pueden usar `InstalledModulesProviderTrait` para verificar dependencias:
 
 ```php
-namespace CubaDevOps\Flexi\Modules\MyModule;
+namespace Flexi\Modules\MyModule;
 
 use Flexi\Contracts\Classes\Traits\InstalledModulesProviderTrait;
 

@@ -110,7 +110,7 @@ class RouteNotFoundListener implements EventListenerInterface
   "listeners": [
     {
       "event": "core.routeNotFound",
-      "handler": "CubaDevOps\\Flexi\\Modules\\ErrorHandling\\Infrastructure\\Listeners\\RouteNotFoundListener"
+      "handler": "Flexi\\Modules\\ErrorHandling\\Infrastructure\\Listeners\\RouteNotFoundListener"
     }
   ]
 }
@@ -121,9 +121,9 @@ class RouteNotFoundListener implements EventListenerInterface
 {
   "services": [
     {
-      "name": "CubaDevOps\\Flexi\\Modules\\ErrorHandling\\Infrastructure\\Listeners\\RouteNotFoundListener",
+      "name": "Flexi\\Modules\\ErrorHandling\\Infrastructure\\Listeners\\RouteNotFoundListener",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Modules\\ErrorHandling\\Infrastructure\\Listeners\\RouteNotFoundListener",
+        "name": "Flexi\\Modules\\ErrorHandling\\Infrastructure\\Listeners\\RouteNotFoundListener",
         "arguments": [
           "@session",
           "@Psr\\Http\\Message\\ResponseFactoryInterface"

@@ -1,0 +1,69 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Flexi\Test\Application\Commands;
+
+use Flexi\Application\Commands\ActivateModuleCommand;
+use Flexi\Contracts\Interfaces\DTOInterface;
+use PHPUnit\Framework\TestCase;
+
+class ActivateModuleCommandTest extends TestCase
+{
+    public function testConstructWithNamedArguments(): void
+    {
+        $command = new ActivateModuleCommand([
+            'module_name' => 'analytics',
+            'modified_by' => 'tester',
+        ]);
+
+        $this->assertInstanceOf(DTOInterface::class, $command);
+        $this->assertTrue($command->isValid());
+        $this->assertSame('analytics', $command->getModuleName());
+        $this->assertSame('tester', $command->getModifiedBy());
+        $this->assertNull($command->getValidationError());
+
+        $expected = [
+            'module_name' => 'analytics',
+            'modified_by' => 'tester',
+        ];
+
+        $this->assertSame($expected, $command->toArray());
+        $this->assertSame($expected['module_name'], $command->get('module_name'));
+        $this->assertSame($expected['modified_by'], $command->get('modified_by'));
+        $this->assertNull($command->get('unknown_key'));
+        $this->assertSame($expected, json_decode((string) $command, true));
+    }
+
+    public function testConstructWithPositionalArguments(): void
+    {
+        $command = new ActivateModuleCommand(['blog']);
+
+        $this->assertSame('blog', $command->getModuleName());
+        $this->assertNull($command->getModifiedBy());
+        $this->assertTrue($command->isValid());
+    }
+
+    public function testInvalidCommandProvidesErrorMessage(): void
+    {
+        $command = new ActivateModuleCommand();
+
+        $this->assertFalse($command->isValid());
+        $this->assertSame('Module name is required', $command->getValidationError());
+        $this->assertFalse(ActivateModuleCommand::validate([]));
+    }
+
+    public function testFromArrayAndStaticValidate(): void
+    {
+        $data = [
+            'module_name' => 'payments',
+            'modified_by' => 'ci-pipeline',
+        ];
+
+        $command = ActivateModuleCommand::fromArray($data);
+
+        $this->assertInstanceOf(ActivateModuleCommand::class, $command);
+        $this->assertTrue(ActivateModuleCommand::validate($data));
+        $this->assertSame($data, $command->toArray());
+    }
+}

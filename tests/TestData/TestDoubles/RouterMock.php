@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\TestData\TestDoubles;
+namespace Flexi\Test\TestData\TestDoubles;
 
-use CubaDevOps\Flexi\Infrastructure\Http\Route;
-use CubaDevOps\Flexi\Infrastructure\Http\Router;
+use Flexi\Infrastructure\Http\Route;
+use Flexi\Infrastructure\Http\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
+namespace Flexi\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
-use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
-use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
-use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
+use Flexi\Infrastructure\Bus\CommandBus;
+use Flexi\Infrastructure\Bus\EventBus;
+use Flexi\Infrastructure\Bus\QueryBus;
+use Flexi\Infrastructure\Classes\Configuration;
+use Flexi\Infrastructure\Classes\ConfigurationRepository;
+use Flexi\Infrastructure\Factories\ContainerFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\ErrorHandler\Debug;
@@ -57,7 +57,7 @@ class ConsoleApplication
      */
     private static function handle(array $argv, bool $debugMode): string
     {
-        $container = ContainerFactory::createDefault('./src/Config/services.json');
+        $container = ContainerFactory::createDefault();
 
         try {
             $input = CliInputParser::parse($argv);

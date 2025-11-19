@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
+namespace Flexi\Infrastructure\Ui\Cli;
 
+use Flexi\Domain\Commands\NotFoundCommand;
 use Flexi\Contracts\Interfaces\CliDTOInterface;
-use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
+use Flexi\Infrastructure\Bus\QueryBus;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -26,6 +27,9 @@ class QueryHandler
     public function handle(CliInput $input): string
     {
         $dto = DTOFactory::fromArray($this->query_bus, $input->getCommandName(), $input->getArguments());
+        if($dto instanceof NotFoundCommand) {
+            return $dto->__toString();
+        }
         if ($dto instanceof CliDTOInterface && $input->showHelp()) {
             return $dto->usage();
         }

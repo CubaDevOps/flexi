@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure;
+namespace Flexi\Test\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 

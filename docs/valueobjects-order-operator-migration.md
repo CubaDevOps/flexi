@@ -50,7 +50,7 @@ contracts/src/ValueObjects/
 **1. Operator.php**
 - **De:** `src/Domain/ValueObjects/Operator.php`
 - **A:** `contracts/src/ValueObjects/Operator.php`
-- **Namespace:** `CubaDevOps\Flexi\Domain\ValueObjects` → `Flexi\Contracts\ValueObjects`
+- **Namespace:** `Flexi\Domain\ValueObjects` → `Flexi\Contracts\ValueObjects`
 
 **Contenido:**
 - Constantes: `OPERATORS` (lista de operadores válidos)
@@ -60,7 +60,7 @@ contracts/src/ValueObjects/
 **2. Order.php**
 - **De:** `src/Domain/ValueObjects/Order.php`
 - **A:** `contracts/src/ValueObjects/Order.php`
-- **Namespace:** `CubaDevOps\Flexi\Domain\ValueObjects` → `Flexi\Contracts\ValueObjects`
+- **Namespace:** `Flexi\Domain\ValueObjects` → `Flexi\Contracts\ValueObjects`
 
 **Contenido:**
 - Constantes: `ASC` ('ASC'), `DESC` ('DESC')

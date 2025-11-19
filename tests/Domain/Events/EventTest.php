@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Domain\Events;
+namespace Flexi\Test\Domain\Events;
 
-use CubaDevOps\Flexi\Domain\Events\Event;
+use Flexi\Domain\Events\Event;
 use PHPUnit\Framework\TestCase;
 
 class EventTest extends TestCase

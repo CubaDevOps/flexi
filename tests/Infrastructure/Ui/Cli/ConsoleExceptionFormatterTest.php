@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
+namespace Flexi\Test\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Infrastructure\Ui\Cli\ConsoleExceptionFormatter;
+use Flexi\Infrastructure\Ui\Cli\ConsoleExceptionFormatter;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 class ConsoleExceptionFormatterTest extends TestCase
 {
@@ -100,6 +101,94 @@ class ConsoleExceptionFormatterTest extends TestCase
             $className = (new \ReflectionClass($exception))->getShortName();
             $this->assertStringContainsString($className, $output);
         }
+    }
+
+    public function testGetExceptionNameReturnsShortClassName(): void
+    {
+        $result = $this->invokeFormatter('getExceptionName', [new \RuntimeException('boom')]);
+
+        $this->assertSame('RuntimeException', $result);
+    }
+
+    public function testFormatStackTraceLimitsFrames(): void
+    {
+        $exception = $this->createExceptionWithDepth(12);
+
+        $output = $this->invokeFormatter('formatStackTrace', [$exception]);
+
+        $this->assertStringContainsString('#9', $output);
+        $this->assertStringNotContainsString('#10', $output);
+        $this->assertStringContainsString('more frames', $output);
+    }
+
+    public function testFormatPreviousExceptionStopsAfterDepthLimit(): void
+    {
+        $level4 = new \RuntimeException('Level 4');
+        $level3 = new \RuntimeException('Level 3', 0, $level4);
+        $level2 = new \RuntimeException('Level 2', 0, $level3);
+        $level1 = new \RuntimeException('Level 1', 0, $level2);
+
+        $output = $this->invokeFormatter('formatPreviousException', [$level1]);
+
+        $this->assertStringContainsString('Level 1', $output);
+        $this->assertStringContainsString('Level 2', $output);
+        $this->assertStringContainsString('Level 3', $output);
+        $this->assertStringContainsString('... (more nested exceptions)', $output);
+        $this->assertStringNotContainsString('Level 4', $output);
+    }
+
+    public function testShortenPathMakesPathRelative(): void
+    {
+        $path = getcwd() . '/sub/dir/file.php';
+
+        $this->assertSame('./sub/dir/file.php', $this->invokeFormatter('shortenPath', [$path]));
+    }
+
+    public function testShortenPathTruncatesVeryLongPaths(): void
+    {
+        $longPath = '/var/www/' . str_repeat('a', 80) . '/file.php';
+
+        $result = $this->invokeFormatter('shortenPath', [$longPath]);
+
+        $this->assertStringStartsWith('...', $result);
+        $this->assertLessThanOrEqual(60, strlen($result));
+    }
+
+    public function testWrapTextSplitsLongLines(): void
+    {
+        $text = str_repeat('LongWords ', 10);
+
+        $result = $this->invokeFormatter('wrapText', [$text, 20]);
+
+        $this->assertStringContainsString(PHP_EOL, $result);
+        $this->assertGreaterThan(1, substr_count($result, PHP_EOL));
+    }
+
+    private function invokeFormatter(string $method, array $arguments = [])
+    {
+        $reflection = new ReflectionClass(ConsoleExceptionFormatter::class);
+        $reflectionMethod = $reflection->getMethod($method);
+        $reflectionMethod->setAccessible(true);
+
+        return $reflectionMethod->invokeArgs(null, $arguments);
+    }
+
+    private function createExceptionWithDepth(int $depth): \RuntimeException
+    {
+        return $this->triggerNestedException($depth);
+    }
+
+    private function triggerNestedException(int $level): \RuntimeException
+    {
+        if ($level <= 0) {
+            try {
+                throw new \RuntimeException('deep stack');
+            } catch (\RuntimeException $exception) {
+                return $exception;
+            }
+        }
+
+        return $this->triggerNestedException($level - 1);
     }
 }
 

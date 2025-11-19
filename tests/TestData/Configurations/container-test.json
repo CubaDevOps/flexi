@@ -3,38 +3,38 @@
     {
       "name": "Flexi\\Contracts\\ConfigurationRepositoryInterface",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ConfigurationRepository",
+        "name": "Flexi\\Infrastructure\\Classes\\ConfigurationRepository",
         "arguments": []
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
+      "name": "Flexi\\Infrastructure\\Classes\\Configuration",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\Configuration",
+        "name": "Flexi\\Infrastructure\\Classes\\Configuration",
         "arguments": [
           "@Flexi\\Contracts\\ConfigurationRepositoryInterface"
         ]
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Test\\TestData\\TestDoubles\\IsNotInstantiable",
+      "name": "Flexi\\Test\\TestData\\TestDoubles\\IsNotInstantiable",
       "factory": {
-        "class": "CubaDevOps\\Flexi\\Test\\TestData\\TestDoubles\\IsNotInstantiable",
+        "class": "Flexi\\Test\\TestData\\TestDoubles\\IsNotInstantiable",
         "method": "getInstance",
         "arguments": []
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Test\\TestData\\TestDoubles\\HasNoConstructor",
+      "name": "Flexi\\Test\\TestData\\TestDoubles\\HasNoConstructor",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Test\\TestData\\TestDoubles\\HasNoConstructor",
+        "name": "Flexi\\Test\\TestData\\TestDoubles\\HasNoConstructor",
         "arguments": []
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Domain\\Classes\\Router",
+      "name": "Flexi\\Domain\\Classes\\Router",
       "factory": {
-        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory",
+        "class": "Flexi\\Infrastructure\\Factories\\RouterFactory",
         "method": "getInstance",
         "arguments": [
           "@Flexi\\Contracts\\SessionStorageInterface",

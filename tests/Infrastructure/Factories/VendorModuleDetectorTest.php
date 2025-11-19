@@ -1,0 +1,251 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Flexi\Test\Infrastructure\Factories;
+
+use Flexi\Domain\ValueObjects\ModuleInfo;
+use Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Infrastructure\Factories\VendorModuleDetector;
+use Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
+use PHPUnit\Framework\TestCase;
+
+final class VendorModuleDetectorTest extends TestCase
+{
+    private string $vendorDir;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->vendorDir = sys_get_temp_dir() . '/vendor_detector_' . uniqid();
+        mkdir($this->vendorDir);
+
+        VendorModuleDetector::clearCache();
+    }
+
+    protected function tearDown(): void
+    {
+        VendorModuleDetector::clearCache();
+        $this->removeDirectory($this->vendorDir);
+
+        parent::tearDown();
+    }
+
+    public function testGetAllModulesReturnsCachedEntriesWhenCacheValid(): void
+    {
+        $cachedModules = [
+            new ModuleInfo(
+                'Analytics',
+                'vendor/analytics',
+                ModuleType::vendor(),
+                '/vendor/analytics',
+                '1.1.0',
+                false,
+                ['type' => 'library']
+            ),
+            new ModuleInfo(
+                'LocalTool',
+                'vendor/local-tool',
+                ModuleType::local(),
+                '/modules/local-tool',
+                'dev-main',
+                false,
+                ['type' => 'local']
+            ),
+        ];
+
+        $cacheManager = new FakeCacheManager(true, $cachedModules);
+        $detector = new VendorModuleDetector($cacheManager, $this->vendorDir);
+
+        $modules = $detector->getAllModules();
+
+        $this->assertSame(['Analytics'], array_keys($modules));
+        $this->assertSame('vendor/analytics', $modules['Analytics']->getPackage());
+        $this->assertTrue($detector->isModuleInstalled('analytics'));
+        $this->assertInstanceOf(ModuleInfo::class, $detector->getModuleInfo('Analytics'));
+        $this->assertSame(0, $cacheManager->cacheModulesCalls);
+    }
+
+    public function testScanVendorDiscoversModulesAndCachesResults(): void
+    {
+        $cacheManager = new FakeCacheManager(false, []);
+        $detector = new VendorModuleDetector($cacheManager, $this->vendorDir);
+
+        $packagePath = $this->createVendorPackage(
+            'acme',
+            'flexi-module-sample',
+            [
+                'name' => 'acme/flexi-module-sample',
+                'version' => '2.3.4',
+                'description' => 'Sample vendor module',
+                'type' => 'library',
+                'extra' => [
+                    'flexi-module' => [
+                        'category' => 'analytics'
+                    ]
+                ]
+            ]
+        );
+
+        $modules = $detector->getAllModules();
+
+        $this->assertCount(1, $modules);
+        $this->assertArrayHasKey('Sample', $modules);
+        $this->assertSame($packagePath, $modules['Sample']->getPath());
+        $this->assertSame('2.3.4', $modules['Sample']->getVersion());
+        $this->assertTrue($detector->isModuleInstalled('sample'));
+
+        $stats = $detector->getModuleStatistics();
+        $this->assertSame(1, $stats['total']);
+        $this->assertSame(1, $stats['vendor']);
+        $this->assertSame(['library' => 1], $stats['by_type']);
+
+        $this->assertSame(1, $cacheManager->cacheModulesCalls);
+        $this->assertCount(1, $cacheManager->cachedPayload);
+    }
+
+    public function testRefreshModulesInvalidatesCacheAndClearsStaticState(): void
+    {
+        $cachedModules = [
+            new ModuleInfo(
+                'Analytics',
+                'vendor/analytics',
+                ModuleType::vendor(),
+                '/vendor/analytics',
+                '1.1.0',
+                false,
+                ['type' => 'library']
+            ),
+        ];
+
+        $cacheManager = new FakeCacheManager(true, $cachedModules);
+        $detector = new VendorModuleDetector($cacheManager, $this->vendorDir);
+
+        $this->assertTrue($detector->isModuleInstalled('analytics'));
+
+        $cacheManager->valid = false;
+        $cacheManager->cachedModules = [];
+
+        $detector->refreshModules();
+
+        $this->assertTrue($cacheManager->invalidateCalled);
+        $this->assertFalse($detector->isModuleInstalled('analytics'));
+        $this->assertSame(1, $cacheManager->cacheModulesCalls);
+    }
+
+    private function createVendorPackage(string $vendor, string $package, array $composerData): string
+    {
+        $vendorPath = $this->vendorDir . '/' . $vendor;
+        if (!is_dir($vendorPath)) {
+            mkdir($vendorPath, 0777, true);
+        }
+
+        $packagePath = $vendorPath . '/' . $package;
+        mkdir($packagePath);
+
+        $composerJson = $composerData;
+        if (!isset($composerJson['extra']['flexi-module']['name'])) {
+            // Derive module name behaviour exercise
+            unset($composerJson['extra']['flexi-module']['name']);
+        }
+
+        file_put_contents(
+            $packagePath . '/composer.json',
+            json_encode($composerJson, JSON_PRETTY_PRINT)
+        );
+
+        // Add non-module package to ensure it is ignored
+        if (!is_dir($vendorPath . '/ignored')) {
+            mkdir($vendorPath . '/ignored');
+            file_put_contents($vendorPath . '/ignored/composer.json', json_encode(['name' => 'acme/ignored']));
+        }
+
+        return $packagePath;
+    }
+
+    private function removeDirectory(string $path): void
+    {
+        if (!is_dir($path)) {
+            if (file_exists($path)) {
+                unlink($path);
+            }
+            return;
+        }
+
+        foreach (scandir($path) ?: [] as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $itemPath = $path . DIRECTORY_SEPARATOR . $item;
+            if (is_dir($itemPath)) {
+                $this->removeDirectory($itemPath);
+            } else {
+                unlink($itemPath);
+            }
+        }
+
+        rmdir($path);
+    }
+}
+
+final class FakeCacheManager implements ModuleCacheManagerInterface
+{
+    public bool $valid;
+
+    /** @var ModuleInfo[] */
+    public array $cachedModules;
+
+    public int $cacheModulesCalls = 0;
+
+    /** @var ModuleInfo[] */
+    public array $cachedPayload = [];
+
+    public bool $invalidateCalled = false;
+
+    public bool $cacheExists = false;
+
+    public string $cacheFilePath;
+
+    public function __construct(bool $valid, array $cachedModules)
+    {
+        $this->valid = $valid;
+        $this->cachedModules = $cachedModules;
+        $this->cacheFilePath = sys_get_temp_dir() . '/fake_cache_' . uniqid() . '.json';
+    }
+
+    public function getCachedModules(): array
+    {
+        return $this->cachedModules;
+    }
+
+    public function cacheModules(array $modules): bool
+    {
+        $this->cacheModulesCalls++;
+        $this->cachedPayload = $modules;
+        return true;
+    }
+
+    public function isCacheValid(): bool
+    {
+        return $this->valid;
+    }
+
+    public function invalidateCache(): bool
+    {
+        $this->invalidateCalled = true;
+        $this->valid = false;
+        return true;
+    }
+
+    public function getCacheFilePath(): string
+    {
+        return $this->cacheFilePath;
+    }
+
+    public function cacheExists(): bool
+    {
+        return $this->cacheExists;
+    }
+}

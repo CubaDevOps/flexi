@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\DependencyInjection;
+namespace Flexi\Test\Infrastructure\DependencyInjection;
 
 use Flexi\Contracts\Interfaces\ServiceDefinitionInterface;
-use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Service;
-use CubaDevOps\Flexi\Domain\ValueObjects\ServiceType;
+use Flexi\Infrastructure\DependencyInjection\Service;
+use Flexi\Domain\ValueObjects\ServiceType;
 use PHPUnit\Framework\TestCase;
 
 class ServiceTest extends TestCase
@@ -15,6 +15,7 @@ class ServiceTest extends TestCase
 
     private ServiceType $type;
     private $definition;
+    private Service $service;
 
     public function setUp(): void
     {
@@ -39,13 +40,37 @@ class ServiceTest extends TestCase
         $this->assertEquals(self::SERVICE_NAME, $this->service->getName());
     }
 
-    // TODO: this is not working as expected
-    //    public function testToString(): void
-    //    {
-    //        $expected = '?';
-    //
-    //        $result = $this->service->__toString();
-    //
-    //        $this->assertEquals($expected, $result);
-    //    }
+    /**
+     * @throws \JsonException
+     */
+    public function testToString(): void
+    {
+        $result = $this->service->__toString();
+
+        // Should return a valid JSON string
+        $this->assertIsString($result);
+        $this->assertJson($result);
+
+        // Decode and verify the JSON is a valid object representation
+        $decoded = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+        $this->assertIsArray($decoded);
+
+        // The JSON should contain the internal properties of the Service object
+        // (private properties are included when using json_encode on an object)
+    }
+
+    /**
+     * Test that the service can be cast to string implicitly
+     * @throws \JsonException
+     */
+    public function testImplicitStringConversion(): void
+    {
+        $stringRepresentation = (string) $this->service;
+
+        $this->assertIsString($stringRepresentation);
+        $this->assertJson($stringRepresentation);
+
+        // Both explicit and implicit conversions should produce the same result
+        $this->assertEquals($this->service->__toString(), $stringRepresentation);
+    }
 }

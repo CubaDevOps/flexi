@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Ui\Web;
+namespace Flexi\Infrastructure\Ui\Web;
 
 use Flexi\Contracts\Interfaces\ConfigurationInterface;
-use CubaDevOps\Flexi\Infrastructure\Factories\RouterFactory;
-use CubaDevOps\Flexi\Infrastructure\Http\Router;
+use Flexi\Infrastructure\Factories\RouterFactory;
+use Flexi\Infrastructure\Http\Router;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -55,7 +55,7 @@ class Application
     private function handle(): StreamInterface
     {
         /** @var Router $router */
-        $router = $this->container->get(RouterFactory::class)->getInstance('./src/Config/routes.json');
+        $router = $this->container->get(RouterFactory::class);
         $response = $router->dispatch(ServerRequest::fromGlobals());
 
         return $this->sendResponse($response);

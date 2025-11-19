@@ -1,0 +1,9 @@
+{
+  "handlers": [
+    {
+      "id": "Flexi\\Test\\TestData\\Queries\\ExtraTestQuery",
+      "cli_alias": "extra-test-query",
+      "handler": "Flexi\\Test\\TestData\\Handlers\\ExtraTestQueryHandler"
+    }
+  ]
+}

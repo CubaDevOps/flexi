@@ -47,11 +47,11 @@ Location:
   Line: 42
 
 Stack Trace:
-  #0 CubaDevOps\Flexi\Infrastructure\Ui\Cli\CommandHandler->handle
+  #0 Flexi\Infrastructure\Ui\Cli\CommandHandler->handle
       ./src/Infrastructure/Ui/Cli/CommandHandler.php:25
-  #1 CubaDevOps\Flexi\Infrastructure\Ui\Cli\ConsoleApplication::handle
+  #1 Flexi\Infrastructure\Ui\Cli\ConsoleApplication::handle
       ./src/Infrastructure/Ui/Cli/ConsoleApplication.php:68
-  #2 CubaDevOps\Flexi\Infrastructure\Ui\Cli\ConsoleApplication::run
+  #2 Flexi\Infrastructure\Ui\Cli\ConsoleApplication::run
       ./src/Infrastructure/Ui/Cli/ConsoleApplication.php:41
   ... más frames
 

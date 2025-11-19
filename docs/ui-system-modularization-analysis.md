@@ -170,8 +170,8 @@ src/Infrastructure/Ui/HtmlRender.php
 
 **2. Update Namespaces**
 ```
-OLD: CubaDevOps\Flexi\Infrastructure\Ui\Template
-NEW: CubaDevOps\Flexi\Modules\Ui\Infrastructure\Ui\Template
+OLD: Flexi\Infrastructure\Ui\Template
+NEW: Flexi\Modules\Ui\Infrastructure\Ui\Template
 ```
 
 **3. Move Tests**
@@ -195,7 +195,7 @@ contracts/src/Interfaces/TemplateEngineInterface.php
 {
   "name": "html_render",
   "class": {
-    "name": "CubaDevOps\\Flexi\\Modules\\Ui\\Infrastructure\\Ui\\HtmlRender",
+    "name": "Flexi\\Modules\\Ui\\Infrastructure\\Ui\\HtmlRender",
     "arguments": [
       "@Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface"
     ]
@@ -204,7 +204,7 @@ contracts/src/Interfaces/TemplateEngineInterface.php
 {
   "name": "Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface",
   "class": {
-    "name": "CubaDevOps\\Flexi\\Modules\\Ui\\Infrastructure\\Ui\\TemplateLocator",
+    "name": "Flexi\\Modules\\Ui\\Infrastructure\\Ui\\TemplateLocator",
     "arguments": []
   }
 }
@@ -352,26 +352,26 @@ $ Benefit from better architecture
 ```
 src/Infrastructure/Ui/Template.php
   → modules/Ui/Infrastructure/Ui/Template.php
-  Namespace: CubaDevOps\Flexi\Infrastructure\Ui → CubaDevOps\Flexi\Modules\Ui\Infrastructure\Ui
+  Namespace: Flexi\Infrastructure\Ui → Flexi\Modules\Ui\Infrastructure\Ui
 
 src/Infrastructure/Ui/TemplateLocator.php
   → modules/Ui/Infrastructure/Ui/TemplateLocator.php
-  Namespace: CubaDevOps\Flexi\Infrastructure\Ui → CubaDevOps\Flexi\Modules\Ui\Infrastructure\Ui
+  Namespace: Flexi\Infrastructure\Ui → Flexi\Modules\Ui\Infrastructure\Ui
 
 src/Infrastructure/Ui/HtmlRender.php
   → modules/Ui/Infrastructure/Ui/HtmlRender.php
-  Namespace: CubaDevOps\Flexi\Infrastructure\Ui → CubaDevOps\Flexi\Modules\Ui\Infrastructure\Ui
+  Namespace: Flexi\Infrastructure\Ui → Flexi\Modules\Ui\Infrastructure\Ui
 ```
 
 #### Phase 3: Test Migration ✅
 ```
 tests/Infrastructure/Ui/TemplateTest.php
   → modules/Ui/tests/Infrastructure/Ui/TemplateTest.php
-  Namespace: CubaDevOps\Flexi\Test\Infrastructure\Ui → CubaDevOps\Flexi\Test\Modules\Ui\Infrastructure\Ui
+  Namespace: Flexi\Test\Infrastructure\Ui → Flexi\Test\Modules\Ui\Infrastructure\Ui
 
 tests/Infrastructure/Ui/HtmlRenderTest.php
   → modules/Ui/tests/Infrastructure/Ui/HtmlRenderTest.php
-  Namespace: CubaDevOps\Flexi\Test\Infrastructure\Ui → CubaDevOps\Flexi\Test\Modules\Ui\Infrastructure\Ui
+  Namespace: Flexi\Test\Infrastructure\Ui → Flexi\Test\Modules\Ui\Infrastructure\Ui
 ```
 
 #### Phase 4: Configuration Separation ✅
@@ -386,14 +386,14 @@ tests/Infrastructure/Ui/HtmlRenderTest.php
     {
       "name": "html_render",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Modules\\Ui\\Infrastructure\\Ui\\HtmlRender",
+        "name": "Flexi\\Modules\\Ui\\Infrastructure\\Ui\\HtmlRender",
         "arguments": ["@Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface"]
       }
     },
     {
       "name": "Flexi\\Contracts\\Interfaces\\TemplateLocatorInterface",
       "class": {
-        "name": "CubaDevOps\\Flexi\\Modules\\Ui\\Infrastructure\\Ui\\TemplateLocator",
+        "name": "Flexi\\Modules\\Ui\\Infrastructure\\Ui\\TemplateLocator",
         "arguments": []
       }
     }

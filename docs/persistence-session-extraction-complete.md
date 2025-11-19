@@ -21,11 +21,11 @@ Successfully extracted `InFileLogRepository` and `NativeSessionStorage` from cor
 modules/Logging/
 ├── Infrastructure/Persistence/
 │   └── InFileLogRepository.php
-│       └── Namespace: CubaDevOps\Flexi\Modules\Logging\Infrastructure\Persistence
+│       └── Namespace: Flexi\Modules\Logging\Infrastructure\Persistence
 ├── Config/services.json
 ├── tests/Infrastructure/Persistence/
 │   └── InFileLogRepositoryTest.php
-│       └── Namespace: CubaDevOps\Flexi\Modules\Logging\Test\Infrastructure\Persistence
+│       └── Namespace: Flexi\Modules\Logging\Test\Infrastructure\Persistence
 └── README.md (future)
 ```
 
@@ -41,7 +41,7 @@ modules/Logging/
 {
   "name": "Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
   "class": {
-    "name": "CubaDevOps\\Flexi\\Modules\\Logging\\Infrastructure\\Persistence\\InFileLogRepository",
+    "name": "Flexi\\Modules\\Logging\\Infrastructure\\Persistence\\InFileLogRepository",
     "arguments": ["ENV.log_file_path", "ENV.log_format"]
   }
 }
@@ -56,11 +56,11 @@ modules/Logging/
 modules/Session/
 ├── Infrastructure/Session/
 │   └── NativeSessionStorage.php
-│       └── Namespace: CubaDevOps\Flexi\Modules\Session\Infrastructure\Session
+│       └── Namespace: Flexi\Modules\Session\Infrastructure\Session
 ├── Config/services.json
 ├── tests/Infrastructure/Session/
 │   └── NativeSessionStorageTest.php
-│       └── Namespace: CubaDevOps\Flexi\Modules\Session\Test\Infrastructure\Session
+│       └── Namespace: Flexi\Modules\Session\Test\Infrastructure\Session
 └── README.md (future)
 ```
 
@@ -77,7 +77,7 @@ modules/Session/
 {
   "name": "Flexi\\Contracts\\Interfaces\\SessionStorageInterface",
   "class": {
-    "name": "CubaDevOps\\Flexi\\Modules\\Session\\Infrastructure\\Session\\NativeSessionStorage",
+    "name": "Flexi\\Modules\\Session\\Infrastructure\\Session\\NativeSessionStorage",
     "arguments": [
       "@logger",
       {
@@ -119,16 +119,16 @@ mkdir -p modules/Session/tests/Infrastructure/Session
 
 ### Phase 2: Moved Source Code with Namespace Updates
 - Copied `InFileLogRepository.php` → `modules/Logging/Infrastructure/Persistence/`
-  - Updated namespace: `CubaDevOps\Flexi\Infrastructure\Persistence` → `CubaDevOps\Flexi\Modules\Logging\Infrastructure\Persistence`
+  - Updated namespace: `Flexi\Infrastructure\Persistence` → `Flexi\Modules\Logging\Infrastructure\Persistence`
 - Copied `NativeSessionStorage.php` → `modules/Session/Infrastructure/Session/`
-  - Updated namespace: `CubaDevOps\Flexi\Infrastructure\Session` → `CubaDevOps\Flexi\Modules\Session\Infrastructure\Session`
+  - Updated namespace: `Flexi\Infrastructure\Session` → `Flexi\Modules\Session\Infrastructure\Session`
 
 ### Phase 3: Moved Tests with Namespace Updates
 - Moved `InFileLogRepositoryTest.php` → `modules/Logging/tests/Infrastructure/Persistence/`
-  - Updated namespace: `CubaDevOps\Flexi\Test\Infrastructure\Persistence` → `CubaDevOps\Flexi\Modules\Logging\Test\Infrastructure\Persistence`
+  - Updated namespace: `Flexi\Test\Infrastructure\Persistence` → `Flexi\Modules\Logging\Test\Infrastructure\Persistence`
   - Updated class reference: `InFileLogRepository` → full namespace path
 - Moved `NativeSessionStorageTest.php` → `modules/Session/tests/Infrastructure/Session/`
-  - Updated namespace: `CubaDevOps\Flexi\Test\Infrastructure\Session` → `CubaDevOps\Flexi\Modules\Session\Test\Infrastructure\Session`
+  - Updated namespace: `Flexi\Test\Infrastructure\Session` → `Flexi\Modules\Session\Test\Infrastructure\Session`
   - Updated class reference: `NativeSessionStorage` → full namespace path
 
 ### Phase 4: Created Module Service Definitions
@@ -168,9 +168,9 @@ rm tests/Infrastructure/Session/NativeSessionStorageTest.php
 ### Before Extraction
 ```
 src/Config/services.json
-├── CubaDevOps\Flexi\Infrastructure\Session\NativeSessionStorage
-├── CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository
-└── logger → @CubaDevOps\Flexi\Infrastructure\Persistence\InFileLogRepository
+├── Flexi\Infrastructure\Session\NativeSessionStorage
+├── Flexi\Infrastructure\Persistence\InFileLogRepository
+└── logger → @Flexi\Infrastructure\Persistence\InFileLogRepository
 
 Core Infrastructure
 ├── Session/ → NativeSessionStorage
@@ -274,7 +274,7 @@ Switch implementations by changing `services.json`:
 {
   "name": "Flexi\\Contracts\\Interfaces\\LogRepositoryInterface",
   "class": {
-    "name": "CubaDevOps\\Flexi\\Modules\\Logging\\Infrastructure\\Persistence\\DatabaseLogRepository"
+    "name": "Flexi\\Modules\\Logging\\Infrastructure\\Persistence\\DatabaseLogRepository"
   }
 }
 ```

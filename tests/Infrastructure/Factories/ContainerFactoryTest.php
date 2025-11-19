@@ -1,0 +1,349 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Flexi\Test\Infrastructure\Factories;
+
+use Flexi\Infrastructure\Factories\ContainerFactory;
+use Flexi\Domain\Interfaces\ModuleDetectorInterface;
+use Flexi\Infrastructure\Factories\CacheFactoryInterface;
+use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Infrastructure\Factories\LocalModuleDetector;
+use Flexi\Infrastructure\Factories\VendorModuleDetector;
+use Flexi\Infrastructure\Factories\DefaultCacheFactory;
+use Flexi\Infrastructure\DependencyInjection\Container;
+use Flexi\Infrastructure\DependencyInjection\ServicesDefinitionParser;
+use Flexi\Infrastructure\Classes\InMemoryCache;
+use Flexi\Infrastructure\Classes\ObjectBuilder;
+use Flexi\Infrastructure\Classes\Configuration;
+use Flexi\Infrastructure\Classes\ConfigurationRepository;
+use Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
+use Flexi\Contracts\Interfaces\CacheInterface;
+use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
+use PHPUnit\Framework\TestCase;
+
+class ContainerFactoryTest extends TestCase
+{
+    /** @var CacheInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $cache;
+
+    /** @var ObjectBuilderInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $objectBuilder;
+
+    /** @var ServicesDefinitionParser|\PHPUnit\Framework\MockObject\MockObject */
+    private $servicesDefinitionParser;
+
+    /** @var ConfigurationFilesProviderInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $configFilesProvider;
+
+    protected function setUp(): void
+    {
+        // Use mocks for all dependencies
+        $this->cache = $this->createMock(CacheInterface::class);
+        $this->objectBuilder = $this->createMock(ObjectBuilderInterface::class);
+        $this->servicesDefinitionParser = $this->createMock(ServicesDefinitionParser::class);
+        $this->configFilesProvider = $this->createMock(ConfigurationFilesProviderInterface::class);
+
+        // Configure cache mock to return appropriate defaults
+        $this->cache
+            ->method('get')
+            ->willReturnCallback(function ($key, $default = null) {
+                if ($key === 'service_definitions') {
+                    return [];
+                }
+                return $default;
+            });
+
+        // Configure cache mock for set operations
+        $this->cache
+            ->method('set')
+            ->willReturn(true);
+
+        // Configure config files provider mock
+        $this->configFilesProvider
+            ->method('getConfigurationFiles')
+            ->willReturn([]);
+    }
+
+    public function testConstruct(): void
+    {
+        $factory = new ContainerFactory($this->cache, $this->objectBuilder, $this->servicesDefinitionParser, $this->configFilesProvider);
+        $this->assertInstanceOf(ContainerFactory::class, $factory);
+    }
+
+    public function testGetInstanceWithoutFile(): void
+    {
+        $factory = new ContainerFactory($this->cache, $this->objectBuilder, $this->servicesDefinitionParser, $this->configFilesProvider);
+        $container = $factory->getInstance();
+
+        $this->assertInstanceOf(Container::class, $container);
+    }
+
+    public function testGetInstanceWithFile(): void
+    {
+        // Configure the config files provider to return the test file
+        $this->configFilesProvider
+            ->method('getConfigurationFiles')
+            ->willReturn(['/var/www/html/var/test-services.json']);
+
+        // Mock the services parser to return test services when called
+        $testServices = [
+            'test-service' => $this->createMock(\Flexi\Infrastructure\DependencyInjection\Service::class)
+        ];
+
+        $this->servicesDefinitionParser
+            ->method('parse')
+            ->willReturn($testServices);
+
+        $factory = new ContainerFactory($this->cache, $this->objectBuilder, $this->servicesDefinitionParser, $this->configFilesProvider);
+        $container = $factory->getInstance();
+
+        $this->assertInstanceOf(Container::class, $container);
+    }
+
+    public function testCreateDefaultWithoutParameters(): void
+    {
+        $container = ContainerFactory::createDefault();
+
+        $this->assertInstanceOf(Container::class, $container);
+    }
+
+    public function testCreateDefaultWithFile(): void
+    {
+        // Create a test services file in writable directory
+        $testFile = '/var/www/html/var/test-services-default.json';
+        $servicesData = [
+            'services' => [
+                [
+                    'name' => 'default-service',
+                    'class' => InMemoryCache::class
+                ]
+            ]
+        ];
+        file_put_contents($testFile, json_encode($servicesData));
+
+        $container = ContainerFactory::createDefault();
+
+        $this->assertInstanceOf(Container::class, $container);
+
+        // Clean up
+        if (file_exists($testFile)) {
+            unlink($testFile);
+        }
+    }
+
+    public function testCreateDefaultCacheModuleNotInstalled(): void
+    {
+        // This test relies on the fact that cache module is not installed by default
+        // The method should fall back to InMemoryCache
+        $container = ContainerFactory::createDefault();
+
+        $this->assertInstanceOf(Container::class, $container);
+    }
+
+    public function testCreateDefaultWithInvalidComposerJson(): void
+    {
+        // Create a temporary invalid composer.json
+        $originalComposerPath = './composer.json';
+        $backupPath = './composer.json.backup';
+        $invalidComposerPath = './composer.json';
+
+        // Backup original if exists
+        if (file_exists($originalComposerPath)) {
+            rename($originalComposerPath, $backupPath);
+        }
+
+        // Create invalid JSON
+        file_put_contents($invalidComposerPath, '{"invalid": json}');
+
+        $container = ContainerFactory::createDefault();
+
+        $this->assertInstanceOf(Container::class, $container);
+
+        // Restore original composer.json
+        unlink($invalidComposerPath);
+        if (file_exists($backupPath)) {
+            rename($backupPath, $originalComposerPath);
+        }
+    }
+
+    public function testCreateDefaultWithNoComposerJson(): void
+    {
+        // Create a temporary directory without composer.json
+        $originalDir = getcwd();
+        $tempDir = '/tmp/test-no-composer-' . uniqid();
+
+        if (!is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
+        chdir($tempDir);
+
+        $container = ContainerFactory::createDefault();
+
+        $this->assertInstanceOf(Container::class, $container);
+
+        // Restore original directory
+        chdir($originalDir);
+        rmdir($tempDir);
+    }
+
+    public function testGetInstanceWithMockedDependencies(): void
+    {
+        // Test getInstance method behavior with mocked dependencies
+        $factory = new ContainerFactory($this->cache, $this->objectBuilder, $this->servicesDefinitionParser, $this->configFilesProvider);
+
+        // Test without file - should create Container with mocked dependencies
+        $container = $factory->getInstance();
+        $this->assertInstanceOf(Container::class, $container);
+    }
+
+    public function testGetInstanceWithFileAndMockedDependencies(): void
+    {
+        // Mock the services parser to return test services
+        $mockService = $this->createMock(\Flexi\Infrastructure\DependencyInjection\Service::class);
+        $testServices = [
+            'test-service-mocked' => $mockService
+        ];
+
+        $this->servicesDefinitionParser
+            ->method('parse')
+            ->willReturn($testServices);
+
+        // Test with file - should parse services and add to container
+        $factory = new ContainerFactory($this->cache, $this->objectBuilder, $this->servicesDefinitionParser, $this->configFilesProvider);
+        $container = $factory->getInstance();
+
+        $this->assertInstanceOf(Container::class, $container);
+        // Note: Testing service registration may require specific Container behavior
+        // For now, we'll just verify the container was created successfully
+    }
+
+    public function testEdgeCasesWithMocks(): void
+    {
+        // Test createDefault without parameters
+        $container = ContainerFactory::createDefault();
+        $this->assertInstanceOf(Container::class, $container);
+
+        // Test getInstance without parameters
+        $factory = new ContainerFactory($this->cache, $this->objectBuilder, $this->servicesDefinitionParser, $this->configFilesProvider);
+        $container = $factory->getInstance();
+        $this->assertInstanceOf(Container::class, $container);
+    }
+
+    public function testHybridModuleDetectorImplementation(): void
+    {
+        // Test the real implementation of HybridModuleDetector
+        $localDetector = new LocalModuleDetector('./tests/fixtures/modules');
+        $vendorDetector = $this->createMock(VendorModuleDetector::class);
+        $detector = new HybridModuleDetector($localDetector, $vendorDetector);
+
+        // This should return false for non-existent modules
+        $this->assertFalse($detector->isModuleInstalled('non-existent-module'));
+
+        // Test interface methods are implemented
+        $modules = $detector->getAllModules();
+        $this->assertIsArray($modules);
+
+        $stats = $detector->getModuleStatistics();
+        $this->assertIsArray($stats);
+        $this->assertArrayHasKey('total', $stats);
+    }
+
+    public function testDefaultCacheFactoryImplementation(): void
+    {
+        // Test DefaultCacheFactory with module not installed
+        $mockModuleDetector = $this->createMock(ModuleDetectorInterface::class);
+        $mockModuleDetector
+            ->method('isModuleInstalled')
+            ->willReturn(false);
+
+        $mockConfiguration = $this->createMock(Configuration::class);
+        $cacheFactory = new DefaultCacheFactory($mockModuleDetector, $mockConfiguration);
+        $cache = $cacheFactory->createCache();
+
+        $this->assertInstanceOf(InMemoryCache::class, $cache);
+    }
+
+    public function testDefaultCacheFactoryWithCacheModuleInstalled(): void
+    {
+        // Test DefaultCacheFactory when cache module is "installed" but fails
+        $mockModuleDetector = $this->createMock(ModuleDetectorInterface::class);
+        $mockModuleDetector
+            ->method('isModuleInstalled')
+            ->willReturn(true);
+
+        $mockConfiguration = $this->createMock(Configuration::class);
+        $cacheFactory = new DefaultCacheFactory($mockModuleDetector, $mockConfiguration);
+
+        // Should fallback to InMemoryCache when cache module fails to load
+        $cache = $cacheFactory->createCache();
+        $this->assertInstanceOf(InMemoryCache::class, $cache);
+    }
+
+    public function testCreateDefaultInternalDependenciesCreation(): void
+    {
+        // This test verifies that createDefault method properly creates all internal dependencies
+        $container = ContainerFactory::createDefault();
+        $this->assertInstanceOf(Container::class, $container);
+
+        // Test that it can handle a valid services file
+        $testFile = '/var/www/html/var/test-services-internal.json';
+        $servicesData = [
+            'services' => [
+                [
+                    'name' => 'internal-service',
+                    'class' => InMemoryCache::class
+                ]
+            ]
+        ];
+        file_put_contents($testFile, json_encode($servicesData));
+
+        $container = ContainerFactory::createDefault();
+        $this->assertInstanceOf(Container::class, $container);
+
+        // Clean up
+        if (file_exists($testFile)) {
+            unlink($testFile);
+        }
+    }
+
+    public function testHybridModuleDetectorCacheHandling(): void
+    {
+        // Test caching behavior
+        $localDetector = new LocalModuleDetector('./tests/fixtures/modules');
+        $vendorDetector = $this->createMock(VendorModuleDetector::class);
+        $detector = new HybridModuleDetector($localDetector, $vendorDetector);
+
+        // Multiple calls should use cached results
+        $result1 = $detector->isModuleInstalled('nonexistent');
+        $result2 = $detector->isModuleInstalled('nonexistent');
+
+        $this->assertEquals($result1, $result2, 'Caching should return consistent results');
+
+        // Test cache clearing
+        $detector->clearCache();
+        $result3 = $detector->isModuleInstalled('nonexistent');
+        $this->assertEquals($result1, $result3, 'Results should be consistent after cache clear');
+    }
+
+    public function testHybridModuleDetectorWithDifferentModules(): void
+    {
+        $localDetector = new LocalModuleDetector('./tests/fixtures/modules');
+        $vendorDetector = $this->createMock(VendorModuleDetector::class);
+        $detector = new HybridModuleDetector($localDetector, $vendorDetector);
+
+        // Test interface compliance for various module names
+        $moduleNames = ['auth', 'cache', 'session', 'user-management'];
+
+        foreach ($moduleNames as $moduleName) {
+            // Test isModuleInstalled method
+            $isInstalled = $detector->isModuleInstalled($moduleName);
+            $this->assertIsBool($isInstalled);
+
+            // Test getModuleInfo method
+            $moduleInfo = $detector->getModuleInfo($moduleName);
+            $this->assertTrue($moduleInfo === null || is_object($moduleInfo));
+        }
+    }
+}

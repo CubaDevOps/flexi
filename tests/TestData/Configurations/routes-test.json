@@ -1,0 +1,16 @@
+{
+  "routes": [
+    {
+      "path": "/test",
+      "method": "GET",
+      "controller": "TestController",
+      "name": "test.route"
+    },
+    {
+      "path": "/api/users",
+      "method": "POST",
+      "controller": "UserController::create",
+      "name": "users.create"
+    }
+  ]
+}

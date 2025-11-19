@@ -87,19 +87,19 @@ All imports were updated in the following files:
 {
   "handlers": [
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Queries\\GetVersionQuery",
+      "id": "Flexi\\Application\\Queries\\GetVersionQuery",
       "cli_alias": "version",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\Health"
+      "handler": "Flexi\\Application\\UseCase\\Health"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Queries\\ListQueriesQuery",
+      "id": "Flexi\\Application\\Queries\\ListQueriesQuery",
       "cli_alias": "query:list",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ListQueries"
+      "handler": "Flexi\\Application\\UseCase\\ListQueries"
     },
     {
-      "id": "CubaDevOps\\Flexi\\Application\\Commands\\ListCommandsCommand",
+      "id": "Flexi\\Application\\Commands\\ListCommandsCommand",
       "cli_alias": "command:list",
-      "handler": "CubaDevOps\\Flexi\\Application\\UseCase\\ListCommands"
+      "handler": "Flexi\\Application\\UseCase\\ListCommands"
     }
   ]
 }

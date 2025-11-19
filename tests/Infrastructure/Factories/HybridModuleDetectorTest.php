@@ -8,7 +8,7 @@ use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
 use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
 use CubaDevOps\Flexi\Infrastructure\Factories\LocalModuleDetector;
 use CubaDevOps\Flexi\Infrastructure\Factories\VendorModuleDetector;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleCacheManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 final class HybridModuleDetectorTest extends TestCase

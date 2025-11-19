@@ -7,7 +7,7 @@ namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Test\TestData\Commands\TestCommand;
 use CubaDevOps\Flexi\Test\TestData\Handlers\TestCommandHandler;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
@@ -137,7 +137,7 @@ class CommandBusTest extends TestCase
         try {
             $dtoClass = $this->commandBus->getDtoClassFromAlias('non-existent-alias');
             // If it somehow returns, we test the fallback
-            $this->assertEquals(\CubaDevOps\Flexi\Application\Commands\NotFoundCommand::class, $dtoClass);
+            $this->assertEquals(\CubaDevOps\Flexi\Domain\Commands\NotFoundCommand::class, $dtoClass);
         } catch (\Error $e) {
             // If it throws an error, that's also valid behavior to test
             $this->assertStringContainsString('non-existent-alias', $e->getMessage());

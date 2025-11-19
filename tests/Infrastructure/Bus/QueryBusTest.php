@@ -7,7 +7,7 @@ namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Test\TestData\Queries\TestQuery;
 use CubaDevOps\Flexi\Test\TestData\Handlers\TestQueryHandler;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;

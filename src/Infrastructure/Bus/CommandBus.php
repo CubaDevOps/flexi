@@ -10,7 +10,7 @@ use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Domain\Events\Event;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

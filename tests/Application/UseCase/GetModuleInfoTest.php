@@ -6,8 +6,8 @@ namespace CubaDevOps\Flexi\Test\Application\UseCase;
 
 use CubaDevOps\Flexi\Application\Commands\ModuleInfoCommand;
 use CubaDevOps\Flexi\Application\UseCase\GetModuleInfo;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
-use CubaDevOps\Flexi\Infrastructure\Factories\ModuleDetectorInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\HandlerInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;

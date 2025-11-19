@@ -6,6 +6,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
 
 /**
  * Module detector for locally installed modules.

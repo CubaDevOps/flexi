@@ -9,7 +9,7 @@ use CubaDevOps\Flexi\Infrastructure\DependencyInjection\RoutesDefinitionParser;
 use CubaDevOps\Flexi\Infrastructure\Factories\RouterFactory;
 use CubaDevOps\Flexi\Infrastructure\Http\Route;
 use CubaDevOps\Flexi\Infrastructure\Http\Router;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ConfigurationFilesProviderInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;

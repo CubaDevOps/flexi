@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ConfigurationFilesProviderInterface;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
 use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
 use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;

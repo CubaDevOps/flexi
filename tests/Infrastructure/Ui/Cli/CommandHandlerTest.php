@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Infrastructure\Ui\Cli\DTOFactory;
 use CubaDevOps\Flexi\Infrastructure\Ui\Cli\CommandHandler;
 use CubaDevOps\Flexi\Infrastructure\Ui\Cli\CliInput;

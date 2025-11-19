@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Application\UseCase;
 
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
-use CubaDevOps\Flexi\Infrastructure\Factories\ModuleDetectorInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;

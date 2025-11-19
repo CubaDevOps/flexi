@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleEnvironmentManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleEnvironmentManagerInterface;
 use Flexi\Contracts\Interfaces\ConfigurationInterface;
 use Dotenv\Dotenv;
 

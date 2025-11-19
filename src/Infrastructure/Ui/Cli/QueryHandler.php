@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
 use Flexi\Contracts\Interfaces\CliDTOInterface;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use Psr\Container\ContainerExceptionInterface;

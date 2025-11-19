@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Interfaces;
+namespace CubaDevOps\Flexi\Domain\Interfaces;
 
 /**
  * Interface for managing module environment variables.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Infrastructure\Interfaces;
+namespace CubaDevOps\Flexi\Domain\Interfaces;
 
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleState;
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;

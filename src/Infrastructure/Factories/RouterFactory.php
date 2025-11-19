@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ConfigurationFilesProviderInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\RoutesDefinitionParser;
 use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
 use Flexi\Contracts\Interfaces\EventBusInterface;

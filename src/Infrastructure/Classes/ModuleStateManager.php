@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleState;
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
 
 /**
  * Manages the activation state of modules.

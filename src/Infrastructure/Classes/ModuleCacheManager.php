@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Classes;
 
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleCacheManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
 

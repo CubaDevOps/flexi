@@ -6,7 +6,9 @@ namespace CubaDevOps\Flexi\Infrastructure\Factories;
 
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleCacheManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
+use Flexi\Contracts\Interfaces\LoggerInterface;
 
 /**
  * Module detector for vendor-installed packages.

@@ -9,7 +9,7 @@ use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
 use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationFilesProvider;
 use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

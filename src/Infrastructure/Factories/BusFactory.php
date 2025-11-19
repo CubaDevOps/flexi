@@ -11,7 +11,7 @@ use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ConfigurationFilesProviderInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\HandlersDefinitionParser;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ListenersDefinitionParser;
 use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;

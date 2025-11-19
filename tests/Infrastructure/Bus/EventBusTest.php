@@ -64,7 +64,7 @@ function fclose($resource): bool
 
 namespace CubaDevOps\Flexi\Tests\Infrastructure\Bus;
 
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBus;
 use CubaDevOps\Flexi\Infrastructure\Bus\EventBusTestOverrides;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\Bus\GenericMessage;

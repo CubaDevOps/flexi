@@ -13,7 +13,7 @@ use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
 use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\Container;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ConfigurationFilesProviderInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
 use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
 use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationFilesProvider;
 use CubaDevOps\Flexi\Infrastructure\Classes\ModuleStateManager;

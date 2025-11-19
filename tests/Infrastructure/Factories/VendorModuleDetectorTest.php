@@ -7,7 +7,7 @@ namespace CubaDevOps\Flexi\Test\Infrastructure\Factories;
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
 use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
 use CubaDevOps\Flexi\Infrastructure\Factories\VendorModuleDetector;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleCacheManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 final class VendorModuleDetectorTest extends TestCase

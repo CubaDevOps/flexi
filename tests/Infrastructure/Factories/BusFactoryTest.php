@@ -13,7 +13,7 @@ use CubaDevOps\Flexi\Infrastructure\Factories\BusFactory;
 use CubaDevOps\Flexi\Infrastructure\Classes\InMemoryCache;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\HandlersDefinitionParser;
 use CubaDevOps\Flexi\Infrastructure\DependencyInjection\ListenersDefinitionParser;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ConfigurationFilesProviderInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;

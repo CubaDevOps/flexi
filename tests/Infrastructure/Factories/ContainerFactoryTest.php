@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Test\Infrastructure\Factories;
 
 use CubaDevOps\Flexi\Infrastructure\Factories\ContainerFactory;
-use CubaDevOps\Flexi\Infrastructure\Factories\ModuleDetectorInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
 use CubaDevOps\Flexi\Infrastructure\Factories\CacheFactoryInterface;
 use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
 use CubaDevOps\Flexi\Infrastructure\Factories\LocalModuleDetector;
@@ -17,7 +17,7 @@ use CubaDevOps\Flexi\Infrastructure\Classes\InMemoryCache;
 use CubaDevOps\Flexi\Infrastructure\Classes\ObjectBuilder;
 use CubaDevOps\Flexi\Infrastructure\Classes\Configuration;
 use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationRepository;
-use CubaDevOps\Flexi\Infrastructure\Interfaces\ConfigurationFilesProviderInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
 use Flexi\Contracts\Interfaces\CacheInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
 use PHPUnit\Framework\TestCase;

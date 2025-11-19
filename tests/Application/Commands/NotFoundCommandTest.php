@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Application\Commands;
 
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use PHPUnit\Framework\TestCase;
 

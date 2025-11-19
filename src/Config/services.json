@@ -104,7 +104,7 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleCacheManagerInterface",
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleCacheManagerInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleCacheManager",
         "arguments": [
@@ -123,7 +123,7 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface",
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleStateManager",
         "arguments": [
@@ -145,7 +145,7 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\VendorModuleDetector",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleCacheManagerInterface",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleCacheManagerInterface",
           "./vendor"
         ]
       }
@@ -161,11 +161,11 @@
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\ModuleDetectorInterface",
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleDetectorInterface",
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleEnvironmentManagerInterface",
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface",
       "alias": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager"
     },
     {
@@ -182,9 +182,9 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Application\\UseCase\\ActivateModule",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
           "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
-          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleEnvironmentManagerInterface"
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface"
         ]
       }
     },
@@ -193,9 +193,9 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Application\\UseCase\\DeactivateModule",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
           "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
-          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleEnvironmentManagerInterface"
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface"
         ]
       }
     },
@@ -204,7 +204,7 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Application\\UseCase\\GetModuleStatus",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
           "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
         ]
       }
@@ -214,9 +214,9 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Application\\UseCase\\UpdateModuleEnvironment",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleEnvironmentManagerInterface",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface",
           "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
-          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface"
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface"
         ]
       }
     },
@@ -225,17 +225,17 @@
       "class": {
         "name": "CubaDevOps\\Flexi\\Application\\UseCase\\ListModules",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
           "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
         ]
       }
     },
     {
-      "name": "CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ConfigurationFilesProviderInterface",
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ConfigurationFilesProviderInterface",
       "class": {
         "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ConfigurationFilesProvider",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Interfaces\\ModuleStateManagerInterface",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
           "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
           "./"
         ]

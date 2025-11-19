@@ -33,6 +33,7 @@ class ListModulesTest extends TestCase
         // Create mocks for dependencies
         $this->stateManager = $this->createMock(ModuleStateManagerInterface::class);
         $this->moduleDetector = $this->createMock(ModuleDetectorInterface::class);
+        $this->moduleDetector->method('getModuleStatistics')->willReturn([]);
 
         $this->listModules = new ListModules($this->stateManager, $this->moduleDetector);
     }
@@ -411,6 +412,72 @@ class ListModulesTest extends TestCase
 
         $useCase = new ListModules($mockStateManager, $mockModuleDetector);
         $this->assertInstanceOf(ListModules::class, $useCase);
+    }
+
+    public function testHandleIncludesConflictDetailsAndStatistics(): void
+    {
+        $analytics = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            'analytics',
+            'cubadevops/flexi-analytics',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::mixed(),
+            '/modules/analytics',
+            '3.0.0',
+            true,
+            [
+                'description' => 'Analytics suite',
+                'local_path' => '/modules/analytics',
+                'vendor_path' => '/vendor/cubadevops/analytics',
+                'resolution_strategy' => 'local_priority',
+            ]
+        );
+
+        $stateManager = $this->createMock(ModuleStateManagerInterface::class);
+        $moduleDetector = $this->createMock(ModuleDetectorInterface::class);
+
+        $moduleDetector
+            ->expects($this->once())
+            ->method('getAllModules')
+            ->willReturn([$analytics]);
+
+        $moduleDetector
+            ->expects($this->any())
+            ->method('getModuleStatistics')
+            ->willReturn(['local_only' => 0, 'conflicts' => 1]);
+
+        $moduleState = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleState(
+            'analytics',
+            false,
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::mixed(),
+            new \DateTimeImmutable('2025-01-10T11:30:00+00:00'),
+            'ops'
+        );
+
+        $stateManager
+            ->expects($this->once())
+            ->method('isModuleActive')
+            ->with('analytics')
+            ->willReturn(false);
+
+        $stateManager
+            ->expects($this->once())
+            ->method('getModuleState')
+            ->with('analytics')
+            ->willReturn($moduleState);
+
+        $listModules = new ListModules($stateManager, $moduleDetector);
+
+        $response = json_decode($listModules->handle(new ListModulesCommand())->get('body'), true);
+
+        $this->assertSame(1, $response['total']);
+        $this->assertSame(0, $response['active']);
+        $this->assertSame(['local_only' => 0, 'conflicts' => 1], $response['types']);
+
+        $module = $response['modules']['analytics'];
+        $this->assertFalse($module['active']);
+        $this->assertSame('ops', $module['modified_by']);
+        $this->assertSame('Analytics suite', $module['description']);
+        $this->assertSame('local_priority', $module['conflict']['resolution_strategy']);
+        $this->assertArrayHasKey('metadata', $module);
     }
 
     private function removeDirectory(string $dir): void

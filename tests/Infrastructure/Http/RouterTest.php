@@ -12,6 +12,7 @@ use CubaDevOps\Flexi\Infrastructure\Http\Route;
 use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouterMock;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\TestHttpHandler;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -28,7 +29,10 @@ class RouterTest extends TestCase
 
     private $event_bus;
     private $class_factory;
-    private ResponseFactoryInterface $response_factory;
+    /**
+     * @var ResponseFactoryInterface|MockObject
+     */
+    private $response_factory;
     private \Psr\Container\ContainerInterface $container;
 
     private RouterMock $router;

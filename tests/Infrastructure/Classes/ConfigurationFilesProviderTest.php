@@ -5,43 +5,210 @@ declare(strict_types=1);
 namespace CubaDevOps\Flexi\Tests\Infrastructure\Classes;
 
 use CubaDevOps\Flexi\Domain\ValueObjects\ConfigurationType;
+use CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo;
+use CubaDevOps\Flexi\Domain\ValueObjects\ModuleType;
+use CubaDevOps\Flexi\Infrastructure\Classes\ConfigurationFilesProvider;
+use CubaDevOps\Flexi\Infrastructure\Factories\HybridModuleDetector;
+use CubaDevOps\Flexi\Infrastructure\Interfaces\ModuleStateManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class ConfigurationFilesProviderTest extends TestCase
 {
-    public function testValueObjectIntegrationWithConfigurationFilesProvider(): void
+    private string $temporaryModulesPath;
+
+    /** @var MockObject&ModuleStateManagerInterface */
+    private ModuleStateManagerInterface $stateManager;
+
+    /** @var MockObject&HybridModuleDetector */
+    private HybridModuleDetector $moduleDetector;
+
+    private ConfigurationFilesProvider $provider;
+
+    protected function setUp(): void
     {
-        // Test que el Value Object funciona correctamente con el provider
-        $servicesType = ConfigurationType::services();
-        $routesType = ConfigurationType::routes();
-        $commandsType = ConfigurationType::commands();
-        $queriesType = ConfigurationType::queries();
-        $listenersType = ConfigurationType::listeners();
+        $this->temporaryModulesPath = sys_get_temp_dir() . '/flexi-config-provider-' . uniqid('', true);
+        $this->createDirectory($this->temporaryModulesPath);
 
-        $this->assertEquals('services', $servicesType->value());
-        $this->assertEquals('routes', $routesType->value());
-        $this->assertEquals('commands', $commandsType->value());
-        $this->assertEquals('queries', $queriesType->value());
-        $this->assertEquals('listeners', $listenersType->value());
+        $this->stateManager = $this->createMock(ModuleStateManagerInterface::class);
+        $this->moduleDetector = $this->createMock(HybridModuleDetector::class);
 
-        // Verificar que los tipos son diferentes entre sí
-        $this->assertFalse($servicesType->equals($routesType));
-        $this->assertFalse($routesType->equals($commandsType));
-        $this->assertTrue($servicesType->equals(ConfigurationType::services()));
+        $this->provider = new ConfigurationFilesProvider($this->stateManager, $this->moduleDetector);
     }
 
-    public function testAllConfigurationTypesAreSupported(): void
+    protected function tearDown(): void
     {
-        $supportedTypes = ConfigurationType::getAllTypes();
+        $this->removeDirectory($this->temporaryModulesPath ?? '');
+        parent::tearDown();
+    }
 
+    public function testGetConfigurationFilesReturnsCoreAndActiveModules(): void
+    {
+        $activeModule = $this->createModule('Blog', ['routes' => '{"route": "blog"}']);
+        $inactiveModule = $this->createModule('Shop', ['routes' => '{"route": "shop"}']);
+
+        $this->moduleDetector
+            ->method('getAllModules')
+            ->willReturn([$activeModule, $inactiveModule]);
+
+        $this->stateManager
+            ->method('isModuleActive')
+            ->willReturnMap([
+                ['Blog', true],
+                ['Shop', false],
+            ]);
+
+        $files = $this->provider->getConfigurationFiles(ConfigurationType::routes());
+
+        $coreRoutesPath = realpath(dirname(__DIR__, 3) . '/src/Config/routes.json');
+        $moduleRoutesPath = realpath($activeModule->getPath() . '/Config/routes.json');
+
+        $this->assertSame([$coreRoutesPath, $moduleRoutesPath], $files);
+    }
+
+    public function testGetConfigurationFilesCanExcludeCoreConfiguration(): void
+    {
+        $module = $this->createModule('Blog', ['routes' => '{"route": "blog"}']);
+
+        $this->moduleDetector
+            ->method('getAllModules')
+            ->willReturn([$module]);
+
+        $this->stateManager
+            ->method('isModuleActive')
+            ->willReturn(true);
+
+        $files = $this->provider->getConfigurationFiles(ConfigurationType::routes(), false);
+
+        $expectedPath = realpath($module->getPath() . '/Config/routes.json');
+
+        $this->assertSame([$expectedPath], $files);
+    }
+
+    public function testGetAllConfigurationFilesAggregatesPerType(): void
+    {
+        $servicesModule = $this->createModule('Blog', ['services' => '{"service": "blog"}']);
+        $listenersModule = $this->createModule('Notifiers', ['listeners' => '{"listener": "notifier"}']);
+
+        $this->moduleDetector
+            ->method('getAllModules')
+            ->willReturn([$servicesModule, $listenersModule]);
+
+        $this->stateManager
+            ->method('isModuleActive')
+            ->willReturn(true);
+
+        $filesByType = $this->provider->getAllConfigurationFiles(false);
+
+        $this->assertSame(
+            realpath($servicesModule->getPath() . '/Config/services.json'),
+            $filesByType['services'][0] ?? null
+        );
+        $this->assertSame([], $filesByType['routes']);
+        $this->assertSame([], $filesByType['commands']);
+        $this->assertSame([], $filesByType['queries']);
+        $this->assertSame(
+            realpath($listenersModule->getPath() . '/Config/listeners.json'),
+            $filesByType['listeners'][0] ?? null
+        );
+    }
+
+    public function testHasModuleConfigurationDetectsExistingConfig(): void
+    {
+        $module = $this->createModule('Blog', ['services' => '{"service": "blog"}']);
+
+        $this->moduleDetector
+            ->method('getAllModules')
+            ->willReturn([$module]);
+
+        $this->assertTrue($this->provider->hasModuleConfiguration('Blog', ConfigurationType::services()));
+        $this->assertFalse($this->provider->hasModuleConfiguration('Blog', ConfigurationType::routes()));
+        $this->assertFalse($this->provider->hasModuleConfiguration('Unknown', ConfigurationType::services()));
+    }
+
+    public function testGetModuleConfigurationFileReturnsNullWhenModuleMissing(): void
+    {
+        $this->moduleDetector
+            ->method('getAllModules')
+            ->willReturn([]);
+
+        $result = $this->provider->getModuleConfigurationFile('Missing', ConfigurationType::routes());
+
+        $this->assertNull($result);
+    }
+
+    public function testGetModuleConfigurationFileHandlesDetectorFailures(): void
+    {
+        $this->moduleDetector
+            ->method('getAllModules')
+            ->willThrowException(new \RuntimeException('Detector failure'));
+
+        $result = $this->provider->getModuleConfigurationFile('Any', ConfigurationType::routes());
+
+        $this->assertNull($result);
+    }
+
+    public function testConfigurationTypeHelpersRemainConsistent(): void
+    {
         $expectedTypes = ['services', 'routes', 'commands', 'queries', 'listeners'];
 
-        $this->assertEquals($expectedTypes, $supportedTypes);
+        $this->assertSame($expectedTypes, ConfigurationType::getAllTypes());
+        $this->assertEquals('services', ConfigurationType::services()->value());
+        $this->assertEquals('routes', ConfigurationType::routes()->value());
+        $this->assertEquals('commands', ConfigurationType::commands()->value());
+        $this->assertEquals('queries', ConfigurationType::queries()->value());
+        $this->assertEquals('listeners', ConfigurationType::listeners()->value());
 
-        foreach ($expectedTypes as $type) {
-            $this->assertTrue(ConfigurationType::isValidType($type));
+        $this->assertTrue(ConfigurationType::services()->equals(ConfigurationType::services()));
+        $this->assertFalse(ConfigurationType::services()->equals(ConfigurationType::routes()));
+        $this->assertFalse(ConfigurationType::isValidType('invalid_type'));
+    }
+
+    private function createModule(string $name, array $configFiles): ModuleInfo
+    {
+        $modulePath = $this->temporaryModulesPath . '/' . $name;
+        $configPath = $modulePath . '/Config';
+
+        $this->createDirectory($configPath);
+
+        foreach ($configFiles as $type => $payload) {
+            file_put_contents($configPath . '/' . $type . '.json', $payload);
         }
 
-        $this->assertFalse(ConfigurationType::isValidType('invalid_type'));
+        return new ModuleInfo($name, 'vendor/' . $name, ModuleType::local(), $modulePath);
+    }
+
+    private function createDirectory(string $path): void
+    {
+        if ('' === $path || is_dir($path)) {
+            return;
+        }
+
+        if (!mkdir($path, 0777, true) && !is_dir($path)) {
+            throw new \RuntimeException(sprintf('Could not create directory %s', $path));
+        }
+    }
+
+    private function removeDirectory(string $path): void
+    {
+        if ('' === $path || !is_dir($path)) {
+            return;
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($iterator as $fileInfo) {
+            if ($fileInfo->isDir()) {
+                rmdir($fileInfo->getPathname());
+                continue;
+            }
+
+            unlink($fileInfo->getPathname());
+        }
+
+        rmdir($path);
     }
 }

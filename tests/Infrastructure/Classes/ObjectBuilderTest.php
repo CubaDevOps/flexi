@@ -272,6 +272,32 @@ class ObjectBuilderTest extends TestCase
         $this->assertSame($mockService, $result);
     }
 
+    public function testResolveDependencyFallsBackToParameterName(): void
+    {
+        $containerMock = $this->createMock(ContainerInterface::class);
+        $service = new \stdClass();
+        $typeName = 'MissingInterface';
+        $parameterName = 'fallback_service';
+
+        $containerMock->expects($this->exactly(2))
+            ->method('has')
+            ->withConsecutive([$typeName], [$parameterName])
+            ->willReturnOnConsecutiveCalls(false, true);
+
+        $containerMock->expects($this->once())
+            ->method('get')
+            ->with($parameterName)
+            ->willReturn($service);
+
+        $reflection = new \ReflectionClass($this->objectBuilder);
+        $method = $reflection->getMethod('resolveDependency');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($this->objectBuilder, $containerMock, $typeName, $parameterName);
+
+        $this->assertSame($service, $result);
+    }
+
     public function testResolveDependencyNotFound(): void
     {
         $this->expectException(\RuntimeException::class);

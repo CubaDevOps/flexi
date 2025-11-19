@@ -652,6 +652,57 @@ class ValidateModulesTest extends TestCase
         }
     }
 
+    public function testHandleWithConflictedModuleAddsStateInfo(): void
+    {
+        $this->createValidModule('hybrid');
+
+        $metadata = [
+            'description' => 'Hybrid delivery',
+            'local_path' => '/modules/hybrid',
+            'vendor_path' => '/vendor/flexi/hybrid',
+            'resolution_strategy' => 'local_priority',
+        ];
+
+        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            'hybrid',
+            'cubadevops/flexi-module-hybrid',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::mixed(),
+            $this->tempModulesPath . '/hybrid',
+            '1.0.0',
+            true,
+            $metadata
+        );
+
+        $this->moduleDetector->method('getAllModules')->willReturn([$moduleInfo]);
+
+        $moduleState = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleState(
+            'hybrid',
+            true,
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::mixed(),
+            new \DateTimeImmutable('2025-01-15T09:45:00+00:00'),
+            'platform'
+        );
+
+        $this->stateManager->method('isModuleActive')->with('hybrid')->willReturn(true);
+        $this->stateManager->method('getModuleState')->with('hybrid')->willReturn($moduleState);
+
+        $response = json_decode(
+            $this->createValidateModules()->handle(new ValidateModulesCommand())->get('body'),
+            true
+        );
+
+        $this->assertSame(1, $response['total']);
+        $this->assertSame(1, $response['valid']);
+        $this->assertSame(0, $response['invalid']);
+
+        $moduleResult = $response['modules']['hybrid'];
+        $this->assertTrue($moduleResult['valid']);
+        $this->assertTrue($moduleResult['active']);
+        $this->assertSame('platform', $moduleResult['state_info']['modified_by']);
+        $this->assertContains('Module has conflicts between local and vendor versions', $moduleResult['warnings']);
+        $this->assertSame('/modules/hybrid', $moduleResult['conflict_info']['local_path']);
+    }
+
     public function testPathNormalizationInConstructor(): void
     {
         $validateModules = $this->createValidateModules();

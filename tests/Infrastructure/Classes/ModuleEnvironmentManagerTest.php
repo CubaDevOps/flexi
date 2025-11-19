@@ -2,199 +2,422 @@
 
 declare(strict_types=1);
 
-namespace CubaDevOps\Flexi\Test\Infrastructure\Classes;
+namespace CubaDevOps\Flexi\Tests\Infrastructure\Classes;
 
 use CubaDevOps\Flexi\Infrastructure\Classes\ModuleEnvironmentManager;
-use Flexi\Contracts\Interfaces\ConfigurationInterface;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\Configuration\ArrayConfiguration;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\Modules\ModuleEnvironmentManagerAlwaysHas;
+use CubaDevOps\Flexi\Test\TestData\TestDoubles\Modules\ModuleEnvironmentManagerRemovalFails;
 use PHPUnit\Framework\TestCase;
 
 class ModuleEnvironmentManagerTest extends TestCase
 {
-    private ModuleEnvironmentManager $envManager;
-    private string $tempDir;
-    private string $tempEnvFile;
-    private string $tempModuleDir;
-    private string $tempModuleEnvFile;
-    private $configurationMock;
+    private string $rootDir;
+    private string $mainEnvPath;
+    private ModuleEnvironmentManager $manager;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->tempDir = sys_get_temp_dir() . '/module_env_test_' . uniqid();
-        mkdir($this->tempDir);
+        $this->rootDir = sys_get_temp_dir() . '/flexi-module-env-' . uniqid('', true);
+        $this->createDirectory($this->rootDir);
 
-        $this->tempEnvFile = $this->tempDir . '/.env';
-        $this->tempModuleDir = $this->tempDir . '/module';
-        $this->tempModuleEnvFile = $this->tempModuleDir . '/.env';
+        $this->mainEnvPath = $this->rootDir . '/.env';
+        file_put_contents($this->mainEnvPath, "BASE_ENV=1\n");
 
-        mkdir($this->tempModuleDir);
-
-        // Create mock configuration
-        $this->configurationMock = $this->createMock(ConfigurationInterface::class);
-        $this->configurationMock->method('get')
-            ->with('ROOT_DIR')
-            ->willReturn($this->tempDir);
-
-        $this->envManager = new ModuleEnvironmentManager($this->configurationMock);
-
-        // Create initial main .env file
-        file_put_contents($this->tempEnvFile, "#Application\ndebug=true\n");
+        $configuration = new ArrayConfiguration(['ROOT_DIR' => $this->rootDir]);
+        $this->manager = new ModuleEnvironmentManager($configuration);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
-        $this->removeDirectory($this->tempDir);
+        $this->removeDirectory($this->rootDir ?? '');
+        parent::tearDown();
     }
 
-    public function testHasModuleEnvFileReturnsTrueWhenFileExists(): void
+    public function testReadModuleEnvironmentParsesVariables(): void
     {
-        file_put_contents($this->tempModuleEnvFile, "TEST_VAR=value");
+        $modulePath = $this->createModule('Blog', <<<ENV
+        # Comment line
+        API_KEY=123
+        GREETING="Hello World"
+        EMPTY_QUOTED=""
+        EMPTY_RAW=
+        ENV
+                );
 
-        $this->assertTrue($this->envManager->hasModuleEnvFile($this->tempModuleDir));
+        $env = $this->manager->readModuleEnvironment($modulePath, 'Blog');
+
+        $this->assertSame(
+            [
+                'API_KEY' => '123',
+                'GREETING' => 'Hello World',
+                'EMPTY_QUOTED' => '',
+                'EMPTY_RAW' => '',
+            ],
+            $env
+        );
     }
 
-    public function testHasModuleEnvFileReturnsFalseWhenFileDoesNotExist(): void
+    public function testReadModuleEnvironmentReturnsEmptyWhenFileMissing(): void
     {
-        $this->assertFalse($this->envManager->hasModuleEnvFile($this->tempModuleDir));
+        $modulePath = $this->createModule('Missing');
+
+        $this->assertSame([], $this->manager->readModuleEnvironment($modulePath, 'Missing'));
     }
 
-    public function testReadModuleEnvironmentReturnsEmptyArrayWhenNoFile(): void
+    public function testAddModuleEnvironmentAppendsBlockAndQuotesValues(): void
     {
-        $result = $this->envManager->readModuleEnvironment($this->tempModuleDir, 'test-module');
-
-        $this->assertEmpty($result);
-    }
-
-    public function testReadModuleEnvironmentParsesVariablesCorrectly(): void
-    {
-        $envContent = "# Test module variables\nTEST_VAR1=value1\nTEST_VAR2=\"value with spaces\"\n# Comment\nTEST_VAR3=value3";
-        file_put_contents($this->tempModuleEnvFile, $envContent);
-
-        $result = $this->envManager->readModuleEnvironment($this->tempModuleDir, 'test-module');
-
-        $expected = [
-            'TEST_VAR1' => 'value1',
-            'TEST_VAR2' => 'value with spaces',
-            'TEST_VAR3' => 'value3'
-        ];
-
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testAddModuleEnvironmentAddsVariablesSuccessfully(): void
-    {
-        $envVars = [
-            'MODULE_VAR1' => 'value1',
-            'MODULE_VAR2' => 'value2'
-        ];
-
-        $result = $this->envManager->addModuleEnvironment('test-module', $envVars);
+        $result = $this->manager->addModuleEnvironment('blog', [
+            'API_KEY' => '123',
+            'GREETING' => 'hello world',
+            'HASHED' => 'value#1',
+        ]);
 
         $this->assertTrue($result);
+        $this->assertTrue($this->manager->hasModuleEnvironment('blog'));
 
-        $mainEnvContent = file_get_contents($this->tempEnvFile);
-        $this->assertStringContainsString('# === MODULE TEST-MODULE ENVIRONMENT VARIABLES ===', $mainEnvContent);
-        $this->assertStringContainsString('MODULE_VAR1=value1', $mainEnvContent);
-        $this->assertStringContainsString('MODULE_VAR2=value2', $mainEnvContent);
-        $this->assertStringContainsString('# === END MODULE TEST-MODULE ENVIRONMENT VARIABLES ===', $mainEnvContent);
+        $content = file_get_contents($this->mainEnvPath);
+        $this->assertIsString($content);
+        $this->assertStringContainsString('BASE_ENV=1', $content);
+        $this->assertStringContainsString('# === MODULE BLOG ENVIRONMENT VARIABLES ===', $content);
+        $this->assertStringContainsString('GREETING="hello world"', $content);
+        $this->assertStringContainsString('HASHED="value#1"', $content);
+
+        $env = $this->manager->getModuleEnvironment('blog');
+        $this->assertSame([
+            'API_KEY' => '123',
+            'GREETING' => 'hello world',
+            'HASHED' => 'value#1',
+        ], $env);
     }
 
-    public function testRemoveModuleEnvironmentRemovesVariablesSuccessfully(): void
+    public function testAddModuleEnvironmentSkipsWhenPayloadEmpty(): void
     {
-        // First add variables
-        $envVars = ['MODULE_VAR1' => 'value1'];
-        $this->envManager->addModuleEnvironment('test-module', $envVars);
+        $before = file_get_contents($this->mainEnvPath);
 
-        // Then remove them
-        $result = $this->envManager->removeModuleEnvironment('test-module');
-
-        $this->assertTrue($result);
-
-        $mainEnvContent = file_get_contents($this->tempEnvFile);
-        $this->assertStringNotContainsString('# === MODULE TEST-MODULE ENVIRONMENT VARIABLES ===', $mainEnvContent);
-        $this->assertStringNotContainsString('MODULE_VAR1=value1', $mainEnvContent);
+        $this->assertTrue($this->manager->addModuleEnvironment('blog', []));
+        $this->assertSame($before, file_get_contents($this->mainEnvPath));
     }
 
-    public function testHasModuleEnvironmentReturnsTrueWhenVariablesExist(): void
+    public function testRemoveModuleEnvironmentClearsBlock(): void
     {
-        $envVars = ['MODULE_VAR1' => 'value1'];
-        $this->envManager->addModuleEnvironment('test-module', $envVars);
+        $this->manager->addModuleEnvironment('blog', ['API_KEY' => '123']);
+        $this->assertTrue($this->manager->hasModuleEnvironment('blog'));
 
-        $this->assertTrue($this->envManager->hasModuleEnvironment('test-module'));
+        $this->assertTrue($this->manager->removeModuleEnvironment('blog'));
+        $this->assertFalse($this->manager->hasModuleEnvironment('blog'));
+
+        $content = file_get_contents($this->mainEnvPath);
+        $this->assertIsString($content);
+        $this->assertStringNotContainsString('MODULE BLOG ENVIRONMENT VARIABLES', $content);
+        $this->assertStringContainsString('BASE_ENV=1', $content);
     }
 
-    public function testHasModuleEnvironmentReturnsFalseWhenVariablesDoNotExist(): void
+    public function testRemoveModuleEnvironmentIsNoOpWhenMissing(): void
     {
-        $this->assertFalse($this->envManager->hasModuleEnvironment('test-module'));
+        $before = file_get_contents($this->mainEnvPath);
+
+        $this->assertTrue($this->manager->removeModuleEnvironment('blog'));
+        $this->assertSame($before, file_get_contents($this->mainEnvPath));
     }
 
-    public function testGetModuleEnvironmentReturnsCorrectVariables(): void
+    public function testUpdateModuleEnvironmentPreservesExistingValues(): void
     {
-        $envVars = [
-            'MODULE_VAR1' => 'value1',
-            'MODULE_VAR2' => 'value2'
-        ];
-        $this->envManager->addModuleEnvironment('test-module', $envVars);
+        $this->manager->addModuleEnvironment('blog', [
+            'API_KEY' => '123',
+            'FEATURE_FLAG' => 'true',
+        ]);
 
-        $result = $this->envManager->getModuleEnvironment('test-module');
+        $original = file_get_contents($this->mainEnvPath);
+        $this->assertIsString($original);
+        $modified = str_replace('API_KEY=123', 'API_KEY=custom', $original);
+        file_put_contents($this->mainEnvPath, $modified);
 
-        $this->assertEquals($envVars, $result);
+        $this->assertTrue($this->manager->updateModuleEnvironment('blog', [
+            'API_KEY' => '999',
+            'NEW_VAR' => 'fresh',
+        ]));
+
+        $env = $this->manager->getModuleEnvironment('blog');
+        $this->assertSame([
+            'API_KEY' => 'custom',
+            'NEW_VAR' => 'fresh',
+            'FEATURE_FLAG' => 'true',
+        ], $env);
     }
 
-    public function testUpdateModuleEnvironmentPreservesUserModifications(): void
+    public function testUpdateModuleEnvironmentAddsBlockWhenMissing(): void
     {
-        // Add initial variables
-        $initialVars = [
-            'MODULE_VAR1' => 'original1',
-            'MODULE_VAR2' => 'original2'
-        ];
-        $this->envManager->addModuleEnvironment('test-module', $initialVars);
+        $this->assertFalse($this->manager->hasModuleEnvironment('blog'));
 
-        // Simulate user modification by manually editing the .env file
-        $mainEnvContent = file_get_contents($this->tempEnvFile);
-        $mainEnvContent = str_replace('MODULE_VAR1=original1', 'MODULE_VAR1=user_modified', $mainEnvContent);
-        file_put_contents($this->tempEnvFile, $mainEnvContent);
-
-        // Update with new variables (including one that was modified by user)
-        $newVars = [
-            'MODULE_VAR1' => 'original1', // This should preserve user modification
-            'MODULE_VAR2' => 'original2',
-            'MODULE_VAR3' => 'new_value'  // This should be added
-        ];
-
-        $result = $this->envManager->updateModuleEnvironment('test-module', $newVars);
-
-        $this->assertTrue($result);
-
-        $finalVars = $this->envManager->getModuleEnvironment('test-module');
-
-        $expected = [
-            'MODULE_VAR1' => 'user_modified', // User modification preserved
-            'MODULE_VAR2' => 'original2',
-            'MODULE_VAR3' => 'new_value'      // New variable added
-        ];
-
-        $this->assertEquals($expected, $finalVars);
+        $this->assertTrue($this->manager->updateModuleEnvironment('blog', ['API_KEY' => '123']));
+        $this->assertSame(['API_KEY' => '123'], $this->manager->getModuleEnvironment('blog'));
     }
 
-    public function testGetModuleEnvFilePathReturnsCorrectPath(): void
+    public function testGetModuleEnvFilePathAndHasModuleEnvFile(): void
     {
-        $expected = $this->tempModuleDir . '/.env';
-        $result = $this->envManager->getModuleEnvFilePath($this->tempModuleDir);
+        $modulePath = $this->createModule('Blog', "API_KEY=123\n");
 
-        $this->assertEquals($expected, $result);
+        $this->assertTrue($this->manager->hasModuleEnvFile($modulePath));
+        $this->assertFalse($this->manager->hasModuleEnvFile($this->rootDir . '/Unknown'));
+
+        $expectedPath = $modulePath . '/.env';
+        $this->assertSame($expectedPath, $this->manager->getModuleEnvFilePath($modulePath . '/'));
     }
 
-    private function removeDirectory(string $dir): void
+    public function testReadModuleEnvironmentHandlesFileReadException(): void
     {
-        if (!is_dir($dir)) {
+        $modulePath = $this->createModule('ExceptionTest', "API_KEY=123\n");
+
+        // Make the .env file unreadable
+        $envFile = $modulePath . '/.env';
+        chmod($envFile, 0000);
+
+        $env = $this->manager->readModuleEnvironment($modulePath, 'ExceptionTest');
+
+        // Should return empty array on exception
+        $this->assertSame([], $env);
+
+        // Restore permissions for cleanup
+        chmod($envFile, 0644);
+    }
+
+    public function testAddModuleEnvironmentFailsWhenUnableToWrite(): void
+    {
+        $lockedDir = $this->rootDir . '/locked-env-path';
+        $this->createDirectory($lockedDir);
+
+        $this->setMainEnvPath($lockedDir);
+
+        $result = $this->manager->addModuleEnvironment('blog', ['API_KEY' => '123']);
+
+        $this->assertFalse($result);
+        $this->assertFalse($this->manager->hasModuleEnvironment('blog'));
+    }
+
+    public function testHasModuleEnvironmentReturnsFalseWhenEnvFileMissing(): void
+    {
+        $missingPath = $this->rootDir . '/missing/.env';
+        $this->setMainEnvPath($missingPath);
+
+        $this->assertFalse($this->manager->hasModuleEnvironment('blog'));
+    }
+
+    public function testRemoveModuleEnvironmentReturnsFalseWhenFileCannotBeRead(): void
+    {
+        $configuration = new ArrayConfiguration(['ROOT_DIR' => $this->rootDir]);
+
+        $manager = new ModuleEnvironmentManagerAlwaysHas($configuration);
+
+        $this->setMainEnvPathFor($manager, $this->rootDir . '/missing/.env');
+
+        $this->assertFalse($manager->removeModuleEnvironment('blog'));
+    }
+
+    public function testUpdateModuleEnvironmentReturnsFalseWhenRemovalFails(): void
+    {
+        $configuration = new ArrayConfiguration(['ROOT_DIR' => $this->rootDir]);
+
+        $manager = new ModuleEnvironmentManagerRemovalFails($configuration);
+
+        $this->assertFalse($manager->updateModuleEnvironment('blog', ['NEW_KEY' => 'value']));
+        $this->assertTrue($manager->removeCalled);
+    }
+
+    private function createModule(string $name, ?string $envContent = null): string
+    {
+        $modulePath = $this->rootDir . '/modules/' . $name;
+        $this->createDirectory($modulePath);
+
+        if ($envContent !== null) {
+            file_put_contents($modulePath . '/.env', $envContent);
+        }
+
+        return $modulePath;
+    }
+
+    private function createDirectory(string $path): void
+    {
+        if ('' === $path || is_dir($path)) {
             return;
         }
 
-        $files = array_diff(scandir($dir), ['.', '..']);
-        foreach ($files as $file) {
-            $path = $dir . '/' . $file;
-            is_dir($path) ? $this->removeDirectory($path) : unlink($path);
+        if (!mkdir($path, 0777, true) && !is_dir($path)) {
+            throw new \RuntimeException(sprintf('Could not create directory %s', $path));
         }
-        rmdir($dir);
+    }
+
+    private function removeDirectory(string $path): void
+    {
+        if ('' === $path || !is_dir($path)) {
+            return;
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($iterator as $fileInfo) {
+            if ($fileInfo->isDir()) {
+                rmdir($fileInfo->getPathname());
+                continue;
+            }
+
+            unlink($fileInfo->getPathname());
+        }
+
+        rmdir($path);
+    }
+
+    private function setMainEnvPath(string $path): void
+    {
+        $this->setMainEnvPathFor($this->manager, $path);
+    }
+
+    private function setMainEnvPathFor(ModuleEnvironmentManager $manager, string $path): void
+    {
+        $reflection = new \ReflectionClass(ModuleEnvironmentManager::class);
+        $property = $reflection->getProperty('mainEnvPath');
+        $property->setAccessible(true);
+        $property->setValue($manager, $path);
+    }
+
+    public function testBuildModuleEnvironmentBlockWithSpecialCharacters(): void
+    {
+        $this->manager->addModuleEnvironment('test', [
+            'SIMPLE' => 'value',
+            'WITH_SPACE' => 'hello world',
+            'WITH_HASH' => 'value#123',
+            'WITH_QUOTES' => 'say "hello"',
+            'MIXED' => 'test #value with spaces',
+        ]);
+
+        $content = file_get_contents($this->mainEnvPath);
+        $this->assertIsString($content);
+
+        // Values with spaces should be quoted
+        $this->assertStringContainsString('WITH_SPACE="hello world"', $content);
+        // Values with hash should be quoted
+        $this->assertStringContainsString('WITH_HASH="value#123"', $content);
+        // Values with quotes should be escaped and quoted
+        $this->assertStringContainsString('WITH_QUOTES=', $content);
+        // Mixed special characters
+        $this->assertStringContainsString('MIXED="test #value with spaces"', $content);
+    }
+
+    public function testGetModuleEnvironmentReturnsEmptyOnException(): void
+    {
+        $this->manager->addModuleEnvironment('test', ['KEY' => 'value']);
+
+        // Make the file unreadable
+        chmod($this->mainEnvPath, 0000);
+
+        $result = $this->manager->getModuleEnvironment('test');
+
+        // Should return empty array on exception
+        $this->assertSame([], $result);
+
+        // Restore permissions
+        chmod($this->mainEnvPath, 0644);
+    }
+
+    public function testRemoveModuleEnvironmentCleansUpMultipleNewlines(): void
+    {
+        $this->manager->addModuleEnvironment('blog', ['KEY1' => 'value1']);
+        $this->manager->addModuleEnvironment('shop', ['KEY2' => 'value2']);
+
+        // Remove first module
+        $this->assertTrue($this->manager->removeModuleEnvironment('blog'));
+
+        $content = file_get_contents($this->mainEnvPath);
+        $this->assertIsString($content);
+
+        // Should not have more than 2 consecutive newlines
+        $this->assertStringNotContainsString("\n\n\n", $content);
+    }
+
+    public function testUpdateModuleEnvironmentReturnsTrue(): void
+    {
+        // Test that update returns true on success
+        $this->manager->addModuleEnvironment('test', ['OLD_KEY' => 'old_value']);
+
+        $result = $this->manager->updateModuleEnvironment('test', ['NEW_KEY' => 'new_value']);
+
+        $this->assertTrue($result);
+
+        $env = $this->manager->getModuleEnvironment('test');
+        $this->assertArrayHasKey('OLD_KEY', $env);
+        $this->assertArrayHasKey('NEW_KEY', $env);
+    }
+
+    public function testReadModuleEnvironmentWithComplexValues(): void
+    {
+        $modulePath = $this->createModule('Complex', <<<ENV
+        # Complex test cases
+        SIMPLE=value
+        WITH_EQUALS=key=value=test
+        SINGLE_QUOTED='single quotes'
+        DOUBLE_QUOTED="double quotes"
+        EMPTY_LINE_BEFORE=test
+
+        # Another comment
+        AFTER_EMPTY=value
+        ENV
+                );
+
+        $env = $this->manager->readModuleEnvironment($modulePath, 'Complex');
+
+        $this->assertArrayHasKey('SIMPLE', $env);
+        $this->assertArrayHasKey('WITH_EQUALS', $env);
+        $this->assertSame('key=value=test', $env['WITH_EQUALS']);
+        $this->assertSame('single quotes', $env['SINGLE_QUOTED']);
+        $this->assertSame('double quotes', $env['DOUBLE_QUOTED']);
+    }
+
+    public function testAddModuleEnvironmentUpdatesExistingModule(): void
+    {
+        // Add initial environment
+        $this->manager->addModuleEnvironment('test', ['KEY1' => 'value1']);
+
+        // Try to add again - should update instead
+        $result = $this->manager->addModuleEnvironment('test', ['KEY2' => 'value2']);
+
+        $this->assertTrue($result);
+
+        $env = $this->manager->getModuleEnvironment('test');
+        $this->assertArrayHasKey('KEY1', $env);
+        $this->assertArrayHasKey('KEY2', $env);
+    }
+
+    public function testRemoveModuleEnvironmentHandlesTrailingNewline(): void
+    {
+        // Add module with content that has trailing newlines
+        file_put_contents($this->mainEnvPath, "BASE_VAR=1\n\n");
+        $this->manager->addModuleEnvironment('test', ['KEY' => 'value']);
+
+        $beforeRemove = file_get_contents($this->mainEnvPath);
+        $this->assertIsString($beforeRemove);
+
+        $this->assertTrue($this->manager->removeModuleEnvironment('test'));
+
+        $afterRemove = file_get_contents($this->mainEnvPath);
+        $this->assertIsString($afterRemove);
+        $this->assertStringContainsString('BASE_VAR=1', $afterRemove);
+        $this->assertStringNotContainsString('MODULE TEST', $afterRemove);
+    }
+
+    public function testParseEnvironmentVariablesHandlesEdgeCases(): void
+    {
+        $this->manager->addModuleEnvironment('edge', [
+            'NO_VALUE' => '',
+            'KEY_ONLY' => 'value',
+        ]);
+
+        $env = $this->manager->getModuleEnvironment('edge');
+
+        $this->assertArrayHasKey('NO_VALUE', $env);
+        $this->assertSame('', $env['NO_VALUE']);
+        $this->assertArrayHasKey('KEY_ONLY', $env);
     }
 }

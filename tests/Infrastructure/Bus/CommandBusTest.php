@@ -11,6 +11,7 @@ use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Test\TestData\Commands\TestCommand;
 use CubaDevOps\Flexi\Test\TestData\Handlers\TestCommandHandler;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -18,10 +19,22 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class CommandBusTest extends TestCase
 {
-    private CommandBus $commandBus;
-    private ContainerInterface $container;
-    private EventBusInterface $event_bus;
-    private ObjectBuilderInterface $class_factory;
+    /**
+     * @var CommandBus|MockObject
+     */
+    private $commandBus;
+    /**
+     * @var ContainerInterface|MockObject
+     */
+    private $container;
+    /**
+     * @var EventBusInterface|MockObject
+     */
+    private $event_bus;
+    /**
+     * @var ObjectBuilderInterface|MockObject
+     */
+    private $class_factory;
 
     /**
      * @throws NotFoundExceptionInterface

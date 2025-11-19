@@ -28,12 +28,10 @@
 
     {
       "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory",
-      "class": {
-        "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory",
+      "factory": {
+        "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\RouterFactory",
+        "method": "create",
         "arguments": [
-          "@CubaDevOps\\Flexi\\Infrastructure\\Bus\\EventBus",
-          "@Flexi\\Contracts\\Interfaces\\ObjectBuilderInterface",
-          "@Psr\\Http\\Message\\ResponseFactoryInterface",
           "@container"
         ]
       }
@@ -48,8 +46,7 @@
         "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\BusFactory",
         "method": "createCommandBus",
         "arguments": [
-          "@container",
-          "./src/Config/commands.json"
+          "@container"
         ]
       }
     },
@@ -63,8 +60,7 @@
         "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\BusFactory",
         "method": "createQueryBus",
         "arguments": [
-          "@container",
-          "./src/Config/queries.json"
+          "@container"
         ]
       }
     },
@@ -78,8 +74,7 @@
         "class": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\BusFactory",
         "method": "createEventBus",
         "arguments": [
-          "@container",
-          "./src/Config/listeners.json"
+          "@container"
         ]
       }
     },
@@ -109,7 +104,151 @@
       }
     },
     {
-      "glob": "./modules/*/Config/services.json"
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleCacheManagerInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleCacheManager",
+        "arguments": [
+          "./var",
+          "./"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleStateRepository",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleStateRepository",
+        "arguments": [
+          "./var/modules-state.json"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleStateManager",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleStateRepository"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\LocalModuleDetector",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\LocalModuleDetector",
+        "arguments": [
+          "./modules"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\VendorModuleDetector",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\VendorModuleDetector",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleCacheManagerInterface",
+          "./vendor"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\LocalModuleDetector",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\VendorModuleDetector"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleDetectorInterface",
+      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface",
+      "alias": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager"
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ModuleEnvironmentManager",
+        "arguments": [
+          "@Flexi\\Contracts\\Interfaces\\ConfigurationInterface"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Application\\UseCase\\ActivateModule",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Application\\UseCase\\ActivateModule",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Application\\UseCase\\DeactivateModule",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Application\\UseCase\\DeactivateModule",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Application\\UseCase\\GetModuleStatus",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Application\\UseCase\\GetModuleStatus",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Application\\UseCase\\UpdateModuleEnvironment",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Application\\UseCase\\UpdateModuleEnvironment",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Application\\UseCase\\ListModules",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Application\\UseCase\\ListModules",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Domain\\Interfaces\\ConfigurationFilesProviderInterface",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\Classes\\ConfigurationFilesProvider",
+        "arguments": [
+          "@CubaDevOps\\Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
+          "@CubaDevOps\\Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+          "./"
+        ]
+      }
+    },
+    {
+      "name": "CubaDevOps\\Flexi\\Infrastructure\\DependencyInjection\\RoutesDefinitionParser",
+      "class": {
+        "name": "CubaDevOps\\Flexi\\Infrastructure\\DependencyInjection\\RoutesDefinitionParser",
+        "arguments": [
+          "@cache"
+        ]
+      }
     }
   ]
 }

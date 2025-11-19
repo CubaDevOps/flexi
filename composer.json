@@ -58,7 +58,7 @@
       "@php -r \"if (!file_exists('var/logs')) { mkdir('var/logs', 0777, true); } touch('var/logs/app.log');\""
     ],
     "post-install-cmd": [
-      "@modules:sync"
+      "@modules:list"
     ],
     "update-framework": [
       "upgrader upgrade-safely"
@@ -67,14 +67,8 @@
       "@composer test",
       "@composer psalm"
     ],
-    "modules:sync": [
-      "@php bin/console -c modules:sync"
-    ],
     "modules:list": [
       "@php bin/console -c modules:list"
-    ],
-    "modules:validate": [
-      "@php bin/console -c modules:validate"
     ]
   },
   "config": {

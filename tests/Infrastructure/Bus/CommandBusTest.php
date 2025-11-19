@@ -7,10 +7,11 @@ namespace CubaDevOps\Flexi\Test\Infrastructure\Bus;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Test\TestData\Commands\TestCommand;
 use CubaDevOps\Flexi\Test\TestData\Handlers\TestCommandHandler;
 use CubaDevOps\Flexi\Infrastructure\Bus\CommandBus;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -18,10 +19,22 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class CommandBusTest extends TestCase
 {
-    private CommandBus $commandBus;
-    private ContainerInterface $container;
-    private EventBusInterface $event_bus;
-    private ObjectBuilderInterface $class_factory;
+    /**
+     * @var CommandBus|MockObject
+     */
+    private $commandBus;
+    /**
+     * @var ContainerInterface|MockObject
+     */
+    private $container;
+    /**
+     * @var EventBusInterface|MockObject
+     */
+    private $event_bus;
+    /**
+     * @var ObjectBuilderInterface|MockObject
+     */
+    private $class_factory;
 
     /**
      * @throws NotFoundExceptionInterface
@@ -37,7 +50,8 @@ class CommandBusTest extends TestCase
 
         $this->commandBus = new CommandBus($this->container, $this->event_bus, $this->class_factory);
 
-        $this->commandBus->loadHandlersFromJsonFile('./tests/TestData/Configurations/commands-bus-test.json');
+        // Register test handlers using the new register system
+        $this->commandBus->register(TestCommand::class, TestCommandHandler::class, 'test');
     }
 
     /**
@@ -123,7 +137,7 @@ class CommandBusTest extends TestCase
         try {
             $dtoClass = $this->commandBus->getDtoClassFromAlias('non-existent-alias');
             // If it somehow returns, we test the fallback
-            $this->assertEquals(\CubaDevOps\Flexi\Application\Commands\NotFoundCommand::class, $dtoClass);
+            $this->assertEquals(\CubaDevOps\Flexi\Domain\Commands\NotFoundCommand::class, $dtoClass);
         } catch (\Error $e) {
             // If it throws an error, that's also valid behavior to test
             $this->assertStringContainsString('non-existent-alias', $e->getMessage());
@@ -132,6 +146,8 @@ class CommandBusTest extends TestCase
         }
     }
 
+    // TODO: DEPRECATED - loadHandlersFromJsonFile no longer exists, needs refactoring for new register() system
+    /*
     public function testLoadHandlersFromJsonFileWithGlob(): void
     {
         // Test loading handlers from JSON file that contains glob patterns
@@ -147,56 +163,42 @@ class CommandBusTest extends TestCase
         $definitions = $commandBus->getHandlersDefinition(false);
         $this->assertNotEmpty($definitions);
     }
+    */
 
+    // TODO: DEPRECATED - loadHandlersFromJsonFile no longer exists, needs refactoring
+    /*
     public function testLoadGlobHandlersMethod(): void
     {
-        // Test loadGlobHandlers method using a partial mock to control its dependencies
-        $commandBusMock = $this->getMockBuilder(CommandBus::class)
-            ->setConstructorArgs([$this->container, $this->event_bus, $this->class_factory])
-            ->onlyMethods(['readGlob'])
-            ->getMock();
+        // This test specifically checks the loadGlobHandlers method behavior
+        $commandBus = new CommandBus($this->container, $this->event_bus, $this->class_factory);
 
-        // Mock readGlob to return some fake file paths
-        $commandBusMock->method('readGlob')
-            ->with('tests/TestData/Configurations/handlers/*.json')
-            ->willReturn([
-                'tests/TestData/Configurations/commands-bus-test.json'
-            ]);
-
-        // Use reflection to call the private loadGlobHandlers method
-        $reflection = new \ReflectionClass($commandBusMock);
-        $method = $reflection->getMethod('loadGlobHandlers');
-        $method->setAccessible(true);
+        // Call a method that would eventually call loadGlobHandlers
+        // We're testing this indirectly through loadHandlersFromJsonFile with glob entries
+        $result = $commandBus->getHandlersDefinition();
 
         // This should execute the foreach loop and call loadHandlersFromJsonFile
-        $method->invoke($commandBusMock, 'tests/TestData/Configurations/handlers/*.json');
+        $this->assertIsArray($result);
 
-        // Verify that handlers were loaded (at least from the valid file)
-        $this->assertTrue($commandBusMock->hasHandler(TestCommand::class));
+        // Test that it handles empty results correctly
+        $commandBus2 = new CommandBus($this->container, $this->event_bus, $this->class_factory);
+        $result2 = $commandBus2->getHandlersDefinition();
+        $this->assertIsArray($result2);
     }
+    */
 
+    // TODO: DEPRECATED - loadHandlersFromJsonFile no longer exists, needs refactoring
+    /*
     public function testLoadGlobHandlersWithEmptyResults(): void
     {
-        // Test loadGlobHandlers when readGlob returns empty array
-        $commandBusMock = $this->getMockBuilder(CommandBus::class)
-            ->setConstructorArgs([$this->container, $this->event_bus, $this->class_factory])
-            ->onlyMethods(['readGlob'])
-            ->getMock();
+        // Test behavior when glob pattern returns no results
+        $commandBus = new CommandBus($this->container, $this->event_bus, $this->class_factory);
 
-        // Mock readGlob to return empty array
-        $commandBusMock->method('readGlob')
-            ->willReturn([]);
+        // Test that it handles empty glob results correctly
+        $result = $commandBus->getHandlersDefinition();
+        $this->assertIsArray($result);
 
-        // Use reflection to call the private loadGlobHandlers method
-        $reflection = new \ReflectionClass($commandBusMock);
-        $method = $reflection->getMethod('loadGlobHandlers');
-        $method->setAccessible(true);
-
-        // This should not throw any errors and should skip the foreach loop
-        $method->invoke($commandBusMock, 'nonexistent/pattern/*.json');
-
-        // The foreach should not execute, so no new handlers should be added
-        $definitions = $commandBusMock->getHandlersDefinition(false);
-        $this->assertEmpty($definitions);
+        // Should return empty array if no handlers registered
+        $this->assertEmpty($result);
     }
+    */
 }

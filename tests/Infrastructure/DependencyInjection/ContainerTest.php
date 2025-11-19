@@ -143,4 +143,146 @@ class ContainerTest extends TestCase
         $this->expectExceptionMessage('Service definition must be an object, an array, or a string class name.');
         $this->container->set('invalid_service', 12345);
     }
+
+    /**
+     * Test self-referencing service does not register (returns early).
+     */
+    public function testSelfReferencingServiceDoesNotRegister(): void
+    {
+        // Try to set container - should return early without registering
+        $this->container->set('container', new \stdClass());
+
+        // Container should still return itself
+        $result = $this->container->get('container');
+        $this->assertSame($this->container, $result);
+    }
+
+    /**
+     * Test self-referencing with ContainerInterface does not register.
+     */
+    public function testSelfReferencingContainerInterfaceDoesNotRegister(): void
+    {
+        // Try to set ContainerInterface - should return early
+        $this->container->set(\Psr\Container\ContainerInterface::class, new \stdClass());
+
+        // Should still return container itself
+        $result = $this->container->get(\Psr\Container\ContainerInterface::class);
+        $this->assertSame($this->container, $result);
+    }
+
+    /**
+     * Test getting cache service.
+     */
+    public function testGetCacheService(): void
+    {
+        $cache = $this->container->get('cache');
+        $this->assertInstanceOf(\Flexi\Contracts\Interfaces\CacheInterface::class, $cache);
+    }
+
+    /**
+     * Test getting factory service.
+     */
+    public function testGetFactoryService(): void
+    {
+        $factory = $this->container->get('factory');
+        $this->assertInstanceOf(\Flexi\Contracts\Interfaces\ObjectBuilderInterface::class, $factory);
+    }
+
+    /**
+     * Test resolving alias that cannot be resolved throws ServiceNotFoundException.
+     */
+    public function testResolveInvalidAliasThrowsException(): void
+    {
+        // Register a service with an alias that points to non-existent service
+        $reflection = new \ReflectionClass(Container::class);
+        $property = $reflection->getProperty('serviceDefinitions');
+        $property->setAccessible(true);
+
+        $definitions = $property->getValue($this->container);
+        $definitions['invalid_alias'] = 'non_existent_service';
+        $property->setValue($this->container, $definitions);
+
+        // The actual exception thrown is ServiceNotFoundException
+        $this->expectException(\CubaDevOps\Flexi\Domain\Exceptions\ServiceNotFoundException::class);
+        $this->container->get('invalid_alias');
+    }
+
+    /**
+     * Test set with object instance caches it directly.
+     */
+    public function testSetWithObjectInstanceCachesDirectly(): void
+    {
+        $service = new \stdClass();
+        $service->test = 'value';
+
+        $this->container->set('test_object', $service);
+
+        $retrieved = $this->container->get('test_object');
+        $this->assertSame($service, $retrieved);
+        $this->assertEquals('value', $retrieved->test);
+    }
+
+    /**
+     * Test set with callable is stored in definitions.
+     */
+    public function testSetWithCallableIsStoredInDefinitions(): void
+    {
+        $callable = function () {
+            return new \stdClass();
+        };
+
+        $this->container->set('test_callable', $callable);
+        $this->assertTrue($this->container->has('test_callable'));
+    }
+
+    /**
+     * Test set does not overwrite existing service.
+     */
+    public function testSetDoesNotOverwriteExistingService(): void
+    {
+        $first = new \stdClass();
+        $first->value = 'first';
+
+        $this->container->set('test_service', $first);
+
+        $second = new \stdClass();
+        $second->value = 'second';
+
+        // Try to set again - should not overwrite
+        $this->container->set('test_service', $second);
+
+        $retrieved = $this->container->get('test_service');
+        $this->assertSame($first, $retrieved);
+        $this->assertEquals('first', $retrieved->value);
+    }
+
+    /**
+     * Test get with array definition builds from definition.
+     */
+    public function testGetWithArrayDefinitionBuildsFromDefinition(): void
+    {
+        $this->assertTrue($this->container->has(CommandBus::class));
+        $service = $this->container->get(CommandBus::class);
+        $this->assertInstanceOf(CommandBus::class, $service);
+    }
+
+    /**
+     * Test has returns true for cached services.
+     */
+    public function testHasReturnsTrueForCachedServices(): void
+    {
+        $service = new \stdClass();
+        $this->container->set('cached_test', $service);
+
+        $this->assertTrue($this->container->has('cached_test'));
+    }
+
+    /**
+     * Test getting ContainerInterface returns container itself.
+     */
+    public function testGetContainerInterfaceReturnsSelf(): void
+    {
+        $container = $this->container->get(\Psr\Container\ContainerInterface::class);
+        $this->assertSame($this->container, $container);
+    }
 }

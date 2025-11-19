@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
 
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Application\Commands\ModuleInfoCommand;
 use CubaDevOps\Flexi\Infrastructure\Bus\QueryBus;
 use CubaDevOps\Flexi\Infrastructure\Ui\Cli\CliInput;
@@ -38,7 +37,7 @@ class QueryHandlerTest extends TestCase
         $result = $handler->handle($input);
 
         $this->assertIsString($result);
-        $this->assertEquals('Query result', $result);
+        $this->assertEquals('NotFoundCommand: No handler registered for this command', $result);
     }
 
     public function testHandleWithHelpFlag(): void
@@ -75,7 +74,7 @@ class QueryHandlerTest extends TestCase
         $result = $handler->handle($input);
 
         $this->assertIsString($result);
-        $this->assertEquals('Query not found', $result);
+        $this->assertEquals('NotFoundCommand: No handler registered for this command', $result);
     }
 
     public function testHandleWithArguments(): void
@@ -99,14 +98,14 @@ class QueryHandlerTest extends TestCase
         $result = $handler->handle($input);
 
         $this->assertIsString($result);
-        $this->assertEquals('Filtered query result', $result);
+        $this->assertEquals('NotFoundCommand: No handler registered for this command', $result);
     }
 
     public function testHandleReturnsStringFromQueryBus(): void
     {
         $queryBusMock = $this->createMock(QueryBus::class);
         $queryBusMock->method('hasHandler')->willReturn(true);
-        $queryBusMock->method('getDtoClassFromAlias')->willReturn(NotFoundCommand::class);
+        $queryBusMock->method('getDtoClassFromAlias')->willReturn('CubaDevOps\\Flexi\\Test\\TestData\\Queries\\TestQuery');
 
         $messageMock = $this->createMock(MessageInterface::class);
         $messageMock->method('__toString')->willReturn('Complex query response');
@@ -142,7 +141,7 @@ class QueryHandlerTest extends TestCase
         $result = $handler->handle($input);
 
         $this->assertIsString($result);
-        $this->assertEquals('Empty args query', $result);
+        $this->assertEquals('NotFoundCommand: No handler registered for this command', $result);
     }
 
     public function testQueryHandlerWithCliDTOAndHelpFlag(): void

@@ -8,7 +8,6 @@ use Flexi\Contracts\Classes\Traits\FileHandlerTrait;
 use Flexi\Contracts\Classes\Traits\GlobFileReader;
 use Flexi\Contracts\Classes\Traits\JsonFileReader;
 use Flexi\Contracts\Interfaces\CacheInterface;
-use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
 
 class ServicesDefinitionParser
 {
@@ -94,36 +93,10 @@ class ServicesDefinitionParser
                 $services[$service['name']] = $service['alias'];
             } elseif (isset($service['factory']) || isset($service['class'])) {
                 $services[$service['name']] = $service;
-            } elseif (isset($service['glob'])) {
-                $this->processGlobServices($service['glob'], $services, $filename);
             }
         }
 
         return $services;
-    }
-
-    /**
-     * Processes services defined by a glob pattern.
-     * Only processes files from installed modules.
-     */
-    private function processGlobServices(string $glob, array &$services, string $filename): void
-    {
-        $files = $this->readGlob($glob);
-
-        // Filter files to only include installed modules
-        $filter = new InstalledModulesFilter();
-        $files = $filter->filterFiles($files);
-
-        foreach ($files as $file) {
-            $fileServices = $this->parse($file);
-
-            foreach ($fileServices as $name => $fileService) {
-                if (isset($services[$name])) {
-                    throw new \RuntimeException(sprintf(self::ERROR_SERVICE_ALREADY_DEFINED, $name, $filename));
-                }
-                $services[$name] = $fileService;
-            }
-        }
     }
 
     /**

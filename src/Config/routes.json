@@ -1,7 +1,5 @@
 {
   "routes": [
-    {
-      "glob": "./modules/*/Config/routes.json"
-    }
+
   ]
 }

@@ -6,7 +6,7 @@ namespace CubaDevOps\Flexi\Test\Infrastructure\Ui\Cli;
 
 use Flexi\Contracts\Interfaces\BusInterface;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\DummyDTO;
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Infrastructure\Ui\Cli\DTOFactory;
 use PHPUnit\Framework\TestCase;
 

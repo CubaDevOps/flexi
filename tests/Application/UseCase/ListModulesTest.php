@@ -6,6 +6,8 @@ namespace CubaDevOps\Flexi\Test\Application\UseCase;
 
 use CubaDevOps\Flexi\Application\Commands\ListModulesCommand;
 use CubaDevOps\Flexi\Application\UseCase\ListModules;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleStateManagerInterface;
+use CubaDevOps\Flexi\Domain\Interfaces\ModuleDetectorInterface;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\HandlerInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;
@@ -14,6 +16,8 @@ use PHPUnit\Framework\TestCase;
 class ListModulesTest extends TestCase
 {
     private ListModules $listModules;
+    private $stateManager; // Untyped for mock
+    private $moduleDetector; // Untyped for mock
     private string $tempModulesPath;
     private string $tempVendorPath;
 
@@ -26,7 +30,12 @@ class ListModulesTest extends TestCase
         mkdir($this->tempModulesPath);
         mkdir($this->tempVendorPath);
 
-        $this->listModules = new ListModules($this->tempModulesPath, $this->tempVendorPath);
+        // Create mocks for dependencies
+        $this->stateManager = $this->createMock(ModuleStateManagerInterface::class);
+        $this->moduleDetector = $this->createMock(ModuleDetectorInterface::class);
+        $this->moduleDetector->method('getModuleStatistics')->willReturn([]);
+
+        $this->listModules = new ListModules($this->stateManager, $this->moduleDetector);
     }
 
     public function tearDown(): void
@@ -43,6 +52,10 @@ class ListModulesTest extends TestCase
 
     public function testHandleWithNoModules(): void
     {
+        // Configure mock to return no modules
+        $this->moduleDetector->method('getAllModules')
+            ->willReturn([]);
+
         $dto = new ListModulesCommand();
         $result = $this->listModules->handle($dto);
 
@@ -52,7 +65,7 @@ class ListModulesTest extends TestCase
         $response = json_decode($result->get('body'), true);
 
         $this->assertEquals(0, $response['total']);
-        $this->assertEquals(0, $response['installed']);
+        $this->assertEquals(0, $response['active']); // UseCase returns active/inactive, not installed
         $this->assertEquals([], $response['modules']);
     }
 
@@ -84,26 +97,52 @@ class ListModulesTest extends TestCase
             json_encode($composerData, JSON_PRETTY_PRINT)
         );
 
+        // Create ModuleInfo mock
+        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            $moduleName,
+            'cubadevops/flexi-module-test',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            $modulePath,
+            '1.0.0',
+            false,
+            [
+                'description' => 'Test module',
+                'type' => 'flexi-module',
+                'require' => ['php' => '^7.4|^8.0'],
+                'extra' => ['flexi' => ['autoload' => true]],
+            ]
+        );
+
+        // Configure mock
+        $this->moduleDetector->method('getAllModules')
+            ->willReturn([$moduleInfo]);
+
+        $this->stateManager->method('isModuleActive')
+            ->with($moduleName)
+            ->willReturn(false);
+
+        $this->stateManager->method('getModuleState')
+            ->with($moduleName)
+            ->willReturn(null);
+
         $dto = new ListModulesCommand();
         $result = $this->listModules->handle($dto);
 
         $response = json_decode($result->get('body'), true);
 
         $this->assertEquals(1, $response['total']);
-        $this->assertEquals(0, $response['installed']); // Not installed via composer
+        $this->assertEquals(0, $response['active']); // Module is not active
+        $this->assertEquals(1, $response['inactive']); // Module is inactive
         $this->assertArrayHasKey($moduleName, $response['modules']);
 
         $moduleInfo = $response['modules'][$moduleName];
         $this->assertEquals($moduleName, $moduleInfo['name']);
         $this->assertEquals($modulePath, $moduleInfo['path']);
-        $this->assertFalse($moduleInfo['installed']);
-        $this->assertTrue($moduleInfo['composer_exists']);
+        $this->assertFalse($moduleInfo['active']); // Changed from 'installed' to 'active'
         $this->assertEquals('cubadevops/flexi-module-test', $moduleInfo['package']);
         $this->assertEquals('1.0.0', $moduleInfo['version']);
         $this->assertEquals('Test module', $moduleInfo['description']);
-        $this->assertEquals('flexi-module', $moduleInfo['type']);
-        $this->assertArrayHasKey('flexi', $moduleInfo);
-        $this->assertEquals(1, $moduleInfo['dependencies']); // Only php dependency
+        $this->assertEquals('local', $moduleInfo['type']); // ModuleType value
     }
 
     public function testHandleWithInstalledModule(): void
@@ -129,16 +168,41 @@ class ListModulesTest extends TestCase
         $vendorModulePath = $this->tempVendorPath . '/flexi-module-auth';
         mkdir($vendorModulePath);
 
+        // Create ModuleInfo mock
+        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            $moduleName,
+            'cubadevops/flexi-module-auth',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::vendor(), // Vendor type for installed module
+            $modulePath,
+            '2.0.0',
+            false,
+            [
+                'description' => 'Authentication module',
+            ]
+        );
+
+        // Configure mock
+        $this->moduleDetector->method('getAllModules')
+            ->willReturn([$moduleInfo]);
+
+        $this->stateManager->method('isModuleActive')
+            ->with($moduleName)
+            ->willReturn(true); // Active module
+
+        $this->stateManager->method('getModuleState')
+            ->with($moduleName)
+            ->willReturn(null);
+
         $dto = new ListModulesCommand();
         $result = $this->listModules->handle($dto);
 
         $response = json_decode($result->get('body'), true);
 
         $this->assertEquals(1, $response['total']);
-        $this->assertEquals(1, $response['installed']);
+        $this->assertEquals(1, $response['active']); // Changed from 'installed' to 'active'
 
         $moduleInfo = $response['modules'][$moduleName];
-        $this->assertTrue($moduleInfo['installed']);
+        $this->assertTrue($moduleInfo['active']); // Changed from 'installed' to 'active'
     }
 
     public function testHandleWithModuleWithoutComposerJson(): void
@@ -148,6 +212,29 @@ class ListModulesTest extends TestCase
         $modulePath = $this->tempModulesPath . '/' . $moduleName;
         mkdir($modulePath);
 
+        // Create ModuleInfo mock for broken module (no composer.json)
+        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            $moduleName,
+            'unknown',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            $modulePath,
+            'unknown',
+            false,
+            []
+        );
+
+        // Configure mock
+        $this->moduleDetector->method('getAllModules')
+            ->willReturn([$moduleInfo]);
+
+        $this->stateManager->method('isModuleActive')
+            ->with($moduleName)
+            ->willReturn(false);
+
+        $this->stateManager->method('getModuleState')
+            ->with($moduleName)
+            ->willReturn(null);
+
         $dto = new ListModulesCommand();
         $result = $this->listModules->handle($dto);
 
@@ -155,7 +242,7 @@ class ListModulesTest extends TestCase
 
         $this->assertEquals(1, $response['total']);
         $moduleInfo = $response['modules'][$moduleName];
-        $this->assertFalse($moduleInfo['composer_exists']);
+        $this->assertFalse($moduleInfo['active']); // Changed from composer_exists to active
         $this->assertEquals($moduleName, $moduleInfo['name']);
     }
 
@@ -164,15 +251,20 @@ class ListModulesTest extends TestCase
         $customModulesPath = '/custom/modules';
         $customVendorPath = '/custom/vendor';
 
-        $useCase = new ListModules($customModulesPath, $customVendorPath);
+        // Create new mocks for this specific test
+        $mockStateManager = $this->createMock(ModuleStateManagerInterface::class);
+        $mockModuleDetector = $this->createMock(ModuleDetectorInterface::class);
+
+        $useCase = new ListModules($mockStateManager, $mockModuleDetector);
 
         $this->assertInstanceOf(ListModules::class, $useCase);
     }
 
     public function testHandleWithNonExistentModulesDirectory(): void
     {
-        // Remove modules directory
-        rmdir($this->tempModulesPath);
+        // Configure mock to return no modules
+        $this->moduleDetector->method('getAllModules')
+            ->willReturn([]);
 
         $dto = new ListModulesCommand();
         $result = $this->listModules->handle($dto);
@@ -180,65 +272,53 @@ class ListModulesTest extends TestCase
         $response = json_decode($result->get('body'), true);
 
         $this->assertEquals(0, $response['total']);
-        $this->assertEquals(0, $response['installed']);
+        $this->assertEquals(0, $response['active']); // Changed from 'installed' to 'active'
         $this->assertEquals([], $response['modules']);
     }
 
     public function testHandleWithNonExistentVendorDirectory(): void
     {
-        // Remove vendor directory
-        rmdir($this->tempVendorPath);
-
-        // Create a test module
-        $moduleName = 'TestModule';
-        $modulePath = $this->tempModulesPath . '/' . $moduleName;
-        mkdir($modulePath);
-
-        $composerData = ['name' => 'cubadevops/flexi-module-test'];
-        file_put_contents(
-            $modulePath . '/composer.json',
-            json_encode($composerData)
-        );
+        // Configure mock to return no modules (simulating no vendor directory)
+        $this->moduleDetector->method('getAllModules')
+            ->willReturn([]);
 
         $dto = new ListModulesCommand();
         $result = $this->listModules->handle($dto);
 
         $response = json_decode($result->get('body'), true);
 
-        $this->assertEquals(1, $response['total']);
-        $this->assertEquals(0, $response['installed']); // No vendor directory means no installed modules
+        $this->assertEquals(0, $response['total']);
+        $this->assertEquals(0, $response['active']); // No vendor directory means no active modules
     }
 
     public function testHandleWithMultipleInstalledModules(): void
     {
-        // Create multiple installed modules in vendor
-        $vendorModules = [
-            'flexi-module-auth',
-            'flexi-module-user',
-            'flexi-module-admin'
-        ];
+        // Create multiple ModuleInfo mocks
+        $modules = [];
+        $moduleNames = ['Auth', 'Cache', 'Logging'];
 
-        foreach ($vendorModules as $packageName) {
-            $vendorModulePath = $this->tempVendorPath . '/' . $packageName;
-            mkdir($vendorModulePath);
-        }
-
-        // Create corresponding modules directory entries
-        $moduleNames = ['auth', 'user', 'admin'];
-        foreach ($moduleNames as $moduleName) {
-            $modulePath = $this->tempModulesPath . '/' . ucfirst($moduleName);
-            mkdir($modulePath);
-
-            $composerData = [
-                'name' => "cubadevops/flexi-module-{$moduleName}",
-                'version' => '1.0.0'
-            ];
-
-            file_put_contents(
-                $modulePath . '/composer.json',
-                json_encode($composerData)
+        foreach ($moduleNames as $name) {
+            $modules[] = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+                $name,
+                'cubadevops/flexi-module-' . strtolower($name),
+                \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::vendor(),
+                '/vendor/cubadevops/flexi-module-' . strtolower($name),
+                '1.0.0',
+                false,
+                []
             );
         }
+
+        // Configure mock
+        $this->moduleDetector->method('getAllModules')
+            ->willReturn($modules);
+
+        // Configure all modules as active
+        $this->stateManager->method('isModuleActive')
+            ->willReturn(true);
+
+        $this->stateManager->method('getModuleState')
+            ->willReturn(null);
 
         $dto = new ListModulesCommand();
         $result = $this->listModules->handle($dto);
@@ -246,28 +326,25 @@ class ListModulesTest extends TestCase
         $response = json_decode($result->get('body'), true);
 
         $this->assertEquals(3, $response['total']);
-        $this->assertEquals(3, $response['installed']);
-
-        // Check each module is marked as installed
-        foreach (['Auth', 'User', 'Admin'] as $moduleName) {
-            $this->assertTrue($response['modules'][$moduleName]['installed']);
-        }
+        $this->assertEquals(3, $response['active']); // All modules are active
+        $this->assertEquals(0, $response['inactive']);
     }
 
     public function testHandleWithInvalidJsonInComposer(): void
     {
-        // Create a test module with invalid JSON
-        $moduleName = 'InvalidJson';
-        $modulePath = $this->tempModulesPath . '/' . $moduleName;
-        mkdir($modulePath);
+        // This test verifies that UseCase handles modules gracefully
+        // In real scenario, invalid JSON would be handled by ModuleDetector
 
-        // Create invalid JSON file
-        file_put_contents($modulePath . '/composer.json', 'invalid json content');
+        $this->moduleDetector->method('getAllModules')
+            ->willReturn([]); // ModuleDetector would skip invalid modules
 
         $dto = new ListModulesCommand();
+        $result = $this->listModules->handle($dto);
 
-        $this->expectException(\JsonException::class);
-        $this->listModules->handle($dto);
+        // Should handle gracefully and return empty result
+        $response = json_decode($result->get('body'), true);
+        $this->assertEquals(0, $response['total']);
+        $this->assertEquals(0, $response['active']);
     }
 
     public function testHandleWithModuleHavingMinimalComposerJson(): void
@@ -287,25 +364,120 @@ class ListModulesTest extends TestCase
             json_encode($composerData)
         );
 
+        // Create ModuleInfo mock for minimal module
+        $moduleInfo = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            $moduleName,
+            'cubadevops/flexi-module-minimal',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::local(),
+            $modulePath,
+            'unknown',
+            false,
+            [
+                'description' => '',
+                'type' => 'unknown',
+                'dependencies' => 0
+            ]
+        );
+
+        // Configure mock
+        $this->moduleDetector->method('getAllModules')
+            ->willReturn([$moduleInfo]);
+
+        $this->stateManager->method('isModuleActive')
+            ->with($moduleName)
+            ->willReturn(false);
+
+        $this->stateManager->method('getModuleState')
+            ->with($moduleName)
+            ->willReturn(null);
+
         $dto = new ListModulesCommand();
         $result = $this->listModules->handle($dto);
 
         $response = json_decode($result->get('body'), true);
         $moduleInfo = $response['modules'][$moduleName];
 
-        // Check defaults are applied
+        // Check defaults are applied through UseCase metadata
         $this->assertEquals('unknown', $moduleInfo['version']);
         $this->assertEquals('', $moduleInfo['description']);
-        $this->assertEquals('unknown', $moduleInfo['type']);
-        $this->assertEquals(0, $moduleInfo['dependencies']);
-        $this->assertArrayNotHasKey('flexi', $moduleInfo);
+        $this->assertEquals('local', $moduleInfo['type']); // ModuleType value
     }
 
     public function testPathNormalizationInConstructor(): void
     {
         // Test path normalization with trailing slashes
-        $useCase = new ListModules('./modules/', './vendor/cubadevops/');
+        // Test that constructor accepts proper types
+        $mockStateManager = $this->createMock(ModuleStateManagerInterface::class);
+        $mockModuleDetector = $this->createMock(ModuleDetectorInterface::class);
+
+        $useCase = new ListModules($mockStateManager, $mockModuleDetector);
         $this->assertInstanceOf(ListModules::class, $useCase);
+    }
+
+    public function testHandleIncludesConflictDetailsAndStatistics(): void
+    {
+        $analytics = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleInfo(
+            'analytics',
+            'cubadevops/flexi-analytics',
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::mixed(),
+            '/modules/analytics',
+            '3.0.0',
+            true,
+            [
+                'description' => 'Analytics suite',
+                'local_path' => '/modules/analytics',
+                'vendor_path' => '/vendor/cubadevops/analytics',
+                'resolution_strategy' => 'local_priority',
+            ]
+        );
+
+        $stateManager = $this->createMock(ModuleStateManagerInterface::class);
+        $moduleDetector = $this->createMock(ModuleDetectorInterface::class);
+
+        $moduleDetector
+            ->expects($this->once())
+            ->method('getAllModules')
+            ->willReturn([$analytics]);
+
+        $moduleDetector
+            ->expects($this->any())
+            ->method('getModuleStatistics')
+            ->willReturn(['local_only' => 0, 'conflicts' => 1]);
+
+        $moduleState = new \CubaDevOps\Flexi\Domain\ValueObjects\ModuleState(
+            'analytics',
+            false,
+            \CubaDevOps\Flexi\Domain\ValueObjects\ModuleType::mixed(),
+            new \DateTimeImmutable('2025-01-10T11:30:00+00:00'),
+            'ops'
+        );
+
+        $stateManager
+            ->expects($this->once())
+            ->method('isModuleActive')
+            ->with('analytics')
+            ->willReturn(false);
+
+        $stateManager
+            ->expects($this->once())
+            ->method('getModuleState')
+            ->with('analytics')
+            ->willReturn($moduleState);
+
+        $listModules = new ListModules($stateManager, $moduleDetector);
+
+        $response = json_decode($listModules->handle(new ListModulesCommand())->get('body'), true);
+
+        $this->assertSame(1, $response['total']);
+        $this->assertSame(0, $response['active']);
+        $this->assertSame(['local_only' => 0, 'conflicts' => 1], $response['types']);
+
+        $module = $response['modules']['analytics'];
+        $this->assertFalse($module['active']);
+        $this->assertSame('ops', $module['modified_by']);
+        $this->assertSame('Analytics suite', $module['description']);
+        $this->assertSame('local_priority', $module['conflict']['resolution_strategy']);
+        $this->assertArrayHasKey('metadata', $module);
     }
 
     private function removeDirectory(string $dir): void

@@ -12,8 +12,7 @@ use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\EventInterface;
 use Flexi\Contracts\Interfaces\EventListenerInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
-use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
+use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -21,8 +20,6 @@ use Psr\Log\LoggerInterface;
 
 class EventBus implements EventBusInterface
 {
-    use JsonFileReader;
-    use GlobFileReader;
 
     private array $events = [];
     private ContainerInterface $container;
@@ -34,7 +31,11 @@ class EventBus implements EventBusInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __construct(ContainerInterface $container, ObjectBuilderInterface $class_factory, LoggerInterface $logger, ConfigurationRepositoryInterface $configuration_repository)
+    public function __construct(ContainerInterface $container,
+    ObjectBuilderInterface $class_factory,
+    LoggerInterface $logger,
+    ConfigurationRepositoryInterface $configuration_repository
+    )
     {
         $this->container = $container;
         $this->class_factory = $class_factory;
@@ -42,59 +43,10 @@ class EventBus implements EventBusInterface
         $this->configuration = $configuration_repository;
     }
 
-    /**
-     * @throws \JsonException
-     * @throws \ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function loadHandlersFromJsonFile(string $file): void
-    {
-        $events = $this->readJsonFile($file);
-
-        foreach ($events as $event_entry) {
-            if ($this->isGlob($event_entry)) {
-                $this->loadGlobListeners($event_entry);
-                continue;
-            }
-            $this->buildDefinition($event_entry['event'], $event_entry['listeners']);
-        }
-    }
-
-    private function isGlob(array $listener): bool
-    {
-        return isset($listener['glob']);
-    }
-
-    /**
-     * @throws NotFoundExceptionInterface
-     * @throws \ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws \JsonException
-     */
-    public function loadGlobListeners(array $listener): void
-    {
-        $files = $this->readGlob($listener['glob']);
-
-        // Filter files to only include installed modules
-        $filter = new InstalledModulesFilter();
-        $files = $filter->filterFiles($files);
-
-        foreach ($files as $file) {
-            $this->loadHandlersFromJsonFile($file);
-        }
-    }
-
-    public function buildDefinition(string $event, array $listeners): void
-    {
-        foreach ($listeners as $listener) {
-            $this->register($event, $listener);
-        }
-    }
-
     public function register(
         string $identifier,
-        string $handler
+        string $handler,
+        ?string $cli_alias = null
     ): void {
         $this->events[$identifier][] = $handler;
     }

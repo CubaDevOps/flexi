@@ -12,6 +12,7 @@ use CubaDevOps\Flexi\Infrastructure\Http\Route;
 use CubaDevOps\Flexi\Infrastructure\Http\Router;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\RouterMock;
 use CubaDevOps\Flexi\Test\TestData\TestDoubles\TestHttpHandler;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -28,7 +29,10 @@ class RouterTest extends TestCase
 
     private $event_bus;
     private $class_factory;
-    private ResponseFactoryInterface $response_factory;
+    /**
+     * @var ResponseFactoryInterface|MockObject
+     */
+    private $response_factory;
     private \Psr\Container\ContainerInterface $container;
 
     private RouterMock $router;
@@ -508,6 +512,10 @@ class RouterTest extends TestCase
      * Tests loading routes from JSON file
      * @throws \JsonException
      */
+    /**
+     * DEPRECATED: loadRoutesFile method has been removed
+     */
+    /*
     public function testLoadRoutesFile(): void
     {
         // Create temporary routes file
@@ -530,10 +538,12 @@ class RouterTest extends TestCase
                 ]
             ]
         ];
-        file_put_contents($tempFile, json_encode($routesData, JSON_THROW_ON_ERROR));
+        file_put_contents($tempFile, json_encode($testData, JSON_THROW_ON_ERROR));
 
-        $this->router->loadRoutesFile($tempFile);
+        // DEPRECATED: loadRoutesFile method has been removed
+        // $this->router->loadRoutesFile($tempFile);
 
+        // Test through reflection should verify glob detection
         // Verify routes were loaded
         $usersRoute = $this->router->getByName('api-users');
         $this->assertEquals('/api/users', $usersRoute->getPath());
@@ -545,11 +555,14 @@ class RouterTest extends TestCase
 
         unlink($tempFile);
     }
+    */
 
     /**
      * Tests loading routes with glob patterns
+     * DEPRECATED: loadRoutesFile method has been removed
      * @throws \JsonException
      */
+    /*
     public function testLoadRoutesFileWithGlobPattern(): void
     {
         // Create temporary directory and route files
@@ -599,11 +612,14 @@ class RouterTest extends TestCase
         rmdir($tempDir);
         unlink($mainFile);
     }
+    */
 
     /**
      * Tests loadGlobRoutes method directly
+     * DEPRECATED: loadGlobRoutes method has been removed
      * @throws \JsonException
      */
+    /*
     public function testLoadGlobRoutes(): void
     {
         // Create temporary directory and route files
@@ -625,7 +641,12 @@ class RouterTest extends TestCase
             ]
         ], JSON_THROW_ON_ERROR));
 
-        $this->router->loadGlobRoutes($tempDir . '/*.json');
+                file_put_contents($file2, json_encode($routes2, JSON_THROW_ON_ERROR));
+
+        // DEPRECATED: loadGlobRoutes method has been removed
+        // $this->router->loadGlobRoutes($tempDir . '/*.json');
+
+        // Verify routes from both files were loaded
 
         // Verify routes were loaded
         $glob1Route = $this->router->getByName('glob1-route');
@@ -639,6 +660,7 @@ class RouterTest extends TestCase
         unlink($globFile2);
         rmdir($tempDir);
     }
+    */
 
     /**
      * Tests handleNotFound method default behavior
@@ -678,7 +700,9 @@ class RouterTest extends TestCase
 
     /**
      * Tests private isGlob method through behavior
+     * DEPRECATED: loadRoutesFile method has been removed
      */
+    /*
     public function testIsGlobBehavior(): void
     {
         // Test glob detection indirectly through loadRoutesFile behavior
@@ -700,6 +724,7 @@ class RouterTest extends TestCase
 
         unlink($tempFile);
     }
+    */
 
     /**
      * Tests assertMethodIsAllowedForRoute through processRequest

@@ -4,25 +4,20 @@ declare(strict_types=1);
 
 namespace CubaDevOps\Flexi\Infrastructure\Bus;
 
-use Flexi\Contracts\Classes\Traits\GlobFileReader;
-use Flexi\Contracts\Classes\Traits\JsonFileReader;
 use Flexi\Contracts\Interfaces\BusInterface;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use Flexi\Contracts\Interfaces\EventBusInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;
 use Flexi\Contracts\Interfaces\MessageInterface;
 use Flexi\Contracts\Interfaces\ObjectBuilderInterface;
-use CubaDevOps\Flexi\Application\Commands\NotFoundCommand;
+use CubaDevOps\Flexi\Domain\Commands\NotFoundCommand;
 use CubaDevOps\Flexi\Domain\Events\Event;
-use CubaDevOps\Flexi\Infrastructure\Classes\InstalledModulesFilter;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class QueryBus implements BusInterface
 {
-    use JsonFileReader;
-    use GlobFileReader;
 
     private array $queries = [];
     private array $aliases = [];
@@ -42,61 +37,15 @@ class QueryBus implements BusInterface
         $this->class_factory = $class_factory;
     }
 
-    /**
-     * @throws \JsonException
-     * @throws \ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function loadHandlersFromJsonFile(string $file): void
-    {
-        $handlers = $this->readJsonFile($file);
-        foreach ($handlers['handlers'] as $entry) {
-            if ($this->isGlob($entry)) {
-                $this->loadGlobFiles($entry);
-                continue;
-            }
-            $this->addEntry($entry);
-        }
-    }
-
-    private function isGlob(array $handler): bool
-    {
-        return isset($handler['glob']) && $handler['glob'];
-    }
-
-    /**
-     * @throws NotFoundExceptionInterface
-     * @throws \ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws \JsonException
-     */
-    private function loadGlobFiles(array $handler): void
-    {
-        $files = $this->readGlob($handler['glob']);
-
-        // Filter files to only include installed modules
-        $filter = new InstalledModulesFilter();
-        $files = $filter->filterFiles($files);
-
-        foreach ($files as $file) {
-            $this->loadHandlersFromJsonFile($file);
-        }
-    }
-
-    private function addEntry(array $entry): void
-    {
-        $this->register($entry['id'], $entry['handler']);
-        if (isset($entry['cli_alias'])) {
-            $this->registerCliAlias($entry['cli_alias'], $entry['handler']);
-        }
-    }
-
     public function register(
         string $identifier,
-        string $handler
+        string $handler,
+        ?string $cli_alias = null
     ): void {
         $this->queries[$identifier] = $handler;
+        if ($cli_alias !== null) {
+            $this->registerCliAlias($cli_alias, $handler);
+        }
     }
 
     public function registerCliAlias(string $alias, string $handler): void

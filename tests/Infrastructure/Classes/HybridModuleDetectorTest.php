@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Flexi\Test\Infrastructure\Factories;
+namespace Flexi\Test\Infrastructure\Classes;
 
 use Flexi\Domain\ValueObjects\ModuleType;
-use Flexi\Infrastructure\Factories\HybridModuleDetector;
-use Flexi\Infrastructure\Factories\LocalModuleDetector;
-use Flexi\Infrastructure\Factories\VendorModuleDetector;
+use Flexi\Infrastructure\Classes\HybridModuleDetector;
+use Flexi\Infrastructure\Classes\LocalModuleDetector;
+use Flexi\Infrastructure\Classes\VendorModuleDetector;
 use Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -73,7 +73,7 @@ final class HybridModuleDetectorTest extends TestCase
         ]);
 
         $cacheManager = new NullCacheManager();
-        $localDetector = new LocalModuleDetector($this->modulesDir);
+        $localDetector = new LocalModuleDetector($cacheManager, $this->modulesDir);
         $vendorDetector = new VendorModuleDetector($cacheManager, $this->vendorDir);
 
         $detector = new HybridModuleDetector($localDetector, $vendorDetector);
@@ -184,18 +184,25 @@ final class HybridModuleDetectorTest extends TestCase
 final class NullCacheManager implements ModuleCacheManagerInterface
 {
     public bool $valid = false;
-    /** @var array<int, \Flexi\Domain\ValueObjects\ModuleInfo> */
-    public array $modules = [];
+    /** @var array<string, array<int, \Flexi\Domain\ValueObjects\ModuleInfo>> */
+    public array $modulesByType = [];
 
-    public function getCachedModules(): array
+    public function getCachedModules(?string $type = null): array
     {
-        return $this->modules;
+        if ($type === null) {
+            $all = [];
+            foreach ($this->modulesByType as $modules) {
+                $all = array_merge($all, $modules);
+            }
+            return $all;
+        }
+        return $this->modulesByType[$type] ?? [];
     }
 
-    public function cacheModules(array $modules): bool
+    public function cacheModules(array $modules, string $type): bool
     {
         $this->valid = true;
-        $this->modules = $modules;
+        $this->modulesByType[$type] = $modules;
         return true;
     }
 
@@ -207,7 +214,7 @@ final class NullCacheManager implements ModuleCacheManagerInterface
     public function invalidateCache(): bool
     {
         $this->valid = false;
-        $this->modules = [];
+        $this->modulesByType = [];
         return true;
     }
 

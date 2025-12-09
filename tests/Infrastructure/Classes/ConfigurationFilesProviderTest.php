@@ -8,7 +8,7 @@ use Flexi\Domain\ValueObjects\ConfigurationType;
 use Flexi\Domain\ValueObjects\ModuleInfo;
 use Flexi\Domain\ValueObjects\ModuleType;
 use Flexi\Infrastructure\Classes\ConfigurationFilesProvider;
-use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Infrastructure\Classes\HybridModuleDetector;
 use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

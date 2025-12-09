@@ -6,7 +6,7 @@ namespace Flexi\Application\UseCase;
 
 use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
 use Flexi\Domain\Interfaces\ModuleEnvironmentManagerInterface;
-use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Infrastructure\Classes\HybridModuleDetector;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\DTOInterface;
 use Flexi\Contracts\Interfaces\HandlerInterface;

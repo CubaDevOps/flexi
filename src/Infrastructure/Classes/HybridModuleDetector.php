@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flexi\Infrastructure\Factories;
+namespace Flexi\Infrastructure\Classes;
 
 use Flexi\Domain\ValueObjects\ModuleInfo;
 use Flexi\Domain\ValueObjects\ModuleType;

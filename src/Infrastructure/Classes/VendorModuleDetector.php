@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flexi\Infrastructure\Factories;
+namespace Flexi\Infrastructure\Classes;
 
 use Flexi\Domain\ValueObjects\ModuleInfo;
 use Flexi\Domain\ValueObjects\ModuleType;
@@ -149,22 +149,21 @@ class VendorModuleDetector implements ModuleDetectorInterface
             return null;
         }
 
-        $cachedModules = $this->cacheManager->getCachedModules();
+        $cachedModules = $this->cacheManager->getCachedModules('vendor');
         $indexedModules = [];
 
         foreach ($cachedModules as $module) {
-            if ($module->getType()->getValue() === 'vendor') {
-                $indexedModules[$module->getName()] = [
-                    'name' => $module->getName(),
-                    'package' => $module->getPackage(),
-                    'path' => $module->getPath(),
-                    'version' => $module->getVersion(),
-                    'metadata' => $module->getMetadata()
-                ];
-            }
+            $indexedModules[$module->getName()] = [
+                'name' => $module->getName(),
+                'package' => $module->getPackage(),
+                'path' => $module->getPath(),
+                'version' => $module->getVersion(),
+                'metadata' => $module->getMetadata()
+            ];
         }
 
-        return $indexedModules;
+        // If no vendor modules found in cache, treat it as cache miss
+        return empty($indexedModules) ? null : $indexedModules;
     }
 
     /**
@@ -172,7 +171,7 @@ class VendorModuleDetector implements ModuleDetectorInterface
      */
     private function saveToCache(array $discoveredModules): void
     {
-        // Convert to ModuleInfo objects for caching
+        // Convert discovered vendor modules to ModuleInfo objects
         $moduleInfos = [];
         foreach ($discoveredModules as $moduleData) {
             $moduleInfos[] = new ModuleInfo(
@@ -186,7 +185,7 @@ class VendorModuleDetector implements ModuleDetectorInterface
             );
         }
 
-        $this->cacheManager->cacheModules($moduleInfos);
+        $this->cacheManager->cacheModules($moduleInfos, 'vendor');
     }
 
     /**

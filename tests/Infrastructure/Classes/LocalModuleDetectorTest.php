@@ -2,16 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Flexi\Test\Infrastructure\Factories;
+namespace Flexi\Test\Infrastructure\Classes;
 
 use Flexi\Domain\ValueObjects\ModuleInfo;
 use Flexi\Domain\ValueObjects\ModuleType;
-use Flexi\Infrastructure\Factories\LocalModuleDetector;
+use Flexi\Infrastructure\Classes\LocalModuleDetector;
+use Flexi\Infrastructure\Classes\ModuleCacheManager;
 use PHPUnit\Framework\TestCase;
 
 final class LocalModuleDetectorTest extends TestCase
 {
     private string $modulesDir;
+    private ModuleCacheManager $cacheManager;
 
     protected function setUp(): void
     {
@@ -19,6 +21,9 @@ final class LocalModuleDetectorTest extends TestCase
 
         $this->modulesDir = sys_get_temp_dir() . '/local_detector_' . uniqid();
         mkdir($this->modulesDir);
+        $cacheDir = sys_get_temp_dir() . '/cache_' . uniqid();
+        mkdir($cacheDir);
+        $this->cacheManager = new ModuleCacheManager($cacheDir, $this->modulesDir);
         LocalModuleDetector::clearCache();
     }
 
@@ -44,7 +49,7 @@ final class LocalModuleDetectorTest extends TestCase
             ]
         ]);
 
-        $detector = new LocalModuleDetector($this->modulesDir);
+        $detector = new LocalModuleDetector($this->cacheManager, $this->modulesDir);
 
         $modules = $detector->getAllModules();
         $this->assertArrayHasKey('Blog', $modules);
@@ -70,14 +75,14 @@ final class LocalModuleDetectorTest extends TestCase
             ], JSON_PRETTY_PRINT)
         );
 
-        $detector = new LocalModuleDetector($this->modulesDir);
+        $detector = new LocalModuleDetector($this->cacheManager, $this->modulesDir);
 
         $this->assertTrue($detector->isModuleInstalled('custom'));
 
         $info = $detector->getModuleInfo('custom');
         $this->assertNotNull($info);
         $this->assertSame('Custom', $info->getName());
-        $this->assertSame('cubadevops/flexi-module-custom', $info->getPackage());
+        $this->assertSame('flexi/flexi-module-custom', $info->getPackage());
         $this->assertSame('unknown', $info->getVersion());
         $this->assertSame('flexi-module', $info->getMetadata()['type']);
     }
@@ -96,7 +101,7 @@ final class LocalModuleDetectorTest extends TestCase
         ]);
         $this->createModule('Legacy', []);
 
-        $detector = new LocalModuleDetector($this->modulesDir);
+        $detector = new LocalModuleDetector($this->cacheManager, $this->modulesDir);
 
         $stats = $detector->getModuleStatistics();
         $this->assertSame(2, $stats['total']);

@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Flexi\Infrastructure\Factories;
+namespace Flexi\Infrastructure\Classes;
 
 use Flexi\Domain\ValueObjects\ModuleInfo;
 use Flexi\Domain\ValueObjects\ModuleType;
+use Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
 use Flexi\Domain\Interfaces\ModuleDetectorInterface;
 
 /**
@@ -17,11 +18,15 @@ use Flexi\Domain\Interfaces\ModuleDetectorInterface;
 class LocalModuleDetector implements ModuleDetectorInterface
 {
     private string $modulesPath;
+    private ModuleCacheManagerInterface $cacheManager;
     private static ?array $localModules = null;
 
-    public function __construct(string $modulesPath = './modules')
-    {
+    public function __construct(
+        ModuleCacheManagerInterface $cacheManager,
+        string $modulesPath = './modules'
+    ) {
         $this->modulesPath = rtrim($modulesPath, '/');
+        $this->cacheManager = $cacheManager;
     }
 
     /**
@@ -118,6 +123,13 @@ class LocalModuleDetector implements ModuleDetectorInterface
             return self::$localModules;
         }
 
+        // Try to load from cache first
+        $cachedModules = $this->loadFromCache();
+        if ($cachedModules !== null) {
+            self::$localModules = $cachedModules;
+            return self::$localModules;
+        }
+
         self::$localModules = [];
 
         if (!is_dir($this->modulesPath)) {
@@ -144,6 +156,9 @@ class LocalModuleDetector implements ModuleDetectorInterface
                 continue;
             }
         }
+
+        // Cache the discovered modules
+        $this->saveToCache(self::$localModules);
 
         return self::$localModules;
     }
@@ -189,7 +204,7 @@ class LocalModuleDetector implements ModuleDetectorInterface
         // Default module data
         $moduleData = [
             'name' => $moduleName,
-            'package' => "cubadevops/flexi-module-" . strtolower($moduleName),
+            'package' => "flexi/flexi-module-" . strtolower($moduleName),
             'path' => $modulePath,
             'version' => 'unknown',
             'metadata' => [
@@ -282,6 +297,63 @@ class LocalModuleDetector implements ModuleDetectorInterface
     private function normalizeModuleName(string $moduleName): string
     {
         return ucfirst(strtolower($moduleName));
+    }
+
+    /**
+     * Load modules from cache if valid.
+     */
+    private function loadFromCache(): ?array
+    {
+        if (!$this->cacheManager->isCacheValid()) {
+            return null;
+        }
+
+        $cachedModules = $this->cacheManager->getCachedModules('local');
+        $indexedModules = [];
+
+        foreach ($cachedModules as $module) {
+            $indexedModules[$module->getName()] = [
+                'name' => $module->getName(),
+                'package' => $module->getPackage(),
+                'path' => $module->getPath(),
+                'version' => $module->getVersion(),
+                'metadata' => $module->getMetadata()
+            ];
+        }
+
+        // If no local modules found in cache, treat it as cache miss
+        return empty($indexedModules) ? null : $indexedModules;
+    }
+
+    /**
+     * Save discovered modules to cache.
+     */
+    private function saveToCache(array $discoveredModules): void
+    {
+        // Convert discovered local modules to ModuleInfo objects
+        $moduleInfos = [];
+        foreach ($discoveredModules as $moduleData) {
+            $moduleInfos[] = new ModuleInfo(
+                $moduleData['name'],
+                $moduleData['package'],
+                ModuleType::local(),
+                $moduleData['path'],
+                $moduleData['version'],
+                false,
+                $moduleData['metadata']
+            );
+        }
+
+        $this->cacheManager->cacheModules($moduleInfos, 'local');
+    }
+
+    /**
+     * Force refresh of module discovery (invalidates cache).
+     */
+    public function refreshModules(): void
+    {
+        $this->cacheManager->invalidateCache();
+        self::clearCache();
     }
 
     /**

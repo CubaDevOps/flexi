@@ -132,18 +132,19 @@
       }
     },
     {
-      "name": "Flexi\\Infrastructure\\Factories\\LocalModuleDetector",
+      "name": "Flexi\\Infrastructure\\Classes\\LocalModuleDetector",
       "class": {
-        "name": "Flexi\\Infrastructure\\Factories\\LocalModuleDetector",
+        "name": "Flexi\\Infrastructure\\Classes\\LocalModuleDetector",
         "arguments": [
+          "@Flexi\\Domain\\Interfaces\\ModuleCacheManagerInterface",
           "./modules"
         ]
       }
     },
     {
-      "name": "Flexi\\Infrastructure\\Factories\\VendorModuleDetector",
+      "name": "Flexi\\Infrastructure\\Classes\\VendorModuleDetector",
       "class": {
-        "name": "Flexi\\Infrastructure\\Factories\\VendorModuleDetector",
+        "name": "Flexi\\Infrastructure\\Classes\\VendorModuleDetector",
         "arguments": [
           "@Flexi\\Domain\\Interfaces\\ModuleCacheManagerInterface",
           "./vendor"
@@ -151,18 +152,18 @@
       }
     },
     {
-      "name": "Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+      "name": "Flexi\\Infrastructure\\Classes\\HybridModuleDetector",
       "class": {
-        "name": "Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+        "name": "Flexi\\Infrastructure\\Classes\\HybridModuleDetector",
         "arguments": [
-          "@Flexi\\Infrastructure\\Factories\\LocalModuleDetector",
-          "@Flexi\\Infrastructure\\Factories\\VendorModuleDetector"
+          "@Flexi\\Infrastructure\\Classes\\LocalModuleDetector",
+          "@Flexi\\Infrastructure\\Classes\\VendorModuleDetector"
         ]
       }
     },
     {
       "name": "Flexi\\Domain\\Interfaces\\ModuleDetectorInterface",
-      "alias": "Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
+      "alias": "Flexi\\Infrastructure\\Classes\\HybridModuleDetector"
     },
     {
       "name": "Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface",
@@ -183,7 +184,7 @@
         "name": "Flexi\\Application\\UseCase\\ActivateModule",
         "arguments": [
           "@Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
-          "@Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+          "@Flexi\\Infrastructure\\Classes\\HybridModuleDetector",
           "@Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface"
         ]
       }
@@ -194,7 +195,7 @@
         "name": "Flexi\\Application\\UseCase\\DeactivateModule",
         "arguments": [
           "@Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
-          "@Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+          "@Flexi\\Infrastructure\\Classes\\HybridModuleDetector",
           "@Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface"
         ]
       }
@@ -205,7 +206,7 @@
         "name": "Flexi\\Application\\UseCase\\GetModuleStatus",
         "arguments": [
           "@Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
-          "@Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
+          "@Flexi\\Infrastructure\\Classes\\HybridModuleDetector"
         ]
       }
     },
@@ -215,7 +216,7 @@
         "name": "Flexi\\Application\\UseCase\\UpdateModuleEnvironment",
         "arguments": [
           "@Flexi\\Domain\\Interfaces\\ModuleEnvironmentManagerInterface",
-          "@Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+          "@Flexi\\Infrastructure\\Classes\\HybridModuleDetector",
           "@Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface"
         ]
       }
@@ -226,7 +227,7 @@
         "name": "Flexi\\Application\\UseCase\\ListModules",
         "arguments": [
           "@Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
-          "@Flexi\\Infrastructure\\Factories\\HybridModuleDetector"
+          "@Flexi\\Infrastructure\\Classes\\HybridModuleDetector"
         ]
       }
     },
@@ -236,7 +237,7 @@
         "name": "Flexi\\Infrastructure\\Classes\\ConfigurationFilesProvider",
         "arguments": [
           "@Flexi\\Domain\\Interfaces\\ModuleStateManagerInterface",
-          "@Flexi\\Infrastructure\\Factories\\HybridModuleDetector",
+          "@Flexi\\Infrastructure\\Classes\\HybridModuleDetector",
           "./"
         ]
       }

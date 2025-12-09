@@ -8,7 +8,7 @@ use Flexi\Application\Commands\UpdateModuleEnvironmentCommand;
 use Flexi\Application\UseCase\UpdateModuleEnvironment;
 use Flexi\Domain\ValueObjects\ModuleInfo;
 use Flexi\Domain\ValueObjects\ModuleType;
-use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Infrastructure\Classes\HybridModuleDetector;
 use Flexi\Domain\Interfaces\ModuleEnvironmentManagerInterface;
 use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;

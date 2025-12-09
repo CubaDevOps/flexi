@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Flexi\Application\UseCase;
 
 use Flexi\Domain\Interfaces\ModuleEnvironmentManagerInterface;
-use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Infrastructure\Classes\HybridModuleDetector;
 use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
 use Flexi\Contracts\Classes\PlainTextMessage;
 use Flexi\Contracts\Interfaces\DTOInterface;

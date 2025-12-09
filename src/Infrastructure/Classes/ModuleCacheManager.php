@@ -27,9 +27,11 @@ class ModuleCacheManager implements ModuleCacheManagerInterface
     }
 
     /**
-     * Get cached modules information.
+     * Get cached modules information for a specific type.
+     *
+     * @param string|null $type Module type ('local', 'vendor', or null for all)
      */
-    public function getCachedModules(): array
+    public function getCachedModules(?string $type = null): array
     {
         if (!$this->cacheExists() || !$this->isCacheValid()) {
             return [];
@@ -43,13 +45,31 @@ class ModuleCacheManager implements ModuleCacheManagerInterface
 
             $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
-            if (!isset($data['modules']) || !is_array($data['modules'])) {
+            if (!isset($data['modules_by_type']) || !is_array($data['modules_by_type'])) {
                 return [];
             }
 
             $modules = [];
-            foreach ($data['modules'] as $moduleData) {
-                $modules[] = $this->deserializeModuleInfo($moduleData);
+
+            // If type is specified, return only modules of that type
+            if ($type !== null) {
+                if (!isset($data['modules_by_type'][$type]) || !is_array($data['modules_by_type'][$type])) {
+                    return [];
+                }
+
+                foreach ($data['modules_by_type'][$type] as $moduleData) {
+                    $modules[] = $this->deserializeModuleInfo($moduleData);
+                }
+            } else {
+                // Return all modules from all types
+                foreach ($data['modules_by_type'] as $typeModules) {
+                    if (!is_array($typeModules)) {
+                        continue;
+                    }
+                    foreach ($typeModules as $moduleData) {
+                        $modules[] = $this->deserializeModuleInfo($moduleData);
+                    }
+                }
             }
 
             return $modules;
@@ -60,9 +80,12 @@ class ModuleCacheManager implements ModuleCacheManagerInterface
     }
 
     /**
-     * Cache modules information.
+     * Cache modules information for a specific type.
+     *
+     * @param ModuleInfo[] $modules Array of modules to cache
+     * @param string $type Module type ('local' or 'vendor')
      */
-    public function cacheModules(array $modules): bool
+    public function cacheModules(array $modules, string $type): bool
     {
         try {
             // Ensure cache directory exists
@@ -71,14 +94,22 @@ class ModuleCacheManager implements ModuleCacheManagerInterface
                 return false;
             }
 
-            $cacheData = [
-                'timestamp' => time(),
-                'composer_lock_mtime' => $this->getComposerLockModificationTime(),
-                'modules' => []
-            ];
+            // Load existing cache data to preserve other types
+            $cacheData = $this->loadCacheData();
 
+            // Update timestamp and composer.lock mtime
+            $cacheData['timestamp'] = time();
+            $cacheData['composer_lock_mtime'] = $this->getComposerLockModificationTime();
+
+            // Ensure modules_by_type structure exists
+            if (!isset($cacheData['modules_by_type']) || !is_array($cacheData['modules_by_type'])) {
+                $cacheData['modules_by_type'] = [];
+            }
+
+            // Store modules for the specified type
+            $cacheData['modules_by_type'][$type] = [];
             foreach ($modules as $module) {
-                $cacheData['modules'][] = $this->serializeModuleInfo($module);
+                $cacheData['modules_by_type'][$type][] = $this->serializeModuleInfo($module);
             }
 
             $jsonData = json_encode($cacheData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
@@ -152,6 +183,46 @@ class ModuleCacheManager implements ModuleCacheManagerInterface
     }
 
     /**
+     * Load cache data from file.
+     */
+    private function loadCacheData(): array
+    {
+        if (!$this->cacheExists()) {
+            return [
+                'timestamp' => time(),
+                'composer_lock_mtime' => $this->getComposerLockModificationTime(),
+                'modules_by_type' => []
+            ];
+        }
+
+        try {
+            $content = file_get_contents($this->cacheFilePath);
+            if ($content === false) {
+                return [
+                    'timestamp' => time(),
+                    'composer_lock_mtime' => $this->getComposerLockModificationTime(),
+                    'modules_by_type' => []
+                ];
+            }
+
+            $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+
+            // Ensure structure exists
+            if (!isset($data['modules_by_type'])) {
+                $data['modules_by_type'] = [];
+            }
+
+            return $data;
+        } catch (\JsonException | \Exception $e) {
+            return [
+                'timestamp' => time(),
+                'composer_lock_mtime' => $this->getComposerLockModificationTime(),
+                'modules_by_type' => []
+            ];
+        }
+    }
+
+    /**
      * Get composer.lock modification time.
      */
     private function getComposerLockModificationTime(): ?int
@@ -175,6 +246,7 @@ class ModuleCacheManager implements ModuleCacheManagerInterface
             'type' => $module->getType()->getValue(),
             'path' => $module->getPath(),
             'version' => $module->getVersion(),
+            'active' => $module->isActive(),
             'metadata' => $module->getMetadata()
         ];
     }
@@ -200,7 +272,7 @@ class ModuleCacheManager implements ModuleCacheManagerInterface
             $type,
             $data['path'] ?? '',
             $data['version'] ?? 'unknown',
-            false, // isActive will be determined by ModuleStateManager
+            $data['active'] ?? false, // isActive will be determined by ModuleStateManager
             $data['metadata'] ?? []
         );
     }

@@ -15,19 +15,21 @@ use Flexi\Domain\ValueObjects\ModuleInfo;
 interface ModuleCacheManagerInterface
 {
     /**
-     * Get cached modules information.
+     * Get cached modules information for a specific type.
      *
+     * @param string|null $type Module type ('local', 'vendor', or null for all)
      * @return ModuleInfo[] Array of cached module information
      */
-    public function getCachedModules(): array;
+    public function getCachedModules(?string $type = null): array;
 
     /**
-     * Cache modules information.
+     * Cache modules information for a specific type.
      *
      * @param ModuleInfo[] $modules Array of modules to cache
+     * @param string $type Module type ('local' or 'vendor')
      * @return bool True if cache was successfully written
      */
-    public function cacheModules(array $modules): bool;
+    public function cacheModules(array $modules, string $type): bool;
 
     /**
      * Check if cache is valid based on composer.lock modification time.

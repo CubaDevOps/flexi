@@ -142,7 +142,7 @@ jobs:
 
           # Checkout a develop
           git checkout develop
-          git pull origin develop
+          git pull --rebase origin develop
 
           # Rebase main sobre develop
           git rebase origin/main

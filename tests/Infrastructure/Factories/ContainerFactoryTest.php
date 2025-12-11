@@ -7,9 +7,10 @@ namespace Flexi\Test\Infrastructure\Factories;
 use Flexi\Infrastructure\Factories\ContainerFactory;
 use Flexi\Domain\Interfaces\ModuleDetectorInterface;
 use Flexi\Infrastructure\Factories\CacheFactoryInterface;
-use Flexi\Infrastructure\Factories\HybridModuleDetector;
-use Flexi\Infrastructure\Factories\LocalModuleDetector;
-use Flexi\Infrastructure\Factories\VendorModuleDetector;
+use Flexi\Infrastructure\Classes\HybridModuleDetector;
+use Flexi\Infrastructure\Classes\LocalModuleDetector;
+use Flexi\Infrastructure\Classes\VendorModuleDetector;
+use Flexi\Infrastructure\Classes\ModuleCacheManager;
 use Flexi\Infrastructure\Factories\DefaultCacheFactory;
 use Flexi\Infrastructure\DependencyInjection\Container;
 use Flexi\Infrastructure\DependencyInjection\ServicesDefinitionParser;
@@ -210,7 +211,8 @@ class ContainerFactoryTest extends TestCase
     public function testHybridModuleDetectorImplementation(): void
     {
         // Test the real implementation of HybridModuleDetector
-        $localDetector = new LocalModuleDetector('./tests/fixtures/modules');
+        $cacheManager = new ModuleCacheManager();
+        $localDetector = new LocalModuleDetector($cacheManager, './tests/fixtures/modules');
         $vendorDetector = $this->createMock(VendorModuleDetector::class);
         $detector = new HybridModuleDetector($localDetector, $vendorDetector);
 
@@ -260,7 +262,8 @@ class ContainerFactoryTest extends TestCase
     public function testHybridModuleDetectorCacheHandling(): void
     {
         // Test caching behavior
-        $localDetector = new LocalModuleDetector('./tests/fixtures/modules');
+        $cacheManager = new ModuleCacheManager();
+        $localDetector = new LocalModuleDetector($cacheManager, './tests/fixtures/modules');
         $vendorDetector = $this->createMock(VendorModuleDetector::class);
         $detector = new HybridModuleDetector($localDetector, $vendorDetector);
 
@@ -278,7 +281,8 @@ class ContainerFactoryTest extends TestCase
 
     public function testHybridModuleDetectorWithDifferentModules(): void
     {
-        $localDetector = new LocalModuleDetector('./tests/fixtures/modules');
+        $cacheManager = new ModuleCacheManager();
+        $localDetector = new LocalModuleDetector($cacheManager, './tests/fixtures/modules');
         $vendorDetector = $this->createMock(VendorModuleDetector::class);
         $detector = new HybridModuleDetector($localDetector, $vendorDetector);
 

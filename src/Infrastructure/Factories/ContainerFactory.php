@@ -16,7 +16,10 @@ use Flexi\Infrastructure\DependencyInjection\Container;
 use Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
 use Flexi\Domain\ValueObjects\ConfigurationType;
 use Flexi\Infrastructure\Classes\ConfigurationFilesProvider;
+use Flexi\Infrastructure\Classes\HybridModuleDetector;
+use Flexi\Infrastructure\Classes\LocalModuleDetector;
 use Flexi\Infrastructure\Classes\ModuleStateManager;
+use Flexi\Infrastructure\Classes\VendorModuleDetector;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -71,7 +74,11 @@ class ContainerFactory
         $configurationRepository = new ConfigurationRepository();
         $configuration = new Configuration($configurationRepository);
         $modulesStateManager = new ModuleStateManager(new ModuleStateRepository("./var/modules-state.json"));
-        $moduleDetector = new HybridModuleDetector( new LocalModuleDetector(), new VendorModuleDetector(new ModuleCacheManager()));
+        $moduleCacheManager = new ModuleCacheManager();
+        $moduleDetector = new HybridModuleDetector(
+            new LocalModuleDetector($moduleCacheManager),
+            new VendorModuleDetector($moduleCacheManager)
+        );
         $cache = (new DefaultCacheFactory($moduleDetector, $configuration))->createCache();
         $objectBuilder = new ObjectBuilder($cache);
         $servicesDefinitionParser = new ServicesDefinitionParser($cache);

@@ -6,7 +6,7 @@ namespace Flexi\Infrastructure\Classes;
 
 use Flexi\Domain\Interfaces\ConfigurationFilesProviderInterface;
 use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
-use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Infrastructure\Classes\HybridModuleDetector;
 use Flexi\Domain\ValueObjects\ModuleInfo;
 use Flexi\Domain\ValueObjects\ConfigurationType;
 use Flexi\Contracts\Classes\Traits\FileHandlerTrait;

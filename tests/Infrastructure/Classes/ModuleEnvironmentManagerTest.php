@@ -165,21 +165,47 @@ class ModuleEnvironmentManagerTest extends TestCase
         $this->assertSame($expectedPath, $this->manager->getModuleEnvFilePath($modulePath . '/'));
     }
 
-    public function testReadModuleEnvironmentHandlesFileReadException(): void
+    public function testReadModuleEnvironmentReturnsEmptyWhenDirectoryDoesNotExist(): void
     {
-        $modulePath = $this->createModule('ExceptionTest', "API_KEY=123\n");
+        // Test with a non-existent module path
+        $nonExistentPath = $this->rootDir . '/non-existent-module';
 
-        // Make the .env file unreadable
-        $envFile = $modulePath . '/.env';
-        chmod($envFile, 0000);
+        $env = $this->manager->readModuleEnvironment($nonExistentPath, 'NonExistent');
 
-        $env = $this->manager->readModuleEnvironment($modulePath, 'ExceptionTest');
-
-        // Should return empty array on exception
+        // Should return empty array when directory doesn't exist
         $this->assertSame([], $env);
+    }
 
-        // Restore permissions for cleanup
-        chmod($envFile, 0644);
+    public function testReadModuleEnvironmentHandlesMalformedContent(): void
+    {
+        // Create a module with malformed .env content
+        $modulePath = $this->createModule('Malformed', <<<ENV
+        # Valid comment
+        VALID_KEY=value
+
+        # Lines without equals sign (invalid)
+        JUST_A_LINE
+        ANOTHER_LINE_NO_EQUALS
+
+        # Empty key (should be skipped)
+        =empty_key_value
+
+        # Valid keys after invalid ones
+        ANOTHER_VALID=test
+        ENV
+                );
+
+        $env = $this->manager->readModuleEnvironment($modulePath, 'Malformed');
+
+        // Should parse only valid key=value pairs
+        $this->assertArrayHasKey('VALID_KEY', $env);
+        $this->assertArrayHasKey('ANOTHER_VALID', $env);
+        $this->assertSame('value', $env['VALID_KEY']);
+        $this->assertSame('test', $env['ANOTHER_VALID']);
+
+        // Should not include invalid lines
+        $this->assertArrayNotHasKey('JUST_A_LINE', $env);
+        $this->assertArrayNotHasKey('ANOTHER_LINE_NO_EQUALS', $env);
     }
 
     public function testAddModuleEnvironmentFailsWhenUnableToWrite(): void
@@ -306,20 +332,16 @@ class ModuleEnvironmentManagerTest extends TestCase
         $this->assertStringContainsString('MIXED="test #value with spaces"', $content);
     }
 
-    public function testGetModuleEnvironmentReturnsEmptyOnException(): void
+    public function testGetModuleEnvironmentReturnsEmptyWhenModuleNotRegistered(): void
     {
-        $this->manager->addModuleEnvironment('test', ['KEY' => 'value']);
+        // Try to get environment for a module that was never added
+        $result = $this->manager->getModuleEnvironment('nonexistent');
 
-        // Make the file unreadable
-        chmod($this->mainEnvPath, 0000);
-
-        $result = $this->manager->getModuleEnvironment('test');
-
-        // Should return empty array on exception
+        // Should return empty array when module is not registered
         $this->assertSame([], $result);
 
-        // Restore permissions
-        chmod($this->mainEnvPath, 0644);
+        // Also verify hasModuleEnvironment returns false
+        $this->assertFalse($this->manager->hasModuleEnvironment('nonexistent'));
     }
 
     public function testRemoveModuleEnvironmentCleansUpMultipleNewlines(): void

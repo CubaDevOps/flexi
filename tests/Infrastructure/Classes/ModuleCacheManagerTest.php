@@ -59,16 +59,23 @@ final class ModuleCacheManagerTest extends TestCase
             ['category' => 'vendor']
         );
 
-        $this->assertTrue($manager->cacheModules([$local, $vendor]));
+        $this->assertTrue($manager->cacheModules([$local], 'local'));
+        $this->assertTrue($manager->cacheModules([$vendor], 'vendor'));
         $this->assertTrue($manager->cacheExists());
         $this->assertTrue($manager->isCacheValid());
 
         $cached = $manager->getCachedModules();
         $this->assertCount(2, $cached);
-        $this->assertSame('local-module', $cached[0]->getName());
-        $this->assertTrue($cached[0]->getType()->equals(ModuleType::local()));
-        $this->assertSame('vendor-module', $cached[1]->getName());
-        $this->assertTrue($cached[1]->getType()->equals(ModuleType::vendor()));
+
+        $cachedLocal = $manager->getCachedModules('local');
+        $this->assertCount(1, $cachedLocal);
+        $this->assertSame('local-module', $cachedLocal[0]->getName());
+        $this->assertTrue($cachedLocal[0]->getType()->equals(ModuleType::local()));
+
+        $cachedVendor = $manager->getCachedModules('vendor');
+        $this->assertCount(1, $cachedVendor);
+        $this->assertSame('vendor-module', $cachedVendor[0]->getName());
+        $this->assertTrue($cachedVendor[0]->getType()->equals(ModuleType::vendor()));
     }
 
     public function testCacheInvalidationRemovesFile(): void
@@ -85,7 +92,7 @@ final class ModuleCacheManagerTest extends TestCase
             []
         );
 
-        $manager->cacheModules([$module]);
+        $manager->cacheModules([$module], 'local');
         $this->assertTrue($manager->cacheExists());
         $this->assertTrue($manager->invalidateCache());
         $this->assertFalse($manager->cacheExists());
@@ -113,7 +120,7 @@ final class ModuleCacheManagerTest extends TestCase
             []
         );
 
-        $manager->cacheModules([$module]);
+        $manager->cacheModules([$module], 'local');
 
         // Update composer.lock timestamp to invalidate cache
         // ensure mtime changes without relying on sleep
@@ -155,7 +162,7 @@ final class ModuleCacheManagerTest extends TestCase
             []
         );
 
-        $this->assertFalse($manager->cacheModules([$module]));
+        $this->assertFalse($manager->cacheModules([$module], 'local'));
         $this->assertFalse($manager->cacheExists());
     }
 
@@ -173,7 +180,7 @@ final class ModuleCacheManagerTest extends TestCase
             ['invalid' => INF]
         );
 
-        $this->assertFalse($manager->cacheModules([$module]));
+        $this->assertFalse($manager->cacheModules([$module], 'local'));
         $this->assertFalse($manager->cacheExists());
     }
 
@@ -209,11 +216,13 @@ final class ModuleCacheManagerTest extends TestCase
         $content = json_encode([
             'timestamp' => time(),
             'composer_lock_mtime' => filemtime($this->composerLockPath),
-            'modules' => [
-                [
-                    'name' => 'partial',
-                    'type' => 'mixed',
-                    'path' => '/modules/partial',
+            'modules_by_type' => [
+                'local' => [
+                    [
+                        'name' => 'partial',
+                        'type' => 'mixed',
+                        'path' => '/modules/partial',
+                    ],
                 ],
             ],
         ], JSON_THROW_ON_ERROR);
@@ -244,7 +253,7 @@ final class ModuleCacheManagerTest extends TestCase
             []
         );
 
-        $this->assertTrue($manager->cacheModules([$module]));
+        $this->assertTrue($manager->cacheModules([$module], 'local'));
         $this->assertFalse($manager->isCacheValid());
     }
 

@@ -9,7 +9,7 @@ use Flexi\Application\UseCase\ActivateModule;
 use Flexi\Domain\ValueObjects\ModuleInfo;
 use Flexi\Domain\ValueObjects\ModuleState;
 use Flexi\Domain\ValueObjects\ModuleType;
-use Flexi\Infrastructure\Factories\HybridModuleDetector;
+use Flexi\Infrastructure\Classes\HybridModuleDetector;
 use Flexi\Domain\Interfaces\ModuleEnvironmentManagerInterface;
 use Flexi\Domain\Interfaces\ModuleStateManagerInterface;
 use DateTimeImmutable;

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Flexi\Test\Infrastructure\Factories;
+namespace Flexi\Test\Infrastructure\Classes;
 
 use Flexi\Domain\ValueObjects\ModuleInfo;
 use Flexi\Domain\ValueObjects\ModuleType;
-use Flexi\Infrastructure\Factories\VendorModuleDetector;
+use Flexi\Infrastructure\Classes\VendorModuleDetector;
 use Flexi\Domain\Interfaces\ModuleCacheManagerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -215,12 +215,19 @@ final class FakeCacheManager implements ModuleCacheManagerInterface
         $this->cacheFilePath = sys_get_temp_dir() . '/fake_cache_' . uniqid() . '.json';
     }
 
-    public function getCachedModules(): array
+    public function getCachedModules(?string $type = null): array
     {
-        return $this->cachedModules;
+        if ($type === null) {
+            return $this->cachedModules;
+        }
+
+        // Filter by type
+        return array_filter($this->cachedModules, function($module) use ($type) {
+            return $module->getType()->getValue() === $type;
+        });
     }
 
-    public function cacheModules(array $modules): bool
+    public function cacheModules(array $modules, string $type): bool
     {
         $this->cacheModulesCalls++;
         $this->cachedPayload = $modules;
